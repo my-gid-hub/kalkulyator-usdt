@@ -1,0 +1,2585 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Калькулятор USDT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0D141D; --panel:#1B2635; --panel2:#243241; --ink:#F2F6FB; --muted:#A7B5C4; --faint:#71828F;
+    --line:#33424F; --hiline:rgba(255,255,255,.07); --accent:#5B9BFF; --accent2:#1E2C44;
+    --sell:#43E0AB; --sell2:#123328; --buy:#F7B04D; --buy2:#3A2C12; --green:#71E9BC;
+    --sh1:0 1px 1px rgba(0,0,0,.45),0 5px 12px -5px rgba(0,0,0,.55),0 18px 40px -18px rgba(0,0,0,.65);
+    --sh2:0 2px 4px rgba(0,0,0,.5),0 12px 30px -12px rgba(0,0,0,.62),0 40px 80px -34px rgba(0,0,0,.78);
+    --inset:inset 0 2px 6px rgba(0,0,0,.5),inset 0 1px 1px rgba(0,0,0,.42);
+    --mono:'IBM Plex Mono',ui-monospace,monospace;
+    --disp:'Space Grotesk',system-ui,sans-serif;
+    --body:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  input[type=number]{-moz-appearance:textfield;appearance:textfield}
+  body{background:
+      radial-gradient(1200px 640px at 50% -16%,rgba(91,155,255,.10) 0%,rgba(91,155,255,0) 58%),
+      radial-gradient(900px 620px at 88% 4%,rgba(67,224,171,.055) 0%,rgba(67,224,171,0) 52%),
+      radial-gradient(160% 130% at 50% -4%,#1B2735 0%,#111A26 52%,#0A111A 100%);
+    background-attachment:fixed;
+    color:var(--ink);font-family:var(--body);padding:16px 12px 48px;-webkit-font-smoothing:antialiased;min-height:100vh}
+  .wrap{max-width:1000px;margin:0 auto}
+  .grid{display:grid;grid-template-columns:1fr;gap:13px;align-items:stretch;justify-content:center}
+  @media(min-width:780px){
+    .grid{grid-template-columns:repeat(2,minmax(0,1fr));
+      grid-template-areas:"a a" "b e" "c d" "f f";}
+    .gr-a{grid-area:a} .gr-b{grid-area:b} .gr-c{grid-area:c} .gr-d{grid-area:d} .gr-e{grid-area:e} .gr-f{grid-area:f}
+    .rates .rbody{max-width:560px}
+  }
+  h1{font-family:var(--disp);font-weight:800;font-size:22px;letter-spacing:-.02em;margin-bottom:3px;text-align:center}
+  .sub{color:var(--muted);font-size:12.5px;margin-bottom:22px;text-align:center;letter-spacing:.01em}
+  .card{background:linear-gradient(180deg,#212D3D 0%,#1A2431 100%);border:1px solid var(--line);border-radius:16px;padding:17px;
+    box-shadow:var(--sh1),inset 0 1px 0 var(--hiline);display:flex;flex-direction:column}
+  /* итог/результат прижаты к низу карточки → в строке кнопки «Скопировать» на одной линии */
+  @media(min-width:780px){
+    .gr-b>.res,.gr-d>.res{margin-top:auto}
+    .gr-e #mcTotBox{margin-top:auto}
+  }
+  .lab{font-family:var(--disp);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+    color:#AEB8C4;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+  .lab .tog{margin-left:auto;font-size:10px;color:var(--faint);font-family:var(--body);letter-spacing:0;text-transform:none;cursor:pointer}
+  .lab .saved{margin-left:auto;font-size:9.5px;color:var(--sell);font-family:var(--body);letter-spacing:.04em;text-transform:none;opacity:0;transition:.3s}
+  .lab .tog{margin-left:8px}
+  .labttl{white-space:nowrap}
+  .rgrid{display:grid;grid-template-columns:64px 1fr 1fr;gap:7px;align-items:center}
+  .rgrid .rh{font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);text-align:center;font-family:var(--disp);font-weight:600}
+  .rgrid .rn{font-family:var(--mono);font-size:12.5px;color:var(--ink);white-space:nowrap}
+  .rgrid input{width:100%;font-family:var(--mono);font-size:14px;font-weight:500;color:var(--ink);
+    background:#121A24;border:1px solid #26323F;border-radius:8px;padding:8px;text-align:right;box-shadow:var(--inset)}
+  .rgrid input:focus{outline:none;border-color:var(--accent)}
+  .rsep{height:1px;background:var(--line);margin:12px 0}
+  .cgrid{display:grid;grid-template-columns:64px 1fr 1fr;gap:7px;row-gap:6px;align-items:center}
+  .cgrid .ch{font-family:var(--mono);font-size:10.5px;color:var(--muted);line-height:1.25}
+  .cgrid .ch b{font-weight:600} .cgrid .ch .s{color:var(--sell)} .cgrid .ch .b{color:var(--buy)}
+  .cgrid .ch em{font-style:normal;color:var(--faint);font-size:9.5px}
+  .cgrid .cml{font-size:11px}
+  .cgrid input{width:100%;font-family:var(--mono);font-size:15px;font-weight:600;color:var(--ink);
+    background:#121A24;border:1px solid #26323F;border-radius:8px;padding:8px;text-align:right;box-shadow:var(--inset)}
+  .cgrid input:focus{outline:none;border-color:var(--accent)}
+  .mseg button{font-size:13px}
+  .mseg button.on{color:var(--sell)}
+  .cinp{display:flex;gap:6px;align-items:stretch}
+  .cinp .pm{flex:0 0 38px;font-family:var(--mono);font-size:17px;font-weight:600;color:var(--muted);
+    background:linear-gradient(180deg,#26313F,#1F2937);border:1px solid #384757;border-radius:8px;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.35),inset 0 1px 0 var(--hiline);transition:border-color .12s,color .12s}
+  .cinp .pm:hover{border-color:var(--accent);color:var(--accent)}
+  .cinp .pm:active{transform:scale(.97)}
+  .cinp input{flex:1}
+  .rates.collapsed .rbody{display:none}
+  .rsum{display:none}
+  .rates.collapsed .rsum{display:block;font-family:var(--mono);font-size:12.5px;color:var(--muted);margin-top:9px;line-height:1.7;word-break:break-word}
+  .rsum b{color:var(--ink);font-weight:600}
+  .rates.collapsed #resetBtn{display:none}
+  .seg{display:grid;gap:4px;background:#131D28;padding:4px;border-radius:12px;border:1px solid #2C3947;box-shadow:inset 0 2px 6px rgba(0,0,0,.42),inset 0 1px 2px rgba(0,0,0,.5)}
+  .seg.two{grid-template-columns:1fr 1fr}
+  .seg.three{grid-template-columns:1fr 1fr 1fr}
+  .seg button{font-family:var(--disp);font-weight:600;font-size:13.5px;color:var(--muted);
+    background:transparent;border:none;border-radius:9px;padding:10px 6px;cursor:pointer;transition:background .12s,color .12s,box-shadow .12s}
+  .seg button:hover{color:#C6D1DC}
+  .seg button.on{color:var(--ink);background:linear-gradient(180deg,#42536A 0%,#33445A 100%);
+    box-shadow:0 2px 6px rgba(0,0,0,.42),0 1px 1px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.1)}
+  .seg.dir button.on[data-dir="sell"]{color:var(--sell)}
+  .seg.dir button.on[data-dir="buy"]{color:var(--buy)}
+  .seg.cur button.on,.seg.kn button.on{color:var(--sell)}
+  .ql{font-family:var(--body);font-size:13px;font-weight:600;color:#C0CAD6;margin:12px 0 6px;letter-spacing:.01em}
+  .cl{font-family:var(--body);font-size:13px;font-weight:600;color:#B9C2CD}
+  .hint{font-family:var(--body);font-size:12px;color:var(--muted);margin-top:7px;line-height:1.5}
+  #phrase:focus{border-color:var(--accent)!important;box-shadow:0 0 0 3px rgba(59,130,246,.20)}
+  .phrase-info{font-family:var(--body);font-size:12.5px;margin-top:9px;line-height:1.5;color:var(--muted)}
+  .phrase-info b{color:var(--ink);font-weight:600}
+  .phrase-info.ok{color:var(--sell)}
+  .phrase-info.err{color:var(--buy)}
+  /* панель «что понял калькулятор» — компактно, под полем ввода */
+  .understood{display:none;margin:8px 0 0;padding:9px 12px;border-radius:10px;
+    background:rgba(59,130,246,.09);border:1px solid rgba(96,150,220,.34);
+    font-family:var(--body);font-size:12.5px;line-height:1.5;color:var(--ink)}
+  .understood.err{background:rgba(224,122,95,.10);border-color:rgba(224,122,95,.42);color:#E0A05F}
+  .understood .udir{font-weight:700;color:var(--ink)}
+  .understood .urow{margin-top:2px}
+  .understood .ucur{color:var(--muted)}
+  .understood .uwarn{margin-top:6px;padding-top:6px;border-top:1px solid rgba(96,150,220,.20);font-size:11.5px;color:#E0A05F;line-height:1.45}
+  .understood b{font-weight:600}
+  /* поле фразы: крестик, клавиши, чипы */
+  .pwrap{position:relative}
+  .pwrap #phrase{padding-right:38px;width:100%;box-sizing:border-box}
+  #pClear{position:absolute;right:8px;top:50%;transform:translateY(-50%);border:none;background:none;
+    color:var(--faint);font-size:19px;line-height:1;cursor:pointer;padding:4px 7px;display:none}
+  #pClear:hover{color:var(--ink)}
+  .pkeys{margin-top:5px;font-family:var(--body);font-size:10.5px;color:var(--faint)}
+  .pkeys b{color:var(--muted);font-weight:600}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}
+  .chips button{font-family:var(--body);font-size:11px;color:var(--muted);background:rgba(96,150,220,.08);
+    border:1px solid rgba(96,150,220,.25);border-radius:20px;padding:4px 10px;cursor:pointer;transition:.15s}
+  .chips button:hover{color:var(--ink);border-color:rgba(96,150,220,.55)}
+  /* превью ответа клиенту */
+  .uans{margin-top:9px;padding:10px 12px;border-radius:11px;background:rgba(60,220,163,.07);
+    border:1px solid rgba(60,220,163,.30)}
+  .uans .uansh{font-family:var(--disp);font-size:10px;font-weight:700;letter-spacing:.05em;
+    text-transform:uppercase;color:var(--sell);margin-bottom:5px}
+  .uans pre{margin:0;font-family:var(--mono);font-size:12.5px;line-height:1.5;color:var(--ink);
+    white-space:pre-wrap;word-break:break-word}
+  .uans .uansbtn{margin-top:8px;width:auto;padding:8px 16px;font-size:12.5px}
+  /* история */
+  .hist{margin-top:9px;font-family:var(--body)}
+  .hist summary{cursor:pointer;font-size:11.5px;color:var(--muted);user-select:none;padding:3px 0}
+  .hist summary:hover{color:var(--ink)}
+  .hist #histCnt{color:var(--faint)}
+  .hrow{display:flex;align-items:center;gap:8px;padding:5px 2px;border-bottom:1px solid rgba(96,150,220,.12)}
+  .hrow .ht{font-family:var(--mono);font-size:10.5px;color:var(--faint);flex:0 0 auto}
+  .hrow .hp{font-size:12px;color:var(--muted);flex:1 1 auto;overflow:hidden;text-overflow:ellipsis;
+    white-space:nowrap;cursor:pointer}
+  .hrow .hp:hover{color:var(--ink)}
+  .hrow button{border:1px solid rgba(96,150,220,.30);background:none;color:var(--muted);border-radius:7px;
+    font-size:11px;padding:3px 8px;cursor:pointer;flex:0 0 auto}
+  .hrow button:hover{color:var(--ink);border-color:rgba(96,150,220,.6)}
+  #histClear{margin-top:7px;border:none;background:none;color:var(--faint);font-size:11px;cursor:pointer;text-decoration:underline}
+  #histClear:hover{color:var(--buy)}
+  /* ===== мобильная адаптация новых элементов (поле фразы, чипы, превью, история) ===== */
+  @media(max-width:520px){
+    .pkeys{display:none}                                   /* хоткеи не нужны на телефоне */
+    .pwrap #phrase{padding-right:48px}
+    #pClear{font-size:24px;padding:10px 14px;right:2px}    /* тач-зона ×: ~44px */
+    .chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;
+      margin-left:-8px;margin-right:-8px;padding:2px 8px}  /* одна прокручиваемая строка вместо трёх */
+    .chips::-webkit-scrollbar{display:none}
+    .chips button{flex:0 0 auto;min-height:38px;padding:8px 13px;font-size:12px}
+    .uans .uansbtn{width:100%;min-height:46px;font-size:14px}
+    .uans pre{font-size:13px}
+    .hist summary{padding:10px 0;font-size:12.5px}         /* лёгкое попадание пальцем */
+    .hrow{padding:8px 2px}
+    .hrow button{min-height:38px;padding:6px 12px;font-size:12px}
+    .hrow .hp{font-size:13px}
+  }
+  .amount-wrap{position:relative;margin-top:7px}
+  .amount-wrap input{width:100%;font-family:var(--mono);font-size:30px;font-weight:600;color:#F5F9FD;letter-spacing:.01em;
+    background:linear-gradient(180deg,#0B131D 0%,#12202F 100%);border:1px solid #35485C;border-radius:15px;padding:15px 96px 15px 17px;transition:box-shadow .18s,border-color .18s;
+    box-shadow:inset 0 3px 10px rgba(0,0,0,.62),inset 0 1px 2px rgba(0,0,0,.55),inset 0 -1px 0 rgba(255,255,255,.045),0 0 0 1px rgba(91,155,255,.11),0 8px 22px -12px rgba(91,155,255,.32)}
+  .amount-wrap input:focus{outline:none;border-color:var(--accent);box-shadow:inset 0 3px 10px rgba(0,0,0,.62),inset 0 -1px 0 rgba(255,255,255,.05),0 0 0 3px rgba(91,155,255,.30),0 0 28px -6px rgba(91,155,255,.62)}
+  .amount-wrap .u{position:absolute;right:15px;top:50%;transform:translateY(-50%);
+    font-family:var(--disp);font-weight:600;font-size:15px;color:#8C9AA9;text-shadow:0 1px 0 rgba(0,0,0,.5)}
+  .res{position:relative;background:linear-gradient(165deg,#34475C 0%,#283646 52%,#202C3A 100%);border:1px solid #48596C;border-radius:18px;padding:22px;margin-top:14px;
+    box-shadow:0 2px 4px rgba(0,0,0,.4),0 16px 36px -16px rgba(0,0,0,.7),0 34px 66px -32px rgba(2,12,10,.6),inset 0 1px 0 rgba(255,255,255,.12),inset 0 0 44px -18px rgba(67,224,171,.20)}
+  .res .rl{font-family:var(--disp);font-size:10.5px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:9px}
+  .res .big{font-family:var(--disp);font-weight:700;font-size:42px;line-height:1.04;letter-spacing:-.015em;color:var(--green);word-break:break-all;font-variant-numeric:tabular-nums;text-shadow:0 1px 0 rgba(0,0,0,.45),0 2px 5px rgba(0,0,0,.4),0 0 34px rgba(113,233,188,.36)}
+  .res .big .u{font-size:18px;color:var(--muted);margin-left:9px;font-weight:600;letter-spacing:0}
+  .res .deal{font-family:var(--mono);font-size:13px;color:var(--ink);margin-top:14px;padding-top:12px;border-top:1px solid var(--line);line-height:1.55}
+  .res .deal .g{color:var(--muted)}
+  .res .rate{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:6px}
+  .profit{font-family:var(--mono);font-size:13px;color:var(--sell)}
+  .profit.neg{color:var(--buy)}
+  .profit b{font-weight:700}
+  .res .profit{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)}
+  .res .big{cursor:pointer}
+  .fround{font-family:var(--mono);font-size:11.5px;color:var(--buy);margin-top:8px;line-height:1.5;word-break:break-word}
+  .fcomm{font-family:var(--mono);font-size:12px;color:var(--sell);margin-top:8px}
+  .brow{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+  .brow .bamt{flex:1;min-width:0;font-family:var(--mono);font-size:16px;font-weight:600;color:var(--ink);background:#121A24;border:1px solid #26323F;border-radius:8px;padding:9px;text-align:right;box-shadow:var(--inset)}
+  .brow .bamt:focus{outline:none;border-color:var(--accent)}
+  .brow .bcur{font-family:var(--mono);font-size:14px;color:var(--ink);background:#121A24;border:1px solid #26323F;border-radius:8px;padding:9px 4px;box-shadow:var(--inset)}
+  .brow .bres{font-family:var(--mono);font-size:12.5px;color:var(--sell);flex:0 0 132px;text-align:right;white-space:nowrap}
+  .brow .brm{background:none;border:none;color:var(--faint);font-size:20px;line-height:1;cursor:pointer;padding:0 2px}
+  .brow .brm:hover{color:var(--buy)}
+  .brow .bunit{font-family:var(--mono);font-size:12px;color:var(--muted);flex:0 0 auto;white-space:nowrap}
+  .badd{background:linear-gradient(180deg,#26313F,#1F2937);border:1px solid #384757;color:var(--muted);border-radius:10px;padding:9px 13px;font-family:var(--body);font-size:13px;cursor:pointer;margin-top:2px;
+    box-shadow:0 1px 2px rgba(0,0,0,.35),inset 0 1px 0 var(--hiline);transition:border-color .12s,color .12s,background .12s}
+  .badd:hover{border-color:var(--accent);color:var(--accent);background:var(--accent2)}
+  .badd:active{transform:scale(.99)}
+  .btot{margin-top:16px;padding-top:16px;border-top:1px solid var(--line);font-family:var(--body);font-size:14px;font-weight:500;color:var(--muted);display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+  .btot b{font-family:var(--disp);font-size:27px;font-weight:800;letter-spacing:-.02em;color:var(--sell);text-shadow:0 1px 0 rgba(0,0,0,.45),0 2px 5px rgba(0,0,0,.35),0 0 26px rgba(67,224,171,.3)}
+  @media(max-width:520px){ .brow .bres{flex-basis:96px;font-size:11px} }
+  .res .formula{font-family:var(--mono);font-size:11.5px;color:var(--faint);margin-top:8px;line-height:1.5;word-break:break-word}
+  .fsym{font-family:var(--mono);font-size:13px;color:var(--muted);line-height:1.6;word-break:break-word}
+  .fnum{font-family:var(--mono);font-size:14.5px;color:var(--ink);font-weight:500;line-height:1.62;margin-top:8px;word-break:break-word}
+  .frate{font-family:var(--mono);font-size:12.5px;color:var(--muted);line-height:1.6;margin-top:10px;padding-top:10px;border-top:1px solid var(--line);word-break:break-word}
+  .res .err{font-family:var(--mono);font-size:15px;color:var(--muted)}
+  .copy{margin-top:13px;width:100%;font-family:var(--disp);font-weight:600;font-size:14.5px;color:#fff;
+    background:linear-gradient(115deg,#4F5BD5 0%,#6E6AF0 30%,#8F7BFA 50%,#6E6AF0 70%,#4F5BD5 100%);background-size:220% 100%;
+    border:none;border-radius:11px;padding:12px;cursor:pointer;letter-spacing:.01em;
+    box-shadow:0 6px 16px -6px rgba(101,96,235,.55),inset 0 1px 0 rgba(255,255,255,.22);
+    animation:copySheen 4.5s ease-in-out infinite;
+    transition:filter .15s, transform .1s, box-shadow .15s}
+  @keyframes copySheen{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+  @media(prefers-reduced-motion:reduce){.copy{animation:none}}
+  .copy:hover{filter:brightness(1.06);transform:translateY(-1px);box-shadow:0 9px 22px -7px rgba(101,96,235,.62),inset 0 1px 0 rgba(255,255,255,.22)}
+  .copy:active{transform:translateY(0) scale(.99)}
+  .copy.done{background:var(--sell2);color:var(--sell);animation:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+  .rage{font-family:var(--mono);font-size:11px;color:var(--muted);margin:-6px 0 12px;line-height:1.4}
+  .rage.warn{color:var(--buy)} .rage.old{color:#F87171;font-weight:600}
+  .rchk{margin-top:14px;padding-top:14px;border-top:1px dashed var(--line)}
+  .rchk .rcl{font-family:var(--body);font-size:12.5px;color:var(--muted);margin-bottom:7px}
+  .rchk .rcrow{display:flex;align-items:stretch;gap:8px}
+  .rchk input{flex:1;min-width:0;font-family:var(--mono);font-size:15px;font-weight:600;color:var(--ink);
+    background:#101821;border:1px solid #26323F;border-radius:8px;padding:9px 12px;text-align:right;box-shadow:var(--inset)}
+  .rchk input:focus{outline:none;border-color:var(--accent)}
+  .rchk .rcu{flex:0 0 auto;align-self:center;font-family:var(--mono);font-size:13px;color:var(--muted)}
+  .rchk .rcv{font-family:var(--mono);font-size:13px;margin-top:8px;line-height:1.5;min-height:1.2em}
+  .rchk .rcv.ok{color:var(--sell)} .rchk .rcv.bad{color:var(--buy)}
+  .log .lrow{display:flex;align-items:baseline;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);cursor:pointer}
+  .log .lrow:last-child{border-bottom:none}
+  .log .lrow:hover{background:var(--panel2)}
+  .log .lt{flex:0 0 42px;font-family:var(--mono);font-size:11px;color:var(--faint)}
+  .log .lx{flex:1;min-width:0;font-family:var(--mono);font-size:12.5px;color:var(--ink);line-height:1.45;word-break:break-word}
+  .log .lempty{font-family:var(--body);font-size:13px;color:var(--muted);padding:6px 0}
+  .log .lcopied{color:var(--sell)}
+  .log .lrow.lmatch{border-left:3px solid var(--sell);background:rgba(60,220,163,.08);padding-left:6px}
+  .log .lrow.ldim{opacity:.5}
+  .log .lrow.lnew{background:rgba(60,220,163,.13)}
+  .log .lrow .ldot{color:var(--accent);margin-right:4px}
+  .log .lrow{align-items:center}
+  .log .lcopy{flex:0 0 auto;display:flex;gap:5px;margin-left:8px}
+  .log .cpbtn{font-family:var(--body);font-size:11px;color:var(--muted);background:linear-gradient(180deg,#26313F,#1F2937);border:1px solid #384757;border-radius:7px;padding:4px 8px;cursor:pointer;white-space:nowrap;transition:border-color .12s,color .12s}
+  .log .cpbtn:hover{border-color:var(--accent);color:var(--accent)}
+  .log a.cpbtn.scanlink{text-decoration:none;display:inline-block}
+  .log a.cpbtn.scanlink:hover{border-color:var(--sell);color:var(--sell)}
+  .vcard{background:linear-gradient(180deg,#212D3D,#19232F);border:1px solid #33404F;border-radius:14px;padding:16px;margin-top:14px;box-shadow:var(--sh1),inset 0 1px 0 var(--hiline)}
+  .vcard:first-of-type{margin-top:12px}
+  .vcard-h{font-family:var(--disp);font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#AEB8C4;margin:0 0 12px;display:flex;align-items:center;gap:8px}
+  .vcard-h .sub{font-family:var(--body);font-size:10.5px;font-weight:400;letter-spacing:0;text-transform:none;color:var(--faint);margin-left:auto}
+  .vfilters{border:1px solid #2C3947;border-radius:10px;background:#182330;padding:0 12px;margin-top:10px}
+  .vfilters summary{font-family:var(--disp);font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);padding:10px 0;cursor:pointer;list-style:none;user-select:none}
+  .vfilters summary::-webkit-details-marker{display:none}
+  .vfilters summary::before{content:'▸ ';color:var(--faint)}
+  .vfilters[open] summary::before{content:'▾ '}
+  .vfilters>.frow{padding-bottom:11px}
+  .thead{display:flex;align-items:center;gap:10px;padding:0 4px 7px;border-bottom:1px solid var(--line);font-family:var(--disp);font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--faint)}
+  .trow{display:flex;align-items:center;gap:10px;padding:9px 4px;border-bottom:1px solid rgba(255,255,255,.04);cursor:pointer;transition:background .1s}
+  .trow:hover{background:rgba(255,255,255,.03)}
+  .trow.lmatch{background:rgba(60,220,163,.08);box-shadow:inset 3px 0 0 var(--sell)}
+  .trow.ldim{opacity:.45}
+  .trow.lnew{background:rgba(60,220,163,.13)}
+  .tc{font-family:var(--mono);font-size:12.5px;color:var(--ink);min-width:0}
+  .tc-t{flex:0 0 52px;font-size:11px;color:var(--muted);line-height:1.35}
+  .tc-t .ldot{color:var(--accent);margin-right:2px}
+  .tc-a{flex:0 0 128px;white-space:nowrap}
+  .tc-a b{font-size:14px}
+  .tc-a .tu{color:var(--faint);font-size:10.5px;margin-left:4px}
+  .tc-a .tcnt{color:var(--sell);margin-left:6px}
+  .tc-p{flex:1 1 120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tc-p .tlbl{color:var(--faint);font-size:10.5px;margin-right:5px}
+  .tc-h{flex:1 1 150px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tc-h .tblk{color:var(--faint);margin-left:8px;font-size:11px}
+  .tc-act{flex:0 0 auto;display:flex;gap:5px;margin-left:auto}
+  .thead .tc-t,.thead .tc-a,.thead .tc-p,.thead .tc-h,.thead .tc-act{font-family:var(--disp)}
+  @media(max-width:640px){
+    .thead{display:none}
+    .trow{flex-wrap:wrap;gap:4px 8px;padding:10px 4px}
+    .tc-t{flex:0 0 46px}
+    .tc-a{flex:0 0 auto}
+    .tc-p{flex:1 1 100%;order:5;font-size:11.5px}
+    .tc-h{flex:1 1 100%;order:6;font-size:11.5px}
+    .tc-act{flex:1 1 100%;order:7;margin-left:0;margin-top:4px}
+  }
+  @media(max-width:560px){ .log .lcopy{flex-direction:column;gap:3px} .log .cpbtn{font-size:10px;padding:3px 6px} }
+  /* ===== единая панель ===== */
+  .app{max-width:1000px;margin:0 auto;background:linear-gradient(180deg,#2A394C 0%,#1E2937 46%,#182231 100%);border:1px solid #42535F;border-radius:22px;box-shadow:var(--sh2),inset 0 1px 0 rgba(255,255,255,.10),inset 0 0 0 1px rgba(255,255,255,.02);overflow:hidden;position:relative}
+  .app-head{padding:12px 14px 11px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,0))}
+  .head-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .head-top .brand{font-family:var(--disp);font-weight:800;font-size:16.5px;letter-spacing:-.01em;color:#F2F6FB;white-space:nowrap;text-shadow:0 1px 0 rgba(0,0,0,.4)}
+  .head-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+  .head-actions .saved{opacity:0;transition:.3s;font-family:var(--body);font-size:10px;color:var(--sell);white-space:nowrap}
+  .head-rates{display:flex;align-items:baseline;gap:6px 18px;flex-wrap:wrap;margin-top:11px}
+  .head-rates #rSum{font-family:var(--mono);font-size:12.5px;color:#E7EEF6;line-height:1.6;letter-spacing:.01em}
+  .head-rates #rSum b{color:#9DACBC;font-weight:600}
+  .sumhint{display:none;margin-top:5px;font-family:var(--mono);font-size:12px;color:var(--sell);font-weight:700}
+  .usdtx{margin-top:9px;padding-top:9px;border-top:1px solid var(--line)}
+  .usdtx .uxh{font-family:var(--disp);font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .usdtx .uxgrid{display:grid;grid-template-columns:auto 1fr 1fr;gap:8px 12px;align-items:start}
+  .usdtx .uxch{font-family:var(--disp);font-size:9.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--faint);text-align:right}
+  .usdtx .uxcur{font-family:var(--mono);font-size:13.5px;color:#9DACBC;font-weight:600;padding-top:1px}
+  .usdtx .uxin,.usdtx .uxout{display:flex;flex-direction:column;align-items:flex-end;line-height:1.15}
+  .usdtx .uxv{font-family:var(--mono);font-size:14px;font-variant-numeric:tabular-nums;font-weight:700}
+  .usdtx .uxin .uxv{color:var(--sell)}
+  .usdtx .uxout .uxv{color:var(--buy)}
+  .usdtx .uxf{font-family:var(--mono);font-size:10.5px;color:var(--faint);margin-top:2px;white-space:nowrap}
+  .usdtx .uxnote{font-family:var(--body);font-size:10.5px;color:var(--faint);margin-top:8px;line-height:1.4}
+  .head-rates #rAge{margin:0;font-size:10.5px}
+  .head-rates #spreadWarn{margin:0}
+  .gear{font-family:var(--body);font-size:12px;color:var(--muted);background:linear-gradient(180deg,#26313F,#1F2937);border:1px solid #384757;border-radius:8px;padding:6px 10px;cursor:pointer;white-space:nowrap;box-shadow:0 1px 2px rgba(0,0,0,.35),inset 0 1px 0 var(--hiline);transition:border-color .12s,color .12s}
+  .gear:hover{border-color:var(--accent);color:var(--accent)}
+  .gear.alt{color:var(--faint)}
+  #ratesCard{overflow:hidden;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#182432,#141E2A);padding:14px}
+  #ratesCard.collapsed{max-height:0;padding-top:0;padding-bottom:0;border-bottom:none}
+  .set-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:680px){.set-grid{grid-template-columns:1fr;gap:14px}}
+  .setlab{font-family:var(--disp);font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#AEB8C4;margin-bottom:10px}
+  .setsub{font-family:var(--body);font-size:10px;font-weight:400;letter-spacing:0;text-transform:none;color:var(--faint)}
+  .setnote{font-family:var(--mono);font-size:10.5px;color:var(--muted);margin-top:9px;line-height:1.5}
+  .costwrap{display:flex;align-items:center;gap:8px;max-width:220px;background:#121A24;border:1px solid #26323F;border-radius:8px;padding:0 12px 0 0;box-shadow:var(--inset)}
+  .costwrap input{flex:1;min-width:0;font-family:var(--mono);font-size:15px;font-weight:600;color:var(--ink);background:transparent;border:none;outline:none;padding:10px 12px;text-align:right}
+  .costu{font-family:var(--mono);font-size:13px;color:var(--muted)}
+  .pbar{padding:10px 13px;border-bottom:1px solid var(--line);background:#121A24}
+  .pbar input{width:100%;box-sizing:border-box;font-family:var(--body);font-size:15px;color:var(--ink);background:linear-gradient(180deg,#0B121B,#101A26);border:1px solid #2A3745;border-radius:12px;padding:12px 14px;outline:none;box-shadow:inset 0 2px 6px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.02)}
+  .pbar input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(59,130,246,.20)}
+  .tabs{display:flex;gap:4px;padding:7px 9px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none;background:rgba(13,20,28,.35)}
+  .tabs::-webkit-scrollbar{display:none}
+  .tabs button{flex:1 0 auto;font-family:var(--disp);font-weight:600;font-size:13px;color:var(--muted);background:transparent;border:none;border-radius:9px;padding:9px 11px;cursor:pointer;transition:background .12s,color .12s;white-space:nowrap}
+  .tabs button:hover{color:#C6D1DC}
+  .tabs button.on{color:var(--ink);background:linear-gradient(180deg,#42536A 0%,#33445A 100%);box-shadow:0 2px 6px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.1)}
+  .pane{display:none;padding:14px 13px}
+  .pane.on{display:block}
+  /* один блок расчёта: карточка с переключателем режима внутри */
+  .onecard{background:linear-gradient(180deg,#212D3D 0%,#192330 100%);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:var(--sh1),inset 0 1px 0 var(--hiline);max-width:860px;margin:0 auto}
+  .modeSeg{margin:0 0 13px}
+  .msec{display:none}
+  .msec.on{display:block}
+  .onecard.secglow{outline:2px solid var(--accent);outline-offset:2px}
+  .ex-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+  @media(max-width:680px){.ex-grid{grid-template-columns:1fr}}
+  .ex-in .ql:first-child{margin-top:0}
+  .ex-out .res{margin-top:0}
+  .howto{margin-top:12px;border:1px solid #2C3947;border-radius:10px;background:#182330;padding:0 14px;box-shadow:var(--inset)}
+  .howto summary{font-family:var(--disp);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:11px 0;cursor:pointer;list-style:none;user-select:none}
+  .howto summary::-webkit-details-marker{display:none}
+  .howto summary::before{content:'▸ ';color:var(--faint)}
+  .howto[open] summary::before{content:'▾ '}
+  .howto>.fsym{margin-top:2px}
+  .howto>div{margin-bottom:11px}
+  .mc-note{font-family:var(--body);font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.5}
+  .loghead{font-family:var(--disp);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#AEB8C4;margin-bottom:6px;display:flex;align-items:center}
+  .loghead .tog{margin-left:auto;font-size:10px;color:var(--faint);font-family:var(--body);letter-spacing:0;text-transform:none;cursor:pointer}
+  .resnote{font-family:var(--mono);font-size:11.5px;color:var(--buy);margin-top:8px;line-height:1.4;word-break:break-word}
+  .resnote:empty{display:none}
+  #spreadWarn{font-family:var(--mono);font-size:10.5px;color:#F87171;font-weight:600;white-space:nowrap;margin:0}
+  .calcbox{margin-top:14px;padding:15px 16px;border-radius:14px;background:linear-gradient(180deg,#141F2B 0%,#0D161F 100%);border:1px solid #2A3846;
+    box-shadow:inset 0 3px 8px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.04),inset 0 -1px 0 rgba(0,0,0,.3),0 1px 0 rgba(255,255,255,.03)}
+  .fnum{color:#EAF1F8}
+  .calclab{font-family:var(--disp);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#8695A5;margin-bottom:8px}
+  .calcbox .fnum{margin-top:0;font-size:15.5px;font-weight:600;color:#EEF4FB;letter-spacing:.01em;text-shadow:0 1px 0 rgba(0,0,0,.65),0 2px 3px rgba(0,0,0,.4),0 -1px 0 rgba(255,255,255,.05)}
+  .vres{background:linear-gradient(165deg,#34475C 0%,#283646 52%,#202C3A 100%);border:1px solid #48596C;border-radius:16px;padding:17px;margin-top:14px;box-shadow:0 2px 4px rgba(0,0,0,.4),0 16px 36px -16px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.11)}
+  .vres .vverdict{font-family:var(--disp);font-weight:700;font-size:16.5px;line-height:1.35;margin-bottom:4px}
+  .vres .vamt{font-family:var(--disp);font-weight:800;font-size:30px;color:var(--green);margin:12px 0 14px;font-variant-numeric:tabular-nums;word-break:break-all}
+  .vres .vamt.vbad{color:#F87171}
+  .vres .vamt .u{font-size:14px;color:var(--muted);margin-left:6px;font-weight:600}
+  .vres .vrow{font-family:var(--mono);font-size:12px;color:var(--muted);line-height:1.55;display:flex;gap:10px;padding:3px 0;word-break:break-all}
+  .vres .vrow b{color:#AEB8C4;font-weight:500;flex:0 0 92px}
+  .vres .vrow span{flex:1;min-width:0;color:var(--ink)}
+  .vok{color:var(--sell)} .vwarn{color:var(--buy)} .vbad{color:#F87171}
+  .vres .vrow.vbad span,.vres .vrow.vbad b{color:#F87171}
+  .vin{width:100%;box-sizing:border-box;font-family:var(--mono);font-size:12.5px;color:var(--ink);background:#101821;border:1px solid #26323F;border-radius:9px;padding:10px 12px;outline:none;box-shadow:var(--inset)}
+  .vin:focus{border-color:var(--accent)}
+  textarea.vin{resize:vertical;line-height:1.5;word-break:break-all}
+  .calcbox .fround:empty{display:none}
+
+  /* ===== адаптация: iPhone (≈440px) ===== */
+  @media(max-width:520px){
+    body{padding-left:max(8px,env(safe-area-inset-left));padding-right:max(8px,env(safe-area-inset-right));padding-bottom:max(14px,env(safe-area-inset-bottom))}
+    h1{font-size:19px} .sub{font-size:11.5px;margin-bottom:14px}
+    .pane{padding:12px 8px}
+    .onecard{padding:12px 10px;border-radius:14px}
+    /* iOS зумит страницу при фокусе поля со шрифтом <16px — держим 16 */
+    input[type=text],input[type=number],textarea,select{font-size:16px!important}
+    .amount-wrap input{font-size:24px!important}
+    /* тач-зоны ≥44px */
+    .seg button{min-height:44px;padding:10px 4px;font-size:12.5px}
+    .tabs button{min-height:42px}
+    .badd{min-height:44px}
+    .copy{min-height:48px;font-size:15px}
+    .modeSeg button{font-size:12px;letter-spacing:0}
+    .res .big{font-size:30px} .res .big .u{font-size:15px}
+    .rgrid{grid-template-columns:54px 1fr 1fr;gap:6px}
+    .cinp .pm{flex:0 0 44px;min-height:44px}
+  }
+  /* на сенсорных экранах hover не «залипает» */
+  @media(hover:none){
+    .seg button:hover{color:var(--muted)}
+    .tabs button:hover{color:var(--muted)}
+    .badd:hover{border-color:#384757;color:var(--muted);background:linear-gradient(180deg,#26313F,#1F2937)}
+    .seg button.on:hover{color:var(--ink)}
+    .seg.dir button.on[data-dir="sell"]:hover{color:var(--sell)}
+    .seg.dir button.on[data-dir="buy"]:hover{color:var(--buy)}
+  }
+  /* ===== ноутбук 13" (1280×800): экономим вертикаль ===== */
+  @media(min-width:900px){
+    h1{font-size:20px;margin-bottom:2px}
+    .sub{margin-bottom:12px}
+    .pane{padding-top:11px}
+    .onecard{padding:14px 16px}
+  }
+  /* ===== всплывающие уведомления о поступлениях ===== */
+  #toastWrap{position:fixed;top:14px;right:14px;z-index:9999;display:flex;flex-direction:column;gap:9px;
+    max-width:340px;pointer-events:none}
+  .toast{pointer-events:auto;cursor:pointer;background:linear-gradient(180deg,#25445F 0%,#1C3346 100%);
+    border:1px solid #3C6488;border-radius:13px;padding:12px 14px;box-shadow:0 8px 26px rgba(0,0,0,.5);
+    color:var(--ink);font-family:var(--body);animation:toastIn .28s cubic-bezier(.2,.9,.3,1.2);
+    transition:opacity .25s,transform .25s}
+  .toast.out{opacity:0;transform:translateX(24px)}
+  .toast .th{display:flex;align-items:center;gap:8px;margin-bottom:3px}
+  .toast .tdot{width:9px;height:9px;border-radius:50%;background:var(--sell);box-shadow:0 0 9px var(--sell);flex:0 0 auto}
+  .toast.out-dir .tdot{background:var(--buy);box-shadow:0 0 9px var(--buy)}
+  .toast .ttl{font-family:var(--disp);font-weight:700;font-size:13px;color:#CFE0EE;letter-spacing:.01em}
+  .toast .tclose{margin-left:auto;color:var(--faint);font-size:16px;line-height:1;padding:0 2px;pointer-events:auto}
+  .toast .tclose:hover{color:var(--ink)}
+  .toast .tamt{font-family:var(--disp);font-weight:800;font-size:24px;color:var(--sell);
+    font-variant-numeric:tabular-nums;word-break:break-all;margin:1px 0 2px}
+  .toast.out-dir .tamt{color:var(--buy)}
+  .toast .tsub{font-size:11.5px;color:var(--muted);word-break:break-all}
+  .toast .thint{font-size:10.5px;color:var(--faint);margin-top:5px}
+  @keyframes toastIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+  @media(max-width:520px){ #toastWrap{left:10px;right:10px;max-width:none} }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="app-head">
+    <div class="head-top">
+      <div class="brand">Калькулятор USDT</div>
+      <div class="head-actions">
+        <span class="saved" id="saved">✓ сохранено</span>
+        <button class="gear" id="tog" type="button">изменить</button>
+        <button class="gear alt" id="resetBtn" type="button">сброс</button>
+      </div>
+    </div>
+    <div class="head-rates">
+      <div id="rSum"></div>
+      <div class="rage" id="rAge"></div>
+      <div id="spreadWarn" style="display:none"></div>
+    </div>
+  </div>
+
+  <div class="rates collapsed" id="ratesCard">
+    <div class="setlab">Вставить курсы текстом <span class="setsub">— скопируй сообщение с курсами, поля заполнятся сами</span></div>
+    <textarea id="ratePaste" class="vin" rows="2" spellcheck="false" placeholder="USDT Купівля: +0.7% · Продаж: -1.4% · USD/UAH: 44,55 / 44,85 · EUR/UAH: 51,10 / 51,40 · EUR/USD: 1,142 / 1,153"></textarea>
+    <div class="phrase-info" id="ratePasteInfo"></div>
+    <div class="rsep"></div>
+    <div class="set-grid">
+      <div class="set-col">
+        <div class="setlab">Курсы</div>
+        <div class="rgrid">
+          <span></span><span class="rh">покупка</span><span class="rh">продажа</span>
+          <span class="rn">USD/UAH</span>
+          <input id="usdB" type="number" step="0.01" value="44.40">
+          <input id="usdS" type="number" step="0.01" value="44.75">
+          <span class="rn">EUR/UAH</span>
+          <input id="euruahB" type="number" step="0.01" value="51.05">
+          <input id="euruahS" type="number" step="0.01" value="51.50">
+          <span class="rn">EUR/USD</span>
+          <input id="eurB" type="number" step="0.001" value="1.144">
+          <input id="eurS" type="number" step="0.001" value="1.156">
+        </div>
+        <div class="setnote">USDT ↔ евро считается через EUR/USD. EUR/UAH — для наличного обмена евро ↔ грн, справочно.</div>
+        <div class="rsep"></div>
+        <div class="cgrid">
+          <span></span>
+          <span class="ch"><b class="s">Купівля</b> <em>клиент продаёт</em></span>
+          <span class="ch"><b class="b">Продаж</b> <em>клиент покупает</em></span>
+          <span class="rn cml">Коміс.%</span>
+          <div class="cinp"><button class="pm" data-for="cB" type="button">±</button>
+            <input id="cB" type="text" inputmode="decimal" value="0.7"></div>
+          <div class="cinp"><button class="pm" data-for="cS" type="button">±</button>
+            <input id="cS" type="text" inputmode="decimal" value="-1.4"></div>
+        </div>
+        <div class="usdtx" id="usdtRates"></div>
+      </div>
+      <div class="set-col">
+        <div class="setlab">Ваша закупка USDT <span class="setsub">— клиенту не видно</span></div>
+        <div class="costwrap">
+          <input id="cost" type="text" inputmode="decimal" value="44.50">
+          <span class="costu">грн</span>
+        </div>
+        <div class="hint" style="margin-top:7px">сколько грн стоит тебе 1 USDT (реальная закупка). Выгода = что взял с клиента − закупка.</div>
+        <div class="rsep"></div>
+        <div class="setlab">Округление результата</div>
+        <div class="seg two mseg" id="rSeg">
+          <button data-round="fav" class="on">в пользу</button>
+          <button data-round="exact">точно</button>
+        </div>
+        <div class="seg two mseg" id="rStep" style="margin-top:6px">
+          <button data-step="cent" class="on">до копейки</button>
+          <button data-step="whole">до целого</button>
+        </div>
+        <div class="rsep"></div>
+        <div class="setlab">Удержание комиссии</div>
+        <div class="seg two mseg" id="mSeg">
+          <button data-method="mul" class="on">× коэф. · выгода</button>
+          <button data-method="div">÷ коэф. · мягче</button>
+        </div>
+        <div class="rsep"></div>
+        <div class="setlab">Просчёт в ответе клиенту</div>
+        <div class="seg two mseg" id="cpSeg">
+          <button data-cr="on" class="on">с просчётом</button>
+          <button data-cr="off">без</button>
+        </div>
+        <div class="setnote">строка «Розрахунок: … = …» в ответе клиенту. Базовый курс и коэффициент наценки клиенту не показываются никогда.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pbar">
+    <div class="pwrap">
+      <input id="phrase" type="text" autocomplete="off" placeholder="опиши сделку словами: 1000 usdt в грн · 100 долларов в гривне · 2000$ и 1500€ в usdt">
+      <button id="pClear" type="button" title="очистить (Esc)">×</button>
+    </div>
+    <div class="pkeys">⏎ разобрать · <b>Ctrl+⏎</b> скопировать ответ · <b>Esc</b> очистить · <b>/</b> в поле</div>
+    <div class="chips" id="pChips"></div>
+    <div class="phrase-info" id="phraseInfo"></div>
+    <div class="understood" id="understood"></div>
+    <div class="uans" id="phraseAns" style="display:none">
+      <div class="uansh">Ответ клиенту готов</div>
+      <pre id="phraseAnsTxt"></pre>
+      <button class="copy uansbtn" id="phraseAnsBtn" type="button">Скопіювати відповідь</button>
+    </div>
+    <details class="hist" id="histBox">
+      <summary>Последние расчёты <span id="histCnt"></span></summary>
+      <div id="histList"></div>
+      <button id="histClear" type="button">очистить историю</button>
+    </details>
+  </div>
+
+  <div class="tabs">
+    <button data-tab="calc" class="on" type="button">Калькулятор</button>
+    <button data-tab="verify" type="button">Проверка транзакций</button>
+  </div>
+
+  <div class="pane on" data-pane="calc">
+  <div class="onecard" id="calcCard">
+  <div class="seg three modeSeg" id="modeSeg">
+    <button data-mode="secEx" class="on">Обмен</button>
+    <button data-mode="secMc">Несколько валют</button>
+    <button data-mode="secEu">Наличные</button>
+  </div>
+  <div class="msec on" id="secEx">
+    <details class="howto"><summary>Как пользоваться этим блоком</summary>
+      <div class="fsym" style="margin-bottom:11px">Основной расчёт обмена USDT ↔ грн/$/€.<br><b>1.</b> Сверху задай курсы и комиссии (кнопка «изменить»). <b>2.</b> Выбери <b>направление</b>: клиент продаёт USDT или покупает. <b>3.</b> Выбери <b>валюту</b> расчёта и что известно — количество USDT или сумму денег. <b>4.</b> Впиши число. Справа появится результат, курс и строка «как считается». <b>5.</b> «Скопировать ответ для клиента» — готовый текст на украинском (наценка клиенту не видна).<br><span style="color:var(--muted)">«Сверка: сколько клиент прислал» — впиши полученную сумму, покажет недостачу или перебор.</span><br><span style="color:var(--muted)">Быстрый путь: вставь фразу клиента в поле сверху — под «Понял» сразу появится готовый ответ (кнопка «Скопіювати» или Ctrl+Enter). Последние расчёты — в «Последние расчёты» под полем.</span></div>
+    </details>
+    <div class="ex-grid">
+      <div class="ex-in">
+        <div class="ql" style="margin-top:0">Направление сделки</div>
+        <div class="seg two dir" id="dirSeg">
+          <button data-dir="sell" class="on">Продаёт USDT</button>
+          <button data-dir="buy">Покупает USDT</button>
+        </div>
+        <div class="hint" id="dirHint"></div>
+        <div class="ql">Валюта расчёта</div>
+        <div class="seg three cur" id="curSeg">
+          <button data-cur="UAH" class="on">грн</button>
+          <button data-cur="USD">доллар</button>
+          <button data-cur="EUR">евро</button>
+        </div>
+        <div class="ql" id="knLab">Что назвал клиент</div>
+        <div class="seg two kn" id="knSeg">
+          <button data-known="crypto" class="on">Кол-во USDT</button>
+          <button data-known="money">Сумма</button>
+        </div>
+        <div class="hint" id="knHint"></div>
+        <div class="ql" id="amtLab">Сколько USDT</div>
+        <div class="amount-wrap">
+          <input id="amount" type="text" inputmode="decimal" value="1000">
+          <span class="u" id="amtU">USDT</span>
+        </div>
+        <div class="sumhint" id="amtSum"></div>
+      </div>
+      <div class="ex-out">
+        <div class="res" style="margin-top:0">
+          <div class="rl" id="resLab">Клиент получит</div>
+          <div class="big" id="resBig" title="нажми — скопируется ответ клиенту"><span id="resV">—</span><span class="u" id="resU"></span></div>
+          <div class="deal" id="resDeal"></div>
+          <div class="rate" id="resRate"></div>
+          <div class="profit" id="resProfit"></div>
+          <div class="resnote" id="resNote"></div>
+          <div class="rchk" id="rChk">
+            <div class="rcl">Сверка: сколько клиент прислал</div>
+            <div class="rcrow"><input id="rcIn" type="text" inputmode="decimal" placeholder="0"><span class="rcu" id="rcU"></span></div>
+            <div class="rcv" id="rcV"></div>
+          </div>
+          <button class="copy" id="copyBtn">Скопировать ответ для клиента</button>
+        </div>
+        <div class="calcbox">
+          <div class="calclab">как считается</div>
+          <div class="fnum" id="fNum">—</div>
+          <div class="fround" id="fRound"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="msec" id="secMc">
+    <details class="howto"><summary>Как пользоваться этим блоком</summary>
+      <div class="fsym" style="margin-bottom:11px">Когда в одной сделке несколько валют сразу.<br><b>Приём</b> — клиент приносит наличные/USDT тебе; <b>Выдача</b> — ты выдаёшь клиенту.<br><b>Суммы → USDT</b>: вписал суммы в разных валютах, получил общий USDT. <b>USDT → суммы</b>: наоборот. <b>Остаток</b>: задал общий USDT и часть фиксированными суммами — остаток посчитается в выбранной валюте.<br>Строка «$ → грн» / «€ → грн» — клиент вносит в валюте, а выплата в гривне по наличному курсу. «+ добавить» — новая строка.</div>
+    </details>
+    <div class="mc-note">клиент рассчитывается сразу в нескольких валютах в одной сделке</div>
+    <div class="ex-grid">
+      <div class="ex-in">
+        <div class="ql" style="margin-top:0" id="mcDirLab">Тип операции</div>
+        <div class="seg two" id="mcDir" style="margin-bottom:10px">
+          <button data-mcdir="recv" class="on" type="button">Приём</button>
+          <button data-mcdir="give" type="button">Выдача</button>
+        </div>
+        <div class="ql">Что известно</div>
+        <div class="seg three" id="mcMode" style="margin-bottom:12px">
+          <button data-mcmode="money" class="on" type="button">Суммы → USDT</button>
+          <button data-mcmode="crypto" type="button">USDT → суммы</button>
+          <button data-mcmode="rest" type="button">Остаток</button>
+        </div>
+        <div id="mcTotalWrap" style="display:none;margin-bottom:12px">
+          <div class="ql" style="margin-top:0">Всего USDT у клиента</div>
+          <div class="brow"><input class="bamt" id="mcTotal" type="text" inputmode="decimal" value="5000"><span class="bunit">USDT</span></div>
+        </div>
+        <div class="hint" id="mcHint" style="margin:0 0 10px"></div>
+        <div id="mcRows"></div>
+        <button class="badd" id="mcAdd" type="button">+ добавить</button>
+      </div>
+      <div class="ex-out">
+        <div id="mcRestWrap" style="display:none;margin-top:0;margin-bottom:14px">
+          <div class="ql" style="margin-top:0">Остаток выдать в валюте</div>
+          <div class="brow">
+            <select class="bcur" id="mcRestCur"><option value="UAH">грн</option><option value="EUR">€</option><option value="USD" selected>$</option></select>
+            <b class="bres" id="mcRestRes" style="flex:1;text-align:right;font-size:17px;font-family:var(--disp);font-weight:700;color:var(--sell)">—</b>
+          </div>
+          <div class="hint" id="mcRestNote" style="margin-top:6px"></div>
+        </div>
+        <div class="btot" id="mcTotBox" style="margin-top:0;border-top:none;padding-top:0"><span id="mcTotLab">Клиент получит:</span> <b id="mcTot">—</b></div>
+        <div class="resnote" id="mcNote"></div>
+        <div class="calcbox"><div class="calclab">как считается</div><div class="fnum" id="mcCalc">—</div></div>
+        <div class="profit" id="mcProfit" style="margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);display:none"></div>
+        <button class="copy" id="mcCopyBtn" type="button">Скопировать ответ для клиента</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="msec" id="secEu">
+    <details class="howto"><summary>Как пользоваться этим блоком</summary>
+      <div class="fsym" style="margin-bottom:11px">Обмен наличных без USDT: доллар/евро/гривна между собой.<br>Выбери пару ($/грн, €/грн, €/$), направление и впиши сумму — получишь результат по наличному курсу. Здесь EUR/UAH — это наличный курс евро-гривна (в USDT-обмене евро считается через EUR/USD, это разные курсы).</div>
+    </details>
+    <div class="ex-grid">
+      <div class="ex-in">
+        <div class="ql" style="margin-top:0">Пара валют</div>
+        <div class="seg three cur" id="euPair">
+          <button data-pair="USDUAH" class="on">$ / грн</button>
+          <button data-pair="EURUAH">€ / грн</button>
+          <button data-pair="EURUSD">€ / $</button>
+        </div>
+        <div class="ql">Напрямок</div>
+        <div class="seg two" id="euDir">
+          <button data-eud="b2q" class="on">—</button>
+          <button data-eud="q2b">—</button>
+        </div>
+        <div class="ql" id="euAmtLab">Скільки</div>
+        <div class="amount-wrap">
+          <input id="euAmt" type="text" inputmode="decimal" value="100">
+          <span class="u" id="euAmtU">$</span>
+        </div>
+      </div>
+      <div class="ex-out">
+        <div class="res" style="margin-top:0">
+          <div class="rl">Клиент получит</div>
+          <div class="big" id="euBig" title="нажми — скопируется ответ клиенту"><span id="euV">—</span><span class="u" id="euU"></span></div>
+          <div class="rate" id="euRate"></div>
+          <div class="calcbox"><div class="calclab">как считается</div><div class="fnum" id="euCalc">—</div></div>
+          <div class="resnote" id="euNote"></div>
+          <button class="copy" id="euCopyBtn">Скопировать ответ для клиента</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div><!-- /onecard -->
+  </div><!-- /pane calc -->
+
+  <div class="pane" data-pane="verify">
+    <details class="howto"><summary>Как пользоваться этой вкладкой</summary>
+      <div class="fsym" style="margin-bottom:11px">Проверка, что USDT реально пришёл, — по хешу транзакции из блокчейна. Всё считается в твоём браузере.<br><b>Сеть</b>: TRON (основная), ETH, BSC — определяется по виду хеша, можно выбрать вручную.<br><b>Хеш транзакции</b> — вставь хеш от клиента, нажми «Проверить». <b>Ожидаемая сумма</b> — если задать, сверит сумму прихода.<br><b>Вердикт по светофору:</b> зелёный «Всё чисто»; жёлтый — внимание (не твой кошелёк, не подтверждён, сумма не сошлась, старый хеш); красный — не официальный USDT или транзакция не прошла.<br><b>Мониторинг кошелька</b> — таблица переводов USDT: время, сумма, адрес, хеш, № блока. Переключатель <b>Входящие / Отправленные</b> — приходы на кошелёк или отправленные с него. Кошелёк берётся из «Мои кошельки-получатели» (первый) и подтягивается сам при открытии вкладки; чтобы посмотреть другой — впиши его в поле и нажми «Показать». Нажми строку — проверится; «⧉» — копировать хеш/адрес; «↗ Scan» — открыть на TronScan. Наблюдение включено постоянно (раз в минуту) и уведомляет о новых приходах звуком и плашкой; «Стоп» — пауза. Зелёная пометка новой транзакции снимается после ↗ Scan или копии хеша/адреса. «Фильтры и поиск» — по сумме и адресу. «Скопировать список» — выгрузить текстом.<br><span style="color:var(--muted)">Настройки внизу: свои кошельки (для сверки получателя), API-ключи, порог «старого» хеша. Всё хранится только у тебя.</span></div>
+    </details>
+    <div class="hint" style="margin:0 0 4px">по хешу транзакции проверяем, что USDT реально пришёл. Данные берём из блокчейн-эксплорера, всё считается в твоём браузере.</div>
+
+    <div class="vcard">
+      <div class="vcard-h">Проверить по хешу <span class="sub">разовая проверка транзакции</span></div>
+      <div class="ql" style="margin-top:0">Сеть</div>
+      <div class="seg three cur" id="vNet">
+        <button data-net="tron" class="on" type="button">TRON</button>
+        <button data-net="eth" type="button">ETH</button>
+        <button data-net="bsc" type="button">BSC</button>
+      </div>
+      <div class="ql">Хеш транзакции</div>
+      <input id="vHash" class="vin" type="text" autocomplete="off" spellcheck="false" placeholder="напр.: a1b2… (TRON) или 0x… (ETH/BSC)">
+      <div class="hint" id="vHashHint" style="margin-top:6px"></div>
+      <div class="ql">Ожидаемая сумма (необязательно)</div>
+      <div class="amount-wrap">
+        <input id="vExpected" type="text" inputmode="decimal" placeholder="—">
+        <span class="u">USDT</span>
+      </div>
+      <button class="copy" id="vCheck" type="button" style="margin-top:14px">Проверить транзакцию</button>
+      <div id="vResult" class="vres" style="display:none"></div>
+    </div>
+
+    <div class="vcard">
+      <div class="vcard-h">Мониторинг кошелька <span class="sub">TRON · USDT</span></div>
+      <div class="hint" id="vWalletHead" style="margin:0 0 10px;display:none"></div>
+      <div class="seg two cur" id="vDir" style="margin-bottom:10px">
+        <button data-dir="in" class="on" type="button">Входящие</button>
+        <button data-dir="out" type="button">Отправленные</button>
+      </div>
+      <div class="rcrow" style="display:flex;align-items:stretch;gap:8px">
+        <select id="vAddrPick" class="bcur" style="display:none;flex:0 0 auto;max-width:46%"></select>
+        <input id="vAddr" class="vin" type="text" autocomplete="off" spellcheck="false" placeholder="T… (пусто — возьму твой TRON-кошелёк из настроек)" style="flex:1">
+        <button class="badd" id="vRecentBtn" type="button" style="flex:0 0 auto;margin:0">Показать</button>
+        <button class="badd" id="vWatchBtn" type="button" style="flex:0 0 auto;margin:0">Ждать</button>
+        <button class="badd" id="vTestBtn" type="button" style="flex:0 0 auto;margin:0" title="проверить звук и всплывающее уведомление">🔔 Тест</button>
+      </div>
+      <div class="hint" style="margin-top:6px">Наблюдение включается само (кошелёк из настроек) и проверяет поступления раз в минуту: звук + плашка. «Стоп» — пауза. «🔔 Тест» — проверить звук и уведомление. Зелёная пометка новой транзакции держится, пока не откроешь её ↗ Scan или не скопируешь хеш/адрес.</div>
+      <details class="vfilters">
+        <summary>Фильтры и поиск</summary>
+        <div class="frow">
+          <div class="rcrow" style="display:flex;align-items:center;gap:10px">
+            <input id="vWaitAmt" class="vin" type="text" inputmode="decimal" placeholder="жду сумму, USDT — подсветит совпадение" style="flex:1">
+            <label class="hint" style="flex:0 0 auto;display:flex;align-items:center;gap:6px;margin:0;cursor:pointer"><input type="checkbox" id="vOnlyNew"> только незасчитанные</label>
+          </div>
+          <div class="rcrow" style="display:flex;align-items:stretch;gap:8px;margin-top:8px">
+            <input id="vFindAmt" class="vin" type="text" inputmode="decimal" placeholder="поиск: сумма USDT" style="flex:1">
+            <input id="vFindAddr" class="vin" type="text" autocomplete="off" spellcheck="false" placeholder="поиск: адрес отправителя (T…)" style="flex:2">
+            <button class="badd" id="vFindClear" type="button" style="flex:0 0 auto;margin:0" title="очистить поиск">✕</button>
+          </div>
+        </div>
+      </details>
+      <div class="hint" id="vWatchInfo" style="margin-top:8px;display:none"></div>
+      <div id="vRecent" class="log" style="display:none;margin-top:10px"></div>
+      <div class="hint" id="vRecentSum" style="display:none;margin-top:8px"></div>
+      <div class="rcrow" style="display:flex;gap:8px;margin-top:8px">
+        <button class="badd" id="vMoreBtn" type="button" style="display:none;flex:1;margin:0">Показать ещё</button>
+        <button class="badd" id="vExportBtn" type="button" style="display:none;flex:1;margin:0">Скопировать список</button>
+      </div>
+    </div>
+
+    <div class="calcbox" style="margin-top:18px">
+      <div class="loghead" style="margin:0"><span>Настройки проверки</span><span class="tog" id="vSetTog">показать</span></div>
+      <div id="vSetBody" style="display:none;margin-top:12px">
+        <div class="ql" style="margin-top:0">Мои кошельки-получатели</div>
+        <textarea id="vWallets" class="vin" rows="3" spellcheck="false" placeholder="по одному в строке (TRON/ETH/BSC). Если заданы — сверяю получателя; пусто — сверку пропускаю"></textarea>
+        <div class="ql">API-ключ Etherscan (для ETH/BSC)</div>
+        <input id="vEthKey" class="vin" type="text" autocomplete="off" spellcheck="false" placeholder="нужен для ETH и BSC">
+        <div class="ql">API-ключ TronScan (необязательно)</div>
+        <input id="vTronKey" class="vin" type="text" autocomplete="off" spellcheck="false" placeholder="обычно не требуется">
+        <div class="ql">API-ключ TronGrid (резервный источник)</div>
+        <input id="vGridKey" class="vin" type="text" autocomplete="off" spellcheck="false" placeholder="если TronScan срежется — подхватит TronGrid">
+        <div class="hint" style="margin-top:6px">TronGrid работает из файла напрямую (CORS). Ключ повышает лимит; на бесплатном узле часто работает и без него.</div>
+        <div class="ql">Отмечать транзакции старше</div>
+        <div class="rcrow" style="align-items:stretch">
+          <input id="vStaleVal" class="vin" type="text" inputmode="decimal" placeholder="2 — предупреждать о старом хеше (0 — не отмечать)" style="flex:1">
+          <div class="seg two" id="vStaleUnit" style="flex:0 0 118px;margin-left:8px">
+            <button data-u="h" class="on" type="button">ч</button>
+            <button data-u="m" type="button">хв</button>
+          </div>
+        </div>
+        <div class="hint" style="margin-top:8px">ключи и кошельки хранятся только в этом браузере (localStorage) и клиенту не видны.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  const $=id=>document.getElementById(id);
+  const RKEYS=['usdB','usdS','eurB','eurS','euruahB','euruahS','cB','cS'];
+  let dir='sell', cur='UAH', known='crypto', method='mul', roundMode='fav', roundStep='cent', euDir='b2q', euPair='USDUAH', copyRate=true;
+  let ratesTime=null;
+  function esc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+  const DEF={usdB:'44.40',usdS:'44.75',euruahB:'51.05',euruahS:'51.50',eurB:'1.144',eurS:'1.156',cB:'0.7',cS:'-1.4',cost:'44.50'};
+  const PAIRS={USDUAH:{base:'$',quote:'грн',bK:'usdB',sK:'usdS'},EURUAH:{base:'€',quote:'грн',bK:'euruahB',sK:'euruahS'},EURUSD:{base:'€',quote:'$',bK:'eurB',sK:'eurS'}};
+  const f2=n=>isFinite(n)?n.toLocaleString('ru-RU',{minimumFractionDigits:2,maximumFractionDigits:2}).replace(/\u00A0/g,' '):'—';
+  const ffO=n=>isFinite(n)?n.toLocaleString('en-US',{maximumFractionDigits:6,useGrouping:false}):'—';
+  const ffM=n=>isFinite(n)?n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}).replace(/,/g,' '):'—';
+  const ffMc=n=>isFinite(n)?(Number.isInteger(n)?n.toLocaleString('en-US').replace(/,/g,' '):ffM(n)):'—';
+  const fBig=n=>f2(n).replace(/ /g,'\u2009');
+  const ffR=n=>isFinite(n)?n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:4}).replace(/,/g,' '):'—';
+  const curU=c=>c==='USD'?'$':c==='EUR'?'€':'грн';
+
+  function ratesSummary(){
+    const g=id=>$(id).value;
+    const fmt=x=>{const n=parseFloat(String(x).replace(',','.'));return (isFinite(n)&&n>0?'+':'')+x+'%';};
+    $('rSum').innerHTML='<b>USD/UAH</b> '+g('usdB')+'/'+g('usdS')+'  ·  <b>EUR/UAH</b> '+g('euruahB')+'/'+g('euruahS')+
+      '  ·  <b>EUR/USD</b> '+g('eurB')+'/'+g('eurS')+'  ·  <b>USDT</b> '+fmt(g('cB'))+' / '+fmt(g('cS'));
+  }
+  // --- сохранение курсов (работает в скачанном файле; в превью просто не сохраняет) ---
+  function saveRates(){ try{ const o={}; RKEYS.forEach(k=>o[k]=$(k).value); o.method=method; o.roundMode=roundMode; o.roundStep=roundStep; o.copyRate=copyRate; o.cost=$('cost').value;
+    o.collapsed=$('ratesCard').classList.contains('collapsed'); o.ratesTime=ratesTime;
+    localStorage.setItem('usdtCalcRates',JSON.stringify(o));
+    const s=$('saved'); s.style.opacity=1; clearTimeout(window._st); window._st=setTimeout(()=>s.style.opacity=0,1200);
+  }catch(e){} }
+  function loadRates(){ try{ const s=localStorage.getItem('usdtCalcRates');
+    if(s){ const o=JSON.parse(s); RKEYS.forEach(k=>{ if(o[k]!=null) $(k).value=o[k]; }); if(o.cost!=null) $('cost').value=o.cost;
+      if(o.ratesTime) ratesTime=o.ratesTime;
+      if(o.method==='mul'||o.method==='div'){ method=o.method;
+        [...$('mSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.method===method)); }
+      if(o.roundMode==='fav'||o.roundMode==='exact'){ roundMode=o.roundMode;
+        [...$('rSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.round===roundMode)); }
+      if(o.roundStep==='cent'||o.roundStep==='whole'){ roundStep=o.roundStep;
+        [...$('rStep').children].forEach(b=>b.classList.toggle('on',b.dataset.step===roundStep)); }
+      if(o.copyRate===false){ copyRate=false;
+        [...$('cpSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.cr==='off')); }
+      if(o.collapsed===false){ $('ratesCard').classList.remove('collapsed'); $('tog').textContent='свернуть'; } }
+  }catch(e){} }
+  // отметка времени последнего изменения курсов + предупреждение о несвежести
+  function touchRates(){ ratesTime=Date.now(); }
+  function updateRatesAge(){
+    const el=$('rAge'); if(!el) return;
+    if(!ratesTime){ el.textContent='курсы ещё не менялись в этом браузере'; el.className='rage'; return; }
+    const min=Math.floor((Date.now()-ratesTime)/60000);
+    let txt, cls='rage';
+    if(min<1) txt='курсы обновлены только что';
+    else if(min<60) txt='курсы заданы '+min+' мин назад';
+    else { const h=Math.floor(min/60), m=min%60; txt='курсы заданы '+h+' ч'+(m?' '+m+' мин':'')+' назад'; }
+    if(min>=480){ cls='rage old'; txt+=' — точно актуальны?'; }
+    else if(min>=180){ cls='rage warn'; txt+=' — проверьте актуальность'; }
+    el.textContent=txt; el.className=cls;
+  }
+
+  // сумма нескольких поступлений: «11200+1400» → 12600 (клиент прислал сделку 2-3 транзами).
+  // работает и для полей, где + не бывает (одиночное число — просто parseFloat).
+  function sumStr(s){
+    s=String(s).replace(/[\s\u2009\u00a0]/g,'').replace(/,/g,'.').replace(/−/g,'-');
+    if(s.indexOf('+')<0) return parseFloat(s);
+    const parts=s.split('+').filter(p=>p!=='');
+    if(!parts.length) return NaN;
+    let sum=0; for(const p of parts){ const n=parseFloat(p); if(!isFinite(n)) return NaN; sum+=n; }
+    return sum;
+  }
+  function sumCount(s){ return String(s).split('+').filter(p=>p.replace(/[\s\u2009\u00a0]/g,'')!=='').length; }
+  function updateSumHint(){
+    const el=$('amtSum'); if(!el) return;
+    const raw=($('amount').value)||'';
+    if(raw.indexOf('+')<0){ el.style.display='none'; el.textContent=''; return; }
+    const n=sumStr(raw), cnt=sumCount(raw);
+    if(!isFinite(n)){ el.style.display='none'; return; }
+    const unit=($('amtU')&&$('amtU').textContent)||'';
+    el.textContent='= '+ffM(n)+' '+unit+'  ·  сума '+cnt+' '+(cnt===1?'надходження':'надходжень');
+    el.style.display='block';
+  }
+  function pn(id){ return sumStr($(id).value); }
+  function fmtStr(s){
+    let v=String(s).replace(/[^\d.,]/g,'').replace(/,/g,'.');
+    const i=v.indexOf('.'); let intp=i<0?v:v.slice(0,i); let dec=i<0?'':'.'+v.slice(i+1).replace(/\./g,'');
+    intp=intp.replace(/^0+(?=\d)/,'');
+    return intp.replace(/\B(?=(\d{3})+(?!\d))/g,'\u2009')+dec;
+  }
+  function fmtNum(el){
+    const raw=el.value;
+    if(raw.indexOf('+')>=0){
+      // выражение-сумма: форматируем каждое слагаемое, соединяем « + », курсор в конец
+      el.value=raw.split('+').map(p=>fmtStr(p)).join(' + ');
+      try{ el.setSelectionRange(el.value.length, el.value.length); }catch(e){}
+      return;
+    }
+    const val=el.value, pos=el.selectionStart||0;
+    const leftKeep=val.slice(0,pos).replace(/[^\d.,]/g,'').length;
+    el.value=fmtStr(val);
+    let p=0,seen=0; while(p<el.value.length&&seen<leftKeep){ if(/[\d.]/.test(el.value[p]))seen++; p++; }
+    try{el.setSelectionRange(p,p);}catch(e){}
+  }
+  // выгода обменника (грн) = грн-эквивалент денег клиента − USDT × закупка; знак = чистая выгода
+  function profitUAH(d, U, money, cur){
+    const cost=pn('cost'); if(!(cost>0)||!(U>0)) return null;
+    const usdMid=(pn('usdB')+pn('usdS'))/2, eurUahMid=(pn('euruahB')+pn('euruahS'))/2;
+    const Fuah = cur==='UAH'? money : cur==='USD'? money*usdMid : money*eurUahMid;
+    return d==='buy' ? (Fuah - U*cost) : (U*cost - Fuah);
+  }
+  function compute(){
+    const usdB=pn('usdB'),usdS=pn('usdS'),eurB=pn('eurB'),eurS=pn('eurS');
+    const cB=pn('cB'), cS=pn('cS'), A=pn('amount');
+    if(![usdB,usdS,eurB,eurS].every(x=>x>0)) return {error:'проверь курсы'};
+    if(!(A>0)) return {error:'введи сумму'};
+    const cu=curU(cur);
+    const c = dir==='sell'? cB : cS;
+    const kMul = 1 + c/100;   // ×-метод (выгода обменнику)
+    const kDiv = 1 - c/100;   // ÷-метод (мягче клиенту)
+    const isFwd = (dir==='sell'&&known==='crypto') || (dir==='buy'&&known==='money');
+    let commStep;
+    if(method==='mul') commStep = isFwd? ['×',kMul,'k'] : ['÷',kMul,'k'];
+    else               commStep = isFwd? ['÷',kDiv,'k'] : ['×',kDiv,'k'];
+    let rateSteps, outUnit;
+    if(dir==='sell'){
+      if(known==='crypto'){ outUnit=cu; rateSteps = cur==='USD'?[]:cur==='UAH'?[['×',usdB,'usdB']]:[['÷',eurS,'eurS']]; }
+      else { outUnit='USDT'; rateSteps = cur==='USD'?[]:cur==='UAH'?[['÷',usdB,'usdB']]:[['×',eurS,'eurS']]; }
+    } else {
+      if(known==='money'){ outUnit='USDT'; rateSteps = cur==='USD'?[]:cur==='UAH'?[['÷',usdS,'usdS']]:[['×',eurB,'eurB']]; }
+      else { outUnit=cu; rateSteps = cur==='USD'?[]:cur==='UAH'?[['×',usdS,'usdS']]:[['÷',eurB,'eurB']]; }
+    }
+    const commFirst = (dir==='buy'&&known==='crypto');
+    const ops = commFirst? [commStep,...rateSteps] : [...rateSteps, commStep];
+    let value=A; ops.forEach(o=>{ value = o[0]==='÷'? value/o[1] : value*o[1]; });
+    const rawValue=value;
+    let valNoComm=A; rateSteps.forEach(o=>{ valNoComm = o[0]==='÷'? valNoComm/o[1] : valNoComm*o[1]; });
+    const commAmt=Math.abs(rawValue-valNoComm), cAbs=Math.round(Math.abs(c)*1000)/1000;
+    let roundNote='';
+    if(roundMode==='fav'){
+      const q = roundStep==='whole'?1:0.01;
+      const n = rawValue/q;
+      const rr = isFwd? Math.floor(n+1e-9) : Math.ceil(n-1e-9);
+      value = rr*q;
+      if(Math.abs(value-rawValue)>1e-9){
+        const dw=isFwd?'вниз':'вверх', sw=roundStep==='whole'?('до целого '+outUnit):'до 0,01';
+        roundNote='округлено '+dw+' '+sw+': '+ffM(rawValue)+' → '+ffM(value);
+      }
+    }
+    const usdtVal=outUnit==='USDT'?value:A, moneyVal=outUnit==='USDT'?A:value;
+    const rate=moneyVal/usdtVal;
+    const gives = dir==='sell'? {v:usdtVal,u:'USDT'} : {v:moneyVal,u:cu};
+    const gets  = dir==='sell'? {v:moneyVal,u:cu}    : {v:usdtVal,u:'USDT'};
+    const LAB={usdB:'USD/UAH пок.',usdS:'USD/UAH прод.',eurB:'EUR/USD пок.',eurS:'EUR/USD прод.',k:(dir==='sell'?'коэф. Купівля':'коэф. Продаж')};
+    const start = known==='crypto'?'USDT':'Сумма';
+    const symbolic = start+ops.map(o=>' '+o[0]+' '+LAB[o[2]]).join('')+' = '+outUnit;
+    const formula = ffO(A)+ops.map(o=>' '+o[0]+' '+ffO(o[1])).join('')+' = '+ffM(value)+' '+outUnit;
+    let rstr;
+    if(dir==='sell'){
+      const oc = method==='mul'?'×':'÷', kc = method==='mul'?kMul:kDiv;
+      rstr = cur==='USD'?('1 '+oc+' '+ffO(kc)) : cur==='UAH'?(ffO(usdB)+' '+oc+' '+ffO(kc)) : ('1 ÷ '+ffO(eurS)+' '+oc+' '+ffO(kc));
+    } else {
+      if(method==='mul') rstr = cur==='USD'?('1 ÷ '+ffO(kMul)) : cur==='UAH'?(ffO(usdS)+' ÷ '+ffO(kMul)) : ('1 ÷ '+ffO(eurB)+' ÷ '+ffO(kMul));
+      else               rstr = cur==='USD'?('1 × '+ffO(kDiv)) : cur==='UAH'?(ffO(usdS)+' × '+ffO(kDiv)) : (ffO(kDiv)+' ÷ '+ffO(eurB));
+    }
+    const rateFormula = 'курс 1 USDT = '+rstr+' = '+ffM(rate)+' '+cu;
+    const commLine = cAbs>1e-9 ? ('комиссия '+(dir==='sell'?'Купівля':'Продаж')+' '+cAbs+'%  ≈  '+ffM(commAmt)+' '+outUnit) : 'комиссия 0%';
+    const profit = profitUAH(dir, usdtVal, moneyVal, cur);
+    return {value,rawValue,outUnit,rate,cu,gives,gets,formula,symbolic,rateFormula,roundNote,commLine,commAmt,cAbs,profit};
+  }
+
+  let last=null;
+  // курс 1 USDT в каждую валюту — считается ТЕМ ЖЕ ядром compute() (никакой отдельной математики).
+  // временно подменяем глобальное состояние на «1 USDT, exact», зовём compute(), читаем .rate, возвращаем назад.
+  function unitRates(){
+    const sv={dir,cur,known,roundMode,roundStep}, savedAmt=$('amount').value;
+    $('amount').value='1'; known='crypto'; roundMode='exact';
+    const out={};
+    const exprOf=rf=>{ if(!rf) return ''; const p=String(rf).split(' = '); return p.length>=3 ? p[1].replace(/\./g,',') : ''; };
+    for(const d of ['sell','buy']) for(const cc of ['UAH','USD','EUR']){
+      dir=d; cur=cc; const r=compute();
+      out[d+'_'+cc]=(r&&!r.error&&isFinite(r.rate))?{rate:r.rate, expr:exprOf(r.rateFormula)}:null;
+    }
+    dir=sv.dir; cur=sv.cur; known=sv.known; roundMode=sv.roundMode; roundStep=sv.roundStep;
+    $('amount').value=savedAmt;
+    return out;
+  }
+  function renderUsdtRates(){
+    const box=$('usdtRates'); if(!box) return;
+    const r=unitRates();
+    const f=(v,d)=>v==null?'—':v.toLocaleString('uk-UA',{minimumFractionDigits:d,maximumFractionDigits:d});
+    const cell=(o,d,cls)=> o==null ? '<span class="'+cls+'">—</span>'
+      : '<span class="'+cls+'"><span class="uxv">'+f(o.rate,d)+'</span>'+(o.expr?'<span class="uxf">'+esc(o.expr)+'</span>':'')+'</span>';
+    const row=(cc,lbl,d)=>'<span class="uxcur">'+lbl+'</span>'+cell(r['sell_'+cc],d,'uxin')+cell(r['buy_'+cc],d,'uxout');
+    box.innerHTML=
+      '<div class="uxh">Курс 1 USDT · видно, как считается</div>'+
+      '<div class="uxgrid">'+
+        '<span></span><span class="uxch" style="color:var(--sell)">прием &#9660;</span><span class="uxch" style="color:var(--buy)">выдача &#9650;</span>'+
+        row('UAH','\u0433\u0440\u043d',2)+row('USD','$',4)+row('EUR','\u20ac',4)+
+      '</div>'+
+      '<div class="uxnote">курс монеты = базовый курс × коэффициент комиссии. прием \u2014 клиент продает USDT (вы покупаете); выдача \u2014 покупает (вы продаете).</div>';
+  }
+  // подсказка при вырожденном/крайнем результате (№3–5)
+  function resultNote(value, raw, inAmt){
+    if(value!=null && !isFinite(value)) return 'результат не считается — проверьте комиссию и курсы';
+    if(value===0 && raw>0) return 'сумма слишком мала — округляется в 0';
+    if((isFinite(value)&&Math.abs(value)>1e15) || (inAmt!=null&&Math.abs(inAmt)>1e15)) return 'очень большое число — проверьте ввод';
+    return '';
+  }
+  // предупреждение об инвертированном спреде (№2): покупка не должна быть выше продажи
+  function checkSpread(){
+    const el=$('spreadWarn'); if(!el) return;
+    const prs=[['usdB','usdS','USD/UAH'],['euruahB','euruahS','EUR/UAH'],['eurB','eurS','EUR/USD']];
+    const bad=prs.filter(p=>{const B=pn(p[0]),S=pn(p[1]);return B>0&&S>0&&B>S;}).map(p=>p[2]);
+    if(bad.length){ el.textContent='⚠ покупка > продажи: '+bad.join(', '); el.style.display=''; }
+    else { el.textContent=''; el.style.display='none'; }
+  }
+  function render(){
+    const r=compute(); last=r;
+    if(r.error){ $('resV').textContent='—'; $('resU').textContent=''; $('resDeal').textContent='';
+      $('resRate').innerHTML='<span class="err">'+(typeof r.error==='string'?r.error:'введи сумму')+'</span>'; $('fNum').textContent='—'; $('fRound').textContent=''; $('rcU').textContent=''; $('resNote').textContent=''; checkRecv(); return; }
+    $('resV').textContent=fBig(r.value); $('resU').textContent=r.outUnit;
+    $('resDeal').innerHTML='<span class="g">даёт</span> '+f2(r.gives.v)+' '+r.gives.u+
+      ' <span class="g">→ получает</span> '+f2(r.gets.v)+' '+r.gets.u;
+    $('resRate').textContent='курс: 1 USDT = '+f2(r.rate)+' '+r.cu;
+    if(r.profit!=null && Math.abs(r.profit)>=0.005){
+      const pos=r.profit>=0;
+      $('resProfit').innerHTML='ваша выгода ≈ <b>'+(pos?'+':'−')+ffM(Math.abs(r.profit))+' грн</b>';
+      $('resProfit').className='profit'+(pos?'':' neg');
+    } else { $('resProfit').textContent=''; $('resProfit').className='profit'; }
+    $('fNum').textContent=r.formula;
+    $('fRound').textContent=r.roundNote||'';
+    $('rcU').textContent=r.gives.u; checkRecv();
+    $('resNote').textContent=resultNote(r.value, r.rawValue, pn('amount'));
+  }
+
+  function labels(){
+    const cu=curU(cur);
+    $('dirHint').textContent = dir==='sell'
+      ? 'клиент отдаёт USDT, забирает '+cu
+      : 'клиент даёт '+cu+', забирает USDT';
+    if(dir==='sell'){
+      $('knSeg').children[0].textContent='Кол-во USDT'; $('knSeg').children[0].dataset.known='crypto';
+      $('knSeg').children[1].textContent='Сумма '+cu; $('knSeg').children[1].dataset.known='money';
+      if(known==='crypto'){ $('amtLab').textContent='Сколько USDT отдаёт'; $('amtU').textContent='USDT'; $('resLab').textContent='Клиент получит'; }
+      else{ $('amtLab').textContent='Сколько '+cu+' хочет получить'; $('amtU').textContent=cu; $('resLab').textContent='Клиент отдаёт'; }
+    }else{
+      $('knSeg').children[0].textContent='Сумма '+cu; $('knSeg').children[0].dataset.known='money';
+      $('knSeg').children[1].textContent='Кол-во USDT'; $('knSeg').children[1].dataset.known='crypto';
+      if(known==='money'){ $('amtLab').textContent='Сколько '+cu+' вносит'; $('amtU').textContent=cu; $('resLab').textContent='Клиент получит'; }
+      else{ $('amtLab').textContent='Сколько USDT хочет'; $('amtU').textContent='USDT'; $('resLab').textContent='Клиенту внести'; }
+    }
+    $('knHint').textContent = known==='crypto'
+      ? 'посчитаем сумму в '+cu
+      : 'посчитаем количество USDT';
+    [...$('knSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.known===known));
+  }
+
+  $('dirSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+    dir=b.dataset.dir;[...$('dirSeg').children].forEach(x=>x.classList.toggle('on',x===b));
+    known=dir==='sell'?'crypto':'money'; labels(); render();});
+  $('curSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+    cur=b.dataset.cur;[...$('curSeg').children].forEach(x=>x.classList.toggle('on',x===b));labels();render();});
+  $('knSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+    known=b.dataset.known;labels();render();});
+  RKEYS.forEach(i=>$(i).addEventListener('input',()=>{touchRates();render();euRender();mcCalc();ratesSummary();updateRatesAge();checkSpread();renderUsdtRates();saveRates();}));
+  $('cost').addEventListener('input',()=>{touchRates();render();mcCalc();updateRatesAge();saveRates();});
+  $('amount').addEventListener('input',e=>{fmtNum(e.target);render();updateSumHint();});
+  $('amount').addEventListener('focus',e=>{try{e.target.select();}catch(_){}});
+  // ---------- разбор фразы (без ИИ, по ключевым словам) ----------
+  function parseNum(s){
+    s=String(s).replace(/[\s\u00a0\u2009]/g,'');
+    if(s.includes(',')&&s.includes('.')){
+      if(s.lastIndexOf(',')>s.lastIndexOf('.')) s=s.replace(/\./g,'').replace(',','.'); else s=s.replace(/,/g,'');
+    } else if(s.includes(',')){
+      const p=s.split(','); if(p.length===2 && (p[1].length<=2 || p[0]==='0' || p[0]==='')) s=s.replace(',','.'); else s=s.replace(/,/g,'');
+    } else if(s.includes('.')){
+      const p=s.split('.'); if(p.length>2) s=s.replace(/\./g,''); else if(p[1].length===3 && p[0].length>=1 && p[0].length<=3 && p[0]!=='0') s=s.replace(/\./g,'');
+    }
+    return parseFloat(s)||0;
+  }
+  const CURWORDS=[
+    ['USDT',/юсдт|юсдэт|юздт|usdt|тезер|тетер|тедер|тизер|монет/],
+    ['EUR', /€|евр|євр|evro|eur/],
+    ['USD', /\$|доллар|долар|долл|дол(?![а-яёa-zА-ЯЁ])|юсд(?![а-яёa-zА-ЯЁ])|бакс|у\.?е\.?(?![а-яёa-zА-ЯЁ])|usd(?!t)/],
+    ['UAH', /грн|₴|грив|грв|grn|hrn|uah|гр(?![а-яёa-zА-ЯЁ])/]
+  ];
+  // единый разбор числа с множителем: к/тыс = ×1000, млн = ×1e6, млрд = ×1e9 (рус/укр/сленг)
+  // число: группы тысяч строго по 3 цифры (иначе «2000, 1500» склеивались в 20001500);
+  // «к/kk» = тысяча только ВПЛОТНУЮ к числу и не перед буквой/цифрой (иначе «к вечеру», «к 15:00» давали ×1000)
+  const NUMRE='(\\d{1,3}(?:[ \\u00a0\\u2009.,]\\d{3})+(?:[.,]\\d{1,2})?|\\d+(?:[.,]\\d+)?|\\.\\d+)'+
+    '(?:\\s*(тысяч[а-яё]*|тыс\\.?|тисяч[а-яіїєґ]*|тис\\.?|тыщ[а-яё]*|лям[а-яё]*|лимон[а-яё]*|миллион[а-яё]*|млн|мільйон[а-яіїєґ]*|млрд|миллиард[а-яё]*|мільярд[а-яіїєґ]*)|(кк|kk|к|k)(?![а-яёіїєґa-z0-9]))?';
+  function numMult(w){ if(!w) return 1; w=String(w).toLowerCase();
+    if(/млрд|миллиард|мільярд/.test(w)) return 1e9;
+    if(/млн|миллион|мільйон|лям|лимон|кк|kk/.test(w)) return 1e6;
+    return 1000; }
+  // словесные суммы → цифры (срабатывает ТОЛЬКО перед единицей, не трогает «получает/полтинник»)
+  // сплит-платежи внутри фразы: «100+300+4800 юсдт» = одно поступление тремя частями → 5200.
+  // складываем ТОЛЬКО голые числа, соединённые «+» без валюты между ними;
+  // «2000$ + 1000€» не трогаем — между числами стоит валюта, это перечисление разных валют.
+  function collapsePlus(t){
+    const part=String.raw`\d[\d\u2009\u00a0 ]*(?:[.,]\d{3})*(?:[.,]\d{1,2})?\s*(?:кк|к)?`;
+    const re=new RegExp('(^|[^\\d.,к])('+part+'(?:\\s*\\+\\s*'+part+')+)(?![\\d])','g');
+    const one=p=>{
+      p=p.trim(); let mult=1;
+      if(/кк\s*$/.test(p)){mult=1e6;p=p.replace(/кк\s*$/,'');}
+      else if(/к\s*$/.test(p)){mult=1e3;p=p.replace(/к\s*$/,'');}
+      p=p.replace(/[\u2009\u00a0 ]/g,'');
+      if(/^\d{1,3}([.,]\d{3})+$/.test(p)) p=p.replace(/[.,]/g,'');   // 1.000.000 — группировка
+      else p=p.replace(',','.');
+      const n=parseFloat(p); return isFinite(n)?n*mult:NaN;
+    };
+    return t.replace(re,(m,pre,grp)=>{
+      const parts=grp.split('+').map(one);
+      if(parts.some(x=>!isFinite(x))) return m;
+      const sum=Math.round(parts.reduce((a,b)=>a+b,0)*100)/100;
+      return pre+(Number.isInteger(sum)?String(sum):String(sum));
+    });
+  }
+  function preNum(t){
+    return collapsePlus(t
+      // повторные пробелы → один: «1  785 187» — одно число, случайный двойной пробел не должен рвать сумму
+      .replace(/ {2,}/g,' '))
+      // время «18:00», «к 9:30» — не сумма: вырезаем ЧЧ:ММ (минуты 00–59), чтобы 18 не стало суммой сделки.
+      // «2200: 600» не трогаем (после двоеточия пробел), «5000:2000» тоже (перед часами стоит цифра)
+      .replace(/(^|[^\d.,:])(\d{1,2}):([0-5]\d)(?![\d:])/g,'$1 ')
+      .replace(/п(?:ол|ів)\s*-?\s*(?:миллиард|мільярд|млрд)[а-яіїєґё]*/g,' 500000000 ')
+      .replace(/п(?:ол|ів)\s*-?\s*(?:миллион|мільйон|млн|лям|лимон)[а-яіїєґё]*/g,' 500000 ')
+      .replace(/п(?:ол|ів)\s*-?\s*(?:тысяч|тисяч|тыщ|тыс|тис)[а-яіїєґё.]*/g,' 500 ')
+      .replace(/п(?:ол|ів)\s*-?\s*(?:сотн|сот)[а-яіїєґё]*/g,' 50 ')
+      .replace(/полтора|півтора/g,' 1.5 ');
+  }
+  function curAt(s){ for(const [c,re] of CURWORDS){ if(re.test(s)) return c; } return null; }
+  function parseDeal(raw){
+    const t=preNum(' '+raw.toLowerCase().replace(/[\u00a0\u2009]/g,' ')+' ');
+    const m=new RegExp(NUMRE).exec(t);
+    if(!m) return {error:'не нашёл сумму — впиши число'};
+    let num=parseNum(m[1])*numMult(m[2]||m[3]);
+    if(!(num>0)) return {error:'сумму не понял'};
+    const pos=m.index, aft=t.slice(pos+m[0].length,pos+m[0].length+16), bef=t.slice(Math.max(0,pos-10),pos);
+    const firstCurIn=(s)=>{let best=null,bp=1e9;for(const [c,re] of CURWORDS){const mm=new RegExp(re.source).exec(s);if(mm&&mm.index<bp){bp=mm.index;best=c;}}return best;};
+    const lastCurIn=(s)=>{let best=null,bp=-1;for(const [c,re] of CURWORDS){let mm,li=-1;const r=new RegExp(re.source,'g');while((mm=r.exec(s)))li=mm.index;if(li>bp){bp=li;best=c;}}return best;};
+    let amtCur=firstCurIn(aft)||lastCurIn(bef);
+    const mentioned=new Set(); for(const [c,re] of CURWORDS){ if(re.test(t)) mentioned.add(c); }
+    if(!amtCur && mentioned.size) amtCur=[...mentioned][0];
+    if(!amtCur) return {error:'не понял валюту — добавь грн / $ / € / usdt'};
+    const giveRe=/отда|отд[аеёу]|даёт|дает|\bдать|\bдал\b|\bдай|\bда[ю]|занос|принос|принес|плат|меня|прода|сда|зда|внос|внош|внес|скид|кин/g;
+    const getRe =/получ|отрим|забир|забер|хоч|нужн|купи|купл|покуп|купу|бер[её]|возьм|візьм|выда|вида|на\s+руки/g;
+    const beforeNum=t.slice(0,m.index);
+    const lastPos=(re,s)=>{let x,l=-1;re.lastIndex=0;while((x=re.exec(s)))l=x.index;return l;};
+    const gi=lastPos(giveRe,beforeNum), ge=lastPos(getRe,beforeNum);
+    let role;
+    if(gi<0&&ge<0) role='give';
+    else role = gi>=ge ? 'give' : 'get';
+    let dir,cur,known;
+    if(amtCur==='USDT'){
+      known='crypto'; dir=(role==='give')?'sell':'buy';
+      cur=[...mentioned].find(c=>c!=='USDT');
+      // валюта выплаты не названа — не угадываем (раньше молча ставился $), а переспрашиваем
+      if(!cur) return {error:'вижу '+ffMc(num)+' USDT, но не понял валюту — допиши: в грн, в $ или в €'};
+    }
+    else { known='money'; cur=amtCur;
+      // сумма в деньгах и рядом упомянут USDT: направление по действию над USDT
+      // «куплю/візьму/нужно usdt за N грн» → покупает USDT (buy); «продам usdt за N грн» → продаёт (sell)
+      if(mentioned.has('USDT')){
+        // покупка USDT (клиент отдаёт деньги) vs продажа USDT (получает деньги).
+        // «отда/відда» НЕ включаем — «отдаёт грн» это покупка usdt, разрулит fallback по role.
+        const buyU=/купи|купл|купівл|купує|покупа|покупк|придб|візьм|возьм|бер[её]|нужн|надо|треба|хоч/.test(beforeNum) || /купи|купл|покупа|придб/.test(t);
+        const sellU=/прода|продаж|сда[єе]|сдам|здам|вивед|вывед|вывест|вивест/.test(t);
+        dir = sellU ? 'sell' : (buyU ? 'buy' : ((role==='give')?'buy':'sell'));
+      } else {
+        dir=(role==='give')?'buy':'sell';
+      }
+    }
+    return {dir,cur,known,amount:num,amtCur,role,multi:mentioned.size>=3};
+  }
+  const CN={UAH:'грн',USD:'$',EUR:'€',USDT:'USDT'};
+  const fcur=(s)=>{let best=null,bp=1e9;for(const [c,re] of CURWORDS){const mm=new RegExp(re.source).exec(s);if(mm&&mm.index<bp){bp=mm.index;best=c;}}return best;};
+  const lcur=(s)=>{let best=null,bp=-1;for(const [c,re] of CURWORDS){let mm,li=-1;const r=new RegExp(re.source,'g');while((mm=r.exec(s)))li=mm.index;if(li>bp){bp=li;best=c;}}return best;};
+  function extractPairs(t){
+    // два прохода: сперва позиции всех чисел, потом валюта строго в «своём» окне,
+    // не перепрыгивая через соседнее число («2200: 600 в долларах» — 2200 остаётся без валюты)
+    const ms=[]; const re=new RegExp(NUMRE,'g'); let m;
+    while((m=re.exec(t))) ms.push({m,start:m.index,end:re.lastIndex});
+    const pairs=[];
+    for(let i=0;i<ms.length;i++){
+      const {m,start,end}=ms[i];
+      const num=parseNum(m[1])*numMult(m[2]||m[3]); if(!(num>0)) continue;
+      const aftEnd=Math.min(end+16, i+1<ms.length?ms[i+1].start:t.length);
+      const befStart=Math.max(start-10, i>0?ms[i-1].end:0);
+      const aft=t.slice(end,aftEnd), bef=t.slice(befStart,start);
+      pairs.push({num,cur:fcur(aft)||lcur(bef),pos:start,end});
+    }
+    // перечисление одной валюты: «2000, 1500 и 5500 грн» — валюта хвоста тянется влево,
+    // но только через чистые разделители списка (запятая/и/та), не через двоеточие или слова
+    for(let i=pairs.length-2;i>=0;i--){
+      if(!pairs[i].cur && pairs[i+1].cur){
+        const gap=t.slice(pairs[i].end, pairs[i+1].pos);
+        if(/^[\s,;+]*(?:и|і|та)?[\s,;+]*$/.test(gap)) pairs[i].cur=pairs[i+1].cur;
+      }
+    }
+    return pairs;
+  }
+  function curAfterWord(t,wre){ const mm=wre.exec(t); if(!mm) return null; return fcur(t.slice(mm.index+mm[0].length, mm.index+mm[0].length+18)); }
+  // "USDT → суммы": сегменты вида "X usdt <валюта>" (2+ штук) → блок «Несколько валют», режим crypto
+  function extractCryptoRows(t){
+    const segs=t.replace(/(\d),(\d)/g,'$1.$2').split(/[,;+]|\sи\s|\sі\s|\sта\s/);  // «133,04» — десятичная, не разделитель списка
+    const rows=[]; let usdtCount=0;
+    for(const seg of segs){
+      const nm=new RegExp(NUMRE).exec(seg);
+      if(!nm) continue;
+      const num=parseNum(nm[1])*numMult(nm[2]||nm[3]); if(!(num>0)) continue;
+      const cs=[]; for(const [c,re] of CURWORDS){ if(re.test(seg)) cs.push(c); }
+      if(!cs.includes('USDT')) continue;
+      const fiat=cs.find(c=>c!=='USDT'); if(!fiat) continue;
+      rows.push({a:String(num),c:fiat}); usdtCount++;
+    }
+    return {rows,usdtCount};
+  }
+  // наличный обмен: по набору из двух фиат-валют → пара блока «Обмін готівки»
+  function cashPair(set){
+    const h=c=>set.has(c);
+    if(h('USD')&&h('UAH')) return {pair:'USDUAH',base:'USD'};
+    if(h('EUR')&&h('UAH')) return {pair:'EURUAH',base:'EUR'};
+    if(h('EUR')&&h('USD')) return {pair:'EURUSD',base:'EUR'};
+    return null;
+  }
+  function parseRequest(raw){
+    const t=preNum(' '+raw.toLowerCase().replace(/[\u00a0\u2009]/g,' ')+' ');
+    if(/двест|двісті|трист|чотирист|четырест|п[’'ʼ]?ятсот|пятьсот|шестьсот|шістсот|семьсот|сімсот|восемьсот|вісімсот|девятьсот|дев[’'ʼ]?ятсот/.test(t))
+      return {error:'сумму пиши цифрами («600», «1500») — числа словами не разбираю'};
+    const pairs=extractPairs(t);
+    if(!pairs.length) return {error:'не нашёл сумму — впиши число'};
+    const mentioned=new Set(); for(const [c,re] of CURWORDS){ if(re.test(t)) mentioned.add(c); }
+    // «остальное 1600 в гривне» — это явная сумма, а не остаток: после слова не должно идти число
+    const restHit=/(остал|остат|отсат|осат|остача|решт|отстав|оставш|залиш)[а-яёіїєґ]*/.exec(t);
+    const restWord=!!restHit && !/^\s*\d/.test(t.slice(restHit.index+restHit[0].length));
+    const numFiat=pairs.filter(p=>p.cur&&p.cur!=='USDT');
+    const numUsdt=pairs.filter(p=>p.cur==='USDT');
+    // USDT → СУММЫ: 2+ сегментов «X usdt <валюта>» — каждое число со своей валютой выплаты (приоритетнее остатка)
+    {
+      const cm=extractCryptoRows(t);
+      if(cm.usdtCount>=2 && cm.rows.length>=2){
+        // клиент с USDT раскидывает по валютам = выдача; «покупает/платит/вносит» = приём
+        const buyKw=/купи|купл|купівл|купує|покупа|покупк|придб|бер[её]|візьм|возьм|забер|(до|за|о)?пла[тч]|внос|внош|внес|докин/.test(t);
+        return {type:'multi',mode:'crypto',dir:buyKw?'recv':'give',rows:cm.rows};
+      }
+    }
+    // ОСТАТОК: общий USDT + слово-распределитель (остаток/раскидай/разбей…) + фикс. суммы
+    if(restWord && numUsdt.length>=1 && numFiat.length>=1){
+      const total=numUsdt[0].num;
+      let restCur=curAfterWord(t,/остал|остат|отсат|осат|остача|решт|отстав|оставш|залиш/) || [...mentioned].find(c=>c!=='USDT'&&!numFiat.some(f=>f.cur===c)) || 'UAH';
+      if(restCur==='USDT') restCur='UAH';
+      // направление — трёхступенчато:
+      // 1) глагол непосредственно ПЕРЕД общей суммой USDT решает всё:
+      //    «есть/маю/продам 6000 юсдт …» → клиент ПРОДАЁТ (give); «хочу купить 500 юсдт …» → ПОКУПАЕТ (recv).
+      //    «нужно» дальше по фразе относится к валютным частям и направление не переворачивает.
+      const pre=t.slice(0,numUsdt[0].pos);
+      let dirHit=null;
+      { const re=/(куп|придб|візьм|возьм|забер|треба|нужн|надо|докин|внос|внош|внес|(?:до|за|о)?пла[тч]|хоч)|((?:^|[\s,.:;])є(?=[\s,.:;!?]|$)|есть|маю|имею|прода|відда|отда|здам|сдам|вивед|вывед|принос|принес|занес|скин|кин|прислав|надішл|відправ|отправ|переказ)/g;
+        let m; while((m=re.exec(pre))) dirHit=m[1]?'recv':'give'; }
+      // 2) глаголов перед суммой нет → смотрим, что клиент делает с частями:
+      //    «нужно/выдать … евро» → части клиенту на руки = продаёт USDT; «есть/дам … $» → платит частями = покупает.
+      if(!dirHit){
+        const after=t.slice(numUsdt[0].pos);
+        if(/нужн|надо|треба|хочу|выда|вида|на\s+руки/.test(after)) dirHit='give';
+        else if(/есть|(?:^|[\s,.:;])є(?=[\s,.:;!?]|$)|маю|имею|\bдам\b|плач|плат|скину|кину|внос|внош|відправ|отправ|переказ/.test(after)) dirHit='recv';
+      }
+      // 3) исторический запасной путь
+      if(!dirHit){
+        const sellRest=/прода|продаж|сда[её]|сдам|здам|здати|відда|отда|вивед|вывед|вывест|вивест|выда|вида|на\s+руки/.test(t);
+        const buyRest=/купи|купл|купу|купівл|купує|покупа|покупк|придб|нужн|надо|треба|хоч|возьм|візьм|забер|бер[её]|есть|\sє\s|(до|за|о)?пла[тч]|внос|внош|внес|докин/.test(t);
+        dirHit=sellRest?'give':(buyRest?'recv':'give');
+      }
+      return {type:'multi',mode:'rest',dir:dirHit,total,rows:numFiat.map(p=>({a:String(p.num),c:p.cur})),restCur};
+    }
+    // число без валюты рядом с валютными суммами: не угадываем («продажа 2200: 600 в долларах…» — 2200 чего?)
+    {
+      const orphan=pairs.filter(p=>!p.cur);
+      if(orphan.length>=1 && numFiat.length>=2 && numUsdt.length===0)
+        return {error:'для суммы '+ffMc(orphan[0].num)+' не понял валюту — если это общий USDT, допиши «usdt»'};
+    }
+    // РАСПРЕДЕЛЕНИЕ: общий USDT + части по валютам, части сходятся с общим («вывести 13100: из них 10500 в долларе, 2600 в гривне»)
+    if(numUsdt.length>=1 && numFiat.length>=1){
+      const total=numUsdt[0].num;
+      const partSum=Math.round(numFiat.reduce((a,b)=>a+b.num,0)*100)/100;
+      if(Math.abs(partSum-total)<=0.011){
+        const buySplit=/купи|купл|купівл|купує|покупа|покупк|придб|бер[её]|візьм|возьм|забер|(до|за|о)?пла[тч]|внос|внош|внес(?!ти на)/.test(t);
+        return {type:'multi',mode:'crypto',dir:buySplit?'recv':'give',rows:numFiat.map(p=>({a:String(p.num),c:p.cur}))};
+      }
+      // части есть, но не сходятся и нет слова «остальное» — не выдумываем
+      return {error:'вижу '+ffMc(total)+' USDT и части на '+ffMc(partSum)+' — не сходится. Если это остаток, добавь «остальное в …»; если распределение — части должны давать общую сумму'};
+    }
+    // НАЛИЧНЫЙ ОБМЕН (без USDT): 1 сумма + 2 фиат-валюты → блок «Обмін готівки»
+    if(!mentioned.has('USDT') && numFiat.length===1){
+      const fiatCurs=[...mentioned].filter(c=>c!=='USDT');
+      if(fiatCurs.length===2){
+        const cp=cashPair(mentioned);
+        if(cp){
+          const amtCur=numFiat[0].cur;
+          const target=fiatCurs.find(c=>c!==amtCur);
+          const dir=amtCur===cp.base?'b2q':'q2b';
+          return {type:'cash',pair:cp.pair,dir,amount:numFiat[0].num,amtCur,target};
+        }
+      }
+    }
+    // НЕСКОЛЬКО ВАЛЮТ: 2+ фиатных сумм → суммы↔USDT
+    if(numFiat.length>=2){
+      const give=/хочу|хочет|нужн|получ|выда|вида|видай|вивед|вивест|на\s+руки|забир/.test(t);
+      const res={type:'multi',mode:'money',dir:give?'give':'recv',rows:numFiat.map(p=>({a:String(p.num),c:p.cur}))};
+      if(numUsdt.length>=1) res.droppedUsdt=numUsdt.reduce((a,b)=>a+b.num,0);
+      return res;
+    }
+    // ОДИНОЧНАЯ
+    const s=parseDeal(raw); if(s.error) return s;
+    const out={type:'single',...s};
+    if(numUsdt.length>=1 && numFiat.length>=1) out.droppedUsdt=numUsdt.reduce((a,b)=>a+b.num,0);
+    return out;
+  }
+  function applySingle(p){
+    dir=p.dir; cur=p.cur; known=p.known;
+    [...$('dirSeg').children].forEach(x=>x.classList.toggle('on',x.dataset.dir===dir));
+    [...$('curSeg').children].forEach(x=>x.classList.toggle('on',x.dataset.cur===cur));
+    $('amount').value=p.amount; fmtNum($('amount')); labels(); render();
+  }
+  function applyMulti(r){
+    mc.kmode=r.mode;
+    if(r.dir) mc.dir=r.dir;
+    if(r.rows&&r.rows.length) mc.rows=r.rows.map(x=>({a:x.a,c:x.c}));
+    if(r.mode==='rest'){ mc.restCur=r.restCur; $('mcTotal').value=String(r.total); }
+    [...$('mcMode').children].forEach(x=>x.classList.toggle('on',x.dataset.mcmode===mc.kmode));
+    [...$('mcDir').children].forEach(x=>x.classList.toggle('on',x.dataset.mcdir===mc.dir));
+    mcRender();
+  }
+  function applyCash(r){
+    euPair=r.pair; euDir=r.dir;
+    [...$('euPair').children].forEach(x=>x.classList.toggle('on',x.dataset.pair===euPair));
+    euLabels();
+    $('euAmt').value=r.amount; fmtNum($('euAmt')); euRender();
+  }
+  const uName={UAH:'грн',USD:'$',EUR:'€',USDT:'USDT','USD>UAH':'$ → грн','EUR>UAH':'€ → грн'};
+  function uAmt(a,c){
+    const n=ffMc(+a);
+    if(c==='USDT') return '<b>'+n+' USDT</b>';
+    if(c==='USD')  return '<b>$'+n+'</b>';
+    if(c==='EUR')  return '<b>€'+n+'</b>';
+    if(c==='UAH')  return '<b>'+n+' грн</b>';
+    if(c==='USD>UAH') return '<b>$'+n+' → грн</b>';
+    if(c==='EUR>UAH') return '<b>€'+n+' → грн</b>';
+    return '<b>'+n+' '+(uName[c]||c)+'</b>';
+  }
+  // подпись роли валютной суммы в строке
+  function uLabel(c){
+    if(c==='USD') return 'доллары (сумма)';
+    if(c==='EUR') return 'евро (сумма)';
+    if(c==='UAH') return 'гривны (сумма)';
+    if(c==='USD>UAH') return 'доллары → выплата в грн';
+    if(c==='EUR>UAH') return 'евро → выплата в грн';
+    return '';
+  }
+  // разбор «что понял калькулятор» — отражает фактический разбор фразы
+  function dealReadback(r){
+    if(!r||r.error) return '';
+    const P='<b>Понял:</b> ';
+    if(r.type==='cash')
+      return P+'наличный обмен (без USDT).<div class="urow">Клиент отдаёт '+uAmt(r.amount,r.amtCur)+' → получает <b>'+(uName[r.target]||r.target)+'</b> наличными.</div>';
+    if(r.type==='multi'){
+      const give=(r.dir==='give');
+      const hasFiat=(r.rows||[]).some(x=>x.c==='USD'||x.c==='EUR'||x.c==='UAH');
+      const rowLines=(r.rows||[]).map(x=>{ const lb=uLabel(x.c); return '<div class="urow">• '+uAmt(x.a,x.c)+(lb?' <span class="ucur">— '+lb+'</span>':'')+'</div>'; }).join('');
+      let head;
+      if(r.mode==='crypto') head=P+'клиент <span class="udir">'+(give?'ПРОДАЁТ USDT':'ПОКУПАЕТ USDT')+'</span>, '+(give?'выдача частями:':'внесение частями:');
+      else if(r.mode==='rest') head=P+'клиент <span class="udir">'+(give?'ПРОДАЁТ':'ПОКУПАЕТ')+' '+ffMc(r.total)+' USDT</span>, '+(give?'выдача частями:':'оплата частями:');
+      else head=P+'клиент <span class="udir">'+(give?'отдаёт':'получает')+' несколько валют</span>:';
+      let body=rowLines;
+      if(r.mode==='rest') body+='<div class="urow">• остаток — в <b>'+(uName[r.restCur]||r.restCur)+'</b></div>';
+      if(r.mode!=='crypto'&&r.mode!=='rest') body+='<div class="urow">Считаю всё вместе в <b>USDT</b>.</div>';
+      let warn='';
+      if(hasFiat&&(r.mode==='crypto'||r.mode==='rest'))
+        warn='<div class="uwarn">⚠ Суммы в строках — <b>номинал в валюте</b>, не USDT. Если клиент имел в виду доллары/евро <b>в переводе на грн</b> — переключи ту строку на «$ → грн».</div>';
+      return head+body+warn;
+    }
+    const isUsdt=r.amtCur==='USDT';
+    if(isUsdt){
+      // dir — фактическое направление расчёта: sell = клиент продаёт USDT, buy = покупает
+      const act=r.dir==='sell'?'ПРОДАЁТ':'ПОКУПАЕТ';
+      const tail=r.dir==='sell'?'Выплата клиенту — в ':'Оплата клиента — в ';
+      return P+'клиент <span class="udir">'+act+' '+ffMc(r.amount)+' USDT</span>.<div class="urow">'+tail+'<b>'+(uName[r.cur]||r.cur)+'</b>.</div>';
+    }
+    // сумма в валюте → USDT: buy = клиент покупает USDT, значит эти деньги ОТДАЁТ; sell = получает
+    const act=r.dir==='buy'?'отдаёт':'получает';
+    return P+'клиент <span class="udir">'+act+' '+uAmt(r.amount,r.amtCur)+'</span>.<div class="urow">Считаю, сколько это в <b>USDT</b>.</div>';
+  }
+  function setUnderstood(html,isErr){
+    const u=$('understood'); if(!u) return;
+    if(!html){ u.style.display='none'; u.innerHTML=''; u.className='understood'; return; }
+    u.className='understood'+(isErr?' err':''); u.innerHTML=html; u.style.display='block';
+  }
+  // готовый ответ клиенту для распознанной фразы (тот же текст, что дают кнопки копий)
+  let phraseAnsTxt=null;
+  function setPhraseAns(txt){
+    phraseAnsTxt=txt||null;
+    const box=$('phraseAns'); if(!box) return;
+    if(!txt){ box.style.display='none'; return; }
+    $('phraseAnsTxt').textContent=txt; box.style.display='block';
+  }
+  function runPhrase(apply){
+    const v=$('phrase').value.trim(); const info=$('phraseInfo');
+    if(info){ info.textContent=''; info.className='phrase-info'; }
+    if($('pClear')) $('pClear').style.display=v?'block':'none';
+    if(!v){ setUnderstood(''); setPhraseAns(null); return; }
+    const r=parseRequest(v);
+    if(r.error){ setUnderstood('⚠ '+r.error, true); setPhraseAns(null); return; }
+    let ans=null;
+    if(r.type==='cash'){ applyCash(r); if(apply) switchMode('secEu'); ans=buildCopyEu(); }
+    else if(r.type==='multi'){ applyMulti(r); if(apply) switchMode('secMc'); ans=buildCopyMc(); }
+    else { applySingle(r); if(apply) switchMode('secEx'); ans=buildCopySingle(); }
+    let html=dealReadback(r);
+    if(r.droppedUsdt) html+='<div class="uwarn">⚠ '+ffMc(r.droppedUsdt)+' USDT не учтены — если это остаток, добавь «остаток».</div>';
+    setUnderstood(html);
+    setPhraseAns(ans);
+    if(ans) histAdd(v, ans);
+  }
+  // ── история последних расчётов (только фразовый поток; хранится локально) ──
+  const HISTK='usdtHistV1';
+  function histGet(){ try{ return JSON.parse(localStorage.getItem(HISTK)||'[]'); }catch(e){ return []; } }
+  function histAdd(phrase, ans){
+    try{
+      let h=histGet();
+      if(h.length && h[0].p===phrase && h[0].a===ans) { h[0].t=Date.now(); }
+      else h.unshift({t:Date.now(), p:phrase, a:ans});
+      h=h.slice(0,8);
+      localStorage.setItem(HISTK, JSON.stringify(h));
+    }catch(e){}
+    histRender();
+  }
+  function histRender(){
+    const list=$('histList'), cnt=$('histCnt'); if(!list) return;
+    const h=histGet();
+    cnt.textContent=h.length?('· '+h.length):'';
+    list.innerHTML=h.map((x,i)=>{
+      const d=new Date(x.t); const hh=String(d.getHours()).padStart(2,'0'), mm=String(d.getMinutes()).padStart(2,'0');
+      return '<div class="hrow" data-i="'+i+'">'+
+        '<span class="ht">'+hh+':'+mm+'</span>'+
+        '<span class="hp" title="повторить расчёт">'+esc(x.p)+'</span>'+
+        '<button data-act="copy" title="скопировать ответ клиенту">⧉ ответ</button>'+
+      '</div>';
+    }).join('')||'<div class="hrow" style="border:none"><span class="hp" style="cursor:default">пока пусто — разбери первую фразу</span></div>';
+  }
+  (function(){
+    const list=$('histList'); if(!list) return;
+    list.addEventListener('click',e=>{
+      const row=e.target.closest('.hrow'); if(!row||row.dataset.i===undefined) return;
+      const h=histGet(); const x=h[+row.dataset.i]; if(!x) return;
+      if(e.target.dataset.act==='copy'){ clip(x.a); e.target.textContent='✓'; setTimeout(()=>{e.target.textContent='⧉ ответ';},1100); return; }
+      $('phrase').value=x.p; runPhrase(true); try{$('phrase').focus();}catch(_){}
+    });
+    const hc=$('histClear'); if(hc) hc.addEventListener('click',()=>{ try{localStorage.removeItem(HISTK);}catch(e){} histRender(); });
+    histRender();
+  })();
+  // ── чипы-примеры: клик подставляет и разбирает ──
+  (function(){
+    const box=$('pChips'); if(!box) return;
+    const EX=['1000 usdt в грн','5000 usdt: 2000$, решта грн','2000$ і 1500€ в usdt',
+              'є 1500+200 юсдт, нужно 100€, решта грн','поміняти 500$ на грн','хочу 300 usdt, скільки грн'];
+    box.innerHTML=EX.map(x=>'<button type="button">'+esc(x)+'</button>').join('');
+    box.addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return;
+      $('phrase').value=b.textContent; runPhrase(true); try{$('phrase').focus();}catch(_){}
+    });
+  })();
+  // ── горячие клавиши и крестик ──
+  (function(){
+    const pc=$('pClear');
+    if(pc) pc.addEventListener('click',()=>{ $('phrase').value=''; runPhrase(false); try{$('phrase').focus();}catch(_){} });
+    const ab=$('phraseAnsBtn');
+    if(ab) ab.addEventListener('click',()=>clip(phraseAnsTxt,'phraseAnsBtn'));
+    try{
+      document.addEventListener('keydown',e=>{
+        const tag=(e.target&&e.target.tagName)||'';
+        const typing=tag==='INPUT'||tag==='TEXTAREA';
+        if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){ if(phraseAnsTxt){ clip(phraseAnsTxt,'phraseAnsBtn'); e.preventDefault(); } return; }
+        if(e.key==='Escape'&&e.target&&e.target.id==='phrase'){ $('phrase').value=''; runPhrase(false); return; }
+        if(e.key==='/'&&!typing){ e.preventDefault(); try{$('phrase').focus();}catch(_){} }
+      });
+    }catch(e){}
+  })();
+  // печать — только считаем в фоне и показываем «Понял», не уводя с поля; Enter — переключить на нужный блок
+  // ввод: сразу переключаем на нужный режим и считаем; экран не скроллим, фокус остаётся в поле
+  $('phrase').addEventListener('input',()=>runPhrase(true));
+  $('phrase').addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); runPhrase(true); }});
+  $('tog').addEventListener('click',()=>{const c=$('ratesCard');c.classList.toggle('collapsed');
+    $('tog').textContent=c.classList.contains('collapsed')?'изменить':'свернуть';saveRates();});
+
+  function buildCopySingle(){
+    if(!last||last.error) return null;
+    // клиенту — только суммы и эффективный курс; коэффициент комиссии и базовый курс не раскрываем
+    let txt='Віддаєте '+ffMc(last.gives.v)+' '+last.gives.u+' → отримуєте '+ffMc(last.gets.v)+' '+last.gets.u;
+    if(copyRate) txt+='\nРозрахунок: '+last.formula;
+    return txt;
+  }
+  // единая копия в буфер с фолбэком и галочкой на кнопке
+  function clip(txt,btnId){
+    if(!txt) return;
+    const done=()=>{ if(!btnId) return; const b=$(btnId); if(!b) return;
+      const old=b.dataset.lbl||b.textContent; b.dataset.lbl=old;
+      b.classList.add('done'); b.textContent='Скопировано ✓';
+      setTimeout(()=>{b.classList.remove('done');b.textContent=b.dataset.lbl;},1400); };
+    try{ navigator.clipboard.writeText(txt).then(done,()=>fallback(txt,done)); }catch(e){ fallback(txt,done); }
+  }
+  function doCopy(){
+    const txt=buildCopySingle(); if(!txt) return;
+    try{ if(last.gives&&last.gives.u==='USDT'&&window.vSuggestExpected) window.vSuggestExpected(last.gives.v); }catch(e){}
+    clip(txt,'copyBtn');
+  }
+  $('copyBtn').addEventListener('click',doCopy);
+  $('resBig').addEventListener('click',doCopy);
+  function fallback(txt,done){ const t=document.createElement('textarea');t.value=txt;document.body.appendChild(t);
+    t.select();try{document.execCommand('copy');done();}catch(e){}document.body.removeChild(t); }
+
+  $('mSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+    method=b.dataset.method;[...$('mSeg').children].forEach(x=>x.classList.toggle('on',x===b));render();euRender();mcCalc();renderUsdtRates();saveRates();});
+  $('cpSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+    copyRate=b.dataset.cr==='on';[...$('cpSeg').children].forEach(x=>x.classList.toggle('on',x===b));saveRates();});
+  $('rSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+    roundMode=b.dataset.round;[...$('rSeg').children].forEach(x=>x.classList.toggle('on',x===b));stepVis();render();euRender();mcCalc();saveRates();});
+  function stepVis(){ const off=roundMode==='exact'; $('rStep').style.opacity=off?'.4':''; $('rStep').style.pointerEvents=off?'none':''; }
+  $('rStep').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+    roundStep=b.dataset.step;[...$('rStep').children].forEach(x=>x.classList.toggle('on',x===b));render();euRender();mcCalc();saveRates();});
+  function reset(){
+    for(const k in DEF) $(k).value=DEF[k];
+    method='mul'; roundMode='fav'; roundStep='cent'; copyRate=true;
+    [...$('cpSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.cr==='on'));
+    [...$('mSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.method==='mul'));
+    [...$('rSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.round==='fav'));
+    [...$('rStep').children].forEach(b=>b.classList.toggle('on',b.dataset.step==='cent'));
+    touchRates(); render(); euRender(); mcCalc(); ratesSummary(); updateRatesAge(); checkSpread(); saveRates();
+  }
+  $('resetBtn').addEventListener('click',reset);
+
+  // --- вставка курсов текстом: одно поле заполняет все курсы и комиссии ---
+  function parseRatesText(raw){
+    const t=' '+String(raw).toLowerCase()+' ';
+    const N='(\\d+(?:[.,]\\d+)?)';
+    const val=s=>parseFloat(String(s).replace(/[\s\u00a0\u2009]+/g,'').replace('−','-').replace(',','.'));
+    const str=s=>String(s).replace(/[\s\u00a0\u2009]+/g,'').replace('−','-').replace(',','.');
+    const out={}, got=[];
+    const PR=[['usd','uah','usdB','usdS','USD/UAH'],['eur','uah','euruahB','euruahS','EUR/UAH'],['eur','usd','eurB','eurS','EUR/USD']];
+    for(const p of PR){
+      const re=new RegExp(p[0]+'\\s*[\\/\\-–—\\\\]\\s*'+p[1]+'\\s*[:=\\-–—]?\\s*'+N+'\\s*[\\/|–—-]\\s*'+N,'i');
+      const m=re.exec(t);
+      if(m){ const B=val(m[1]),S=val(m[2]);
+        if(B>0&&S>0){ out[p[2]]=str(m[1]); out[p[3]]=str(m[2]); got.push(p[4]+' '+str(m[1])+'/'+str(m[2])); } }
+    }
+    const mc=/(?:куп[іи]вл|купл|покупк)[а-яіїєґё]*\s*[:=]?\s*([+\-−]?\s*\d+(?:[.,]\d+)?)\s*%?/i.exec(t);
+    if(mc){ const v=val(mc[1]); if(isFinite(v)&&Math.abs(v)<100&&(/%/.test(mc[0])||Math.abs(v)<=15)){ out.cB=str(mc[1]).replace('+',''); got.push('Купівля '+(v>0?'+':'')+str(mc[1]).replace('+','')+'%'); } }
+    const ms=/продаж[а-яіїєґё]*\s*[:=]?\s*([+\-−]?\s*\d+(?:[.,]\d+)?)\s*%?/i.exec(t);
+    if(ms){ const v=val(ms[1]); if(isFinite(v)&&Math.abs(v)<100&&(/%/.test(ms[0])||Math.abs(v)<=15)){ out.cS=str(ms[1]).replace('+',''); got.push('Продаж '+(v>0?'+':'')+str(ms[1]).replace('+','')+'%'); } }
+    return {out,got};
+  }
+  function applyRatesText(){
+    const el=$('ratePaste'), info=$('ratePasteInfo');
+    const v=el.value.trim();
+    if(!v){ info.textContent=''; info.className='phrase-info'; return; }
+    const r=parseRatesText(v);
+    if(!r.got.length){ info.className='phrase-info err';
+      info.textContent='⚠ не распознал — нужен вид «USD/UAH: 44,55 / 44,85» или «Купівля: +0.7%»'; return; }
+    for(const k in r.out) $(k).value=String(r.out[k]);
+    touchRates(); render(); euRender(); mcCalc(); ratesSummary(); updateRatesAge(); checkSpread(); saveRates();
+    info.className='phrase-info ok';
+    info.textContent='✓ Обновлено: '+r.got.join(' · ');
+    renderUsdtRates();
+  }
+  $('ratePaste').addEventListener('input',applyRatesText);
+
+  // --- Обмін готівки (без USDT): пары $/грн, €/грн, €/$ ---
+  function euLabels(){
+    const P=PAIRS[euPair];
+    $('euDir').children[0].textContent='Дає '+P.base+' → '+P.quote; $('euDir').children[0].dataset.eud='b2q';
+    $('euDir').children[1].textContent='Дає '+P.quote+' → '+P.base; $('euDir').children[1].dataset.eud='q2b';
+    [...$('euDir').children].forEach(b=>b.classList.toggle('on',b.dataset.eud===euDir));
+    const give = euDir==='b2q'?P.base:P.quote;
+    $('euAmtLab').textContent='Скільки '+give; $('euAmtU').textContent=give;
+  }
+  function euCompute(){
+    const P=PAIRS[euPair], bR=pn(P.bK), sR=pn(P.sK), A=pn('euAmt');
+    if(!(bR>0&&sR>0)) return {err:'проверь курсы'};
+    if(!(A>0)) return {err:'введи сумму'};
+    let v,outU,rtxt;
+    if(euDir==='b2q'){ v=A*bR; outU=P.quote; rtxt='1 '+P.base+' = '+f2(bR)+' '+P.quote; }
+    else { v=A/sR; outU=P.base; rtxt='1 '+P.base+' = '+f2(sR)+' '+P.quote; }
+    if(roundMode==='fav'){ const q=roundStep==='whole'?1:0.01; v=Math.floor(v/q+1e-9)*q; }
+    return {v,outU,rtxt};
+  }
+  let euLast=null;
+  function euRender(){
+    const e=euCompute();
+    if(e.err){ $('euV').textContent='—'; $('euU').textContent=''; $('euRate').innerHTML='<span class="err">'+e.err+'</span>'; $('euCalc').textContent='—'; $('euNote').textContent=''; euLast=null; return; }
+    $('euV').textContent=fBig(e.v); $('euU').textContent=e.outU;
+    $('euRate').textContent='курс: '+e.rtxt;
+    const Pc=PAIRS[euPair], bR=pn(Pc.bK), sR=pn(Pc.sK), Ae=pn('euAmt');
+    $('euCalc').textContent = euDir==='b2q'
+      ? (ffO(Ae)+' × '+ffO(bR)+' = '+ffM(e.v)+' '+e.outU)
+      : (ffO(Ae)+' ÷ '+ffO(sR)+' = '+ffM(e.v)+' '+e.outU);
+    $('euNote').textContent = (!isFinite(e.v))?'результат не считается — проверьте курсы'
+      : (e.v===0 && pn('euAmt')>0)?'сумма слишком мала — округляется в 0'
+      : (Math.abs(e.v)>1e15 || Math.abs(pn('euAmt'))>1e15)?'очень большое число — проверьте ввод':'';
+    const P=PAIRS[euPair], give=euDir==='b2q'?P.base:P.quote;
+    euLast={ga:pn('euAmt'), gu:give, v:e.v, outU:e.outU, rate:(euDir==='b2q'?bR:sR), base:P.base, quote:P.quote};
+  }
+  function buildCopyEu(){
+    if(!euLast) return null;
+    let txt='Віддаєте '+ffMc(euLast.ga)+' '+euLast.gu+' → отримуєте '+ffMc(euLast.v)+' '+euLast.outU;
+    if(copyRate){ const mul=euLast.gu===euLast.base;
+      txt+='\nРозрахунок: '+ffMc(euLast.ga)+(mul?' × ':' ÷ ')+ffR(euLast.rate)+' = '+ffMc(euLast.v)+' '+euLast.outU; }
+    return txt;
+  }
+  function doCopyEu(){ clip(buildCopyEu(),'euCopyBtn'); }
+  $('euCopyBtn').addEventListener('click',doCopyEu);
+  $('euBig').addEventListener('click',doCopyEu);
+  $('euPair').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+    euPair=b.dataset.pair;[...$('euPair').children].forEach(x=>x.classList.toggle('on',x===b));
+    euDir='b2q'; euLabels(); euRender();});
+  $('euDir').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+    euDir=b.dataset.eud;euLabels();euRender();});
+  $('euAmt').addEventListener('input',e=>{fmtNum(e.target);euRender();});
+  $('euAmt').addEventListener('focus',e=>{try{e.target.select();}catch(_){}});
+
+  document.querySelectorAll('.pm').forEach(btn=>btn.addEventListener('click',()=>{
+    const v=pn(btn.dataset.for); if(isFinite(v)){ $(btn.dataset.for).value=(-v); render(); saveRates(); }
+  }));
+  ['cB','cS'].forEach(id=>$(id).addEventListener('input',()=>{
+    let v=$(id).value.replace(/[^\d.,-]/g,''); const neg=v.trim().startsWith('-');
+    v=v.replace(/-/g,''); if(neg) v='-'+v; $(id).value=v;
+  }));
+  document.querySelectorAll('input[type=number]').forEach(i=>{
+    i.setAttribute('inputmode','decimal');
+    i.addEventListener('keydown',e=>{ if(e.key==='e'||e.key==='E'||e.key==='+') e.preventDefault(); });
+  });
+  // --- Несколько валют: приём/выдача × суммы↔USDT (единая логика с основным расчётом) ---
+  let mc={rows:[{a:'1000',c:'USD'},{a:'1500',c:'USD'},{a:'1300',c:'EUR'}], dir:'recv', kmode:'money', restCur:'USD'};
+  const MCUR=[['UAH','грн'],['EUR','€'],['USD','$']];
+  const CUS={UAH:'грн',EUR:'€',USD:'$'};
+  const pf=s=>sumStr(s);
+  let mcTotVal=null;
+  function mcOne(d,cur,known,A){
+    const usdB=pn('usdB'),usdS=pn('usdS'),eurB=pn('eurB'),eurS=pn('eurS'),cB=pn('cB'),cS=pn('cS');
+    if(!(A>0)) return null;
+    // композит "$→грн"/"€→грн": сумма в quote-валюте, выплата и расчёт в грн (курс наличных)
+    let quote=null, quoteAmt=null;
+    if(cur.indexOf('>')>=0){
+      const [q,pp]=cur.split('>');
+      if(known==='money'){
+        const conv = q==='USD'? usdB : pn('euruahB');
+        if(!(conv>0)) return null;
+        quote=q; quoteAmt=A; A=(roundMode==='fav'? Math.floor(A*conv*100+1e-9) : Math.round(A*conv*100))/100; cur=pp;   // теперь обычная грн-строка
+      } else { cur=pp; }
+    }
+    const c = d==='sell'? cB : cS;
+    const kMul=1+c/100, kDiv=1-c/100;
+    const isFwd=(d==='sell'&&known==='crypto')||(d==='buy'&&known==='money');
+    const commStep = method==='mul'? (isFwd?['×',kMul]:['÷',kMul]) : (isFwd?['÷',kDiv]:['×',kDiv]);
+    let rateSteps, outUnit, inUnit; const cu=CUS[cur];
+    if(d==='sell'){
+      if(known==='crypto'){ outUnit=cu; inUnit='USDT'; rateSteps=cur==='USD'?[]:cur==='UAH'?[['×',usdB]]:[['÷',eurS]]; }
+      else { outUnit='USDT'; inUnit=cu; rateSteps=cur==='USD'?[]:cur==='UAH'?[['÷',usdB]]:[['×',eurS]]; }
+    } else {
+      if(known==='money'){ outUnit='USDT'; inUnit=cu; rateSteps=cur==='USD'?[]:cur==='UAH'?[['÷',usdS]]:[['×',eurB]]; }
+      else { outUnit=cu; inUnit='USDT'; rateSteps=cur==='USD'?[]:cur==='UAH'?[['×',usdS]]:[['÷',eurB]]; }
+    }
+    for(const o of rateSteps){ if(!(o[1]>0)) return null; }
+    const commFirst=(d==='buy'&&known==='crypto');
+    const ops=commFirst?[commStep,...rateSteps]:[...rateSteps,commStep];
+    let v=A; ops.forEach(o=>{ v=o[0]==='÷'?v/o[1]:v*o[1]; });
+    const raw=v;
+    if(roundMode==='fav'){ const q=roundStep==='whole'?1:0.01; v=isFwd?Math.floor(raw/q+1e-9)*q:Math.ceil(raw/q-1e-9)*q; }
+    else v=Math.round(raw*100)/100;
+    const formula=fmtStr(ffO(A))+' '+inUnit+ops.map(o=>' '+o[0]+' '+ffO(o[1])).join('')+' = '+ffMc(v)+' '+outUnit;
+    return {value:v,outUnit,inUnit,formula,payAmount:(quote?A:null),quote,quoteAmt};
+  }
+  function mcState(){ return {d: mc.dir==='recv'?'buy':'sell', known: mc.kmode}; }
+  function mcProfitShow(sum, ok){
+    const el=$('mcProfit');
+    if(ok && sum!=null && Math.abs(sum)>=0.005){
+      const pos=sum>=0; el.style.display='block';
+      el.className='profit'+(pos?'':' neg');
+      el.innerHTML='ваша выгода ≈ <b>'+(pos?'+':'−')+ffMc(Math.abs(sum))+' грн</b>';
+    } else { el.style.display='none'; el.textContent=''; }
+  }
+  function mcCalc(){
+    if(mc.kmode==='rest'){ mcCalcRest(); return; }
+    const {d,known}=mcState();
+    let tot=0, any=false, prof=0, pok=true;
+    mc.rows.forEach((r,i)=>{ const o=mcOne(d,r.c,known,pf(r.a)); const el=$('mcres'+i);
+      if(o){ any=true;
+        if(el) el.textContent = o.quote
+          ? ('= '+fBig(o.payAmount)+' грн = '+fBig(o.value)+' USDT')
+          : ('= '+fBig(o.value)+' '+o.outUnit);
+        tot += known==='money'? o.value : pf(r.a);
+        const U = known==='money'? o.value : pf(r.a);
+        const money = known==='money'? (o.quote? o.payAmount : pf(r.a)) : o.value;
+        const pcur = (known==='money' && o.quote)? 'UAH' : r.c;
+        const p = profitUAH(d, U, money, pcur); if(p==null) pok=false; else prof+=p; }
+      else if(el) el.textContent=''; });
+    mcTotVal = any? tot : null;
+    let lab;
+    if(known==='money') lab = d==='buy'?'Клиент получит:':'Клиент вносит:';
+    else lab='USDT задействовано:';
+    $('mcTotLab').textContent=lab;
+    $('mcTot').textContent = any? fBig(tot)+' USDT' : '—';
+    $('mcNote').textContent = (any&&!isFinite(tot))?'результат не считается — проверьте комиссию и курсы'
+      : (any&&Math.abs(tot)>1e15)?'очень большое число — проверьте ввод':'';
+    const flines=mc.rows.map(r=>{const o=mcOne(d,r.c,known,pf(r.a));return o?o.formula:'';}).filter(Boolean);
+    $('mcCalc').innerHTML = flines.length? flines.map(esc).join('<br>') : '—';
+    mcProfitShow(prof, any && pok);
+  }
+  function mcCalcRest(){
+    $('mcNote').textContent='';
+    const d = mc.dir==='recv' ? 'buy' : 'sell';   // recv = клиент покупает USDT (платит частями), give = клиент продаёт (выдаём частями)
+    // фикс. строки: наличные ↔ сколько это USDT (по направлению)
+    let fixedU=0, prof=0, pok=true;
+    mc.rows.forEach((r,i)=>{ const o=mcOne(d,r.c,'money',pf(r.a)); const el=$('mcres'+i);
+      if(o){ fixedU+=o.value; if(el) el.textContent='= '+fBig(o.value)+' USDT';
+        const p=profitUAH(d, o.value, pf(r.a), r.c); if(p==null) pok=false; else prof+=p; }
+      else if(el) el.textContent=''; });
+    const total=pf($('mcTotal').value), rc=mc.restCur, note=$('mcRestNote');
+    note.style.color='';
+    if(!(total>0)){ $('mcRestRes').textContent='—'; note.textContent='введи, сколько всего USDT'; mcTotVal=null; mcProfitShow(null,false); return; }
+    const rem=Math.round((total-fixedU)*100)/100;
+    if(rem<-1e-9){ $('mcRestRes').textContent='—'; note.textContent='суммы превышают '+ffMc(total)+' USDT на '+ffMc(-rem); note.style.color='var(--buy)'; mcTotVal=null; mcProfitShow(null,false); return; }
+    const o=mcOne(d,rc,'crypto',rem);
+    const restCash=o?o.value:0;
+    $('mcRestRes').textContent=fBig(restCash)+' '+CUS[rc];
+    note.textContent='осталось '+fBig(rem)+' USDT → '+(d==='buy'?'доплата в ':'выдача в ')+CUS[rc];
+    const pr=profitUAH(d, rem, restCash, rc); if(pr==null) pok=false; else prof+=pr;
+    mcTotVal={total,rem,rc,restCash,d};
+    const fl=mc.rows.filter(r=>pf(r.a)>0).map(r=>{const oo=mcOne(d,r.c,'money',pf(r.a));return oo?oo.formula:'';}).filter(Boolean);
+    fl.push('Залишок: '+ffMc(total)+' − '+ffMc(fixedU)+' = '+ffMc(rem)+' USDT'+(o?' → '+o.formula:''));
+    $('mcCalc').innerHTML=fl.map(esc).join('<br>');
+    mcProfitShow(prof, pok);
+  }
+  function mcRender(){
+    const rest = mc.kmode==='rest';
+    const known = rest?'money':mc.kmode;
+    $('mcDir').style.display = '';
+    $('mcDirLab').style.display = '';
+    $('mcTotalWrap').style.display = rest?'':'none';
+    $('mcRestWrap').style.display = rest?'':'none';
+    $('mcTotBox').style.display = rest?'none':'';
+    if(rest){
+      $('mcHint').textContent = mc.dir==='recv'
+        ? 'клиент покупает фикс. сумму USDT — задай, чем платит; остаток доплатит в выбранной валюте'
+        : 'у клиента фикс. сумма USDT — задай суммы наличных к выдаче; остаток уйдёт в выбранную валюту';
+      $('mcRestCur').value=mc.restCur;
+    } else {
+      $('mcHint').textContent = mc.kmode==='money'
+        ? (mc.dir==='recv'
+            ? 'клиент приносит наличные в разных валютах и покупает USDT — посчитаем общий USDT'
+            : 'клиент забирает наличными в разных валютах — посчитаем, сколько USDT он вносит')
+        : (mc.dir==='recv'
+            ? 'известно, сколько USDT берёт клиент по каждой валюте — посчитаем, сколько наличных он вносит'
+            : 'у клиента USDT — раскидай по валютам, посчитаем, сколько наличных он получит');
+    }
+    const showUnit = (mc.kmode==='crypto');
+    $('mcRows').innerHTML=mc.rows.map((r,i)=>{
+      if(mc.kmode!=='money' && r.c.indexOf('>')>=0){ r.c=r.c.split('>')[1]; }
+      let list=MCUR.slice();
+      if(mc.kmode==='money') list=list.concat([['USD>UAH','$ → грн'],['EUR>UAH','€ → грн']]);
+      const opts=list.map(([v,l])=>'<option value="'+v+'"'+(v===r.c?' selected':'')+'>'+l+'</option>').join('');
+      return '<div class="brow"><input class="bamt" type="text" inputmode="decimal" value="'+fmtStr(r.a)+'" data-i="'+i+'">'+
+        (showUnit?'<span class="bunit">USDT →</span>':'')+
+        '<select class="bcur" data-i="'+i+'">'+opts+'</select>'+
+        '<span class="bres" id="mcres'+i+'"></span>'+
+        '<button class="brm" type="button" data-i="'+i+'" title="убрать">×</button></div>';
+    }).join('');
+    $('mcRows').querySelectorAll('.bamt').forEach(el=>el.addEventListener('input',e=>{fmtNum(e.target);mc.rows[+e.target.dataset.i].a=e.target.value;mcCalc();}));
+    $('mcRows').querySelectorAll('.bamt').forEach(el=>el.addEventListener('focus',e=>{try{e.target.select();}catch(_){}}));
+    $('mcRows').querySelectorAll('.bamt').forEach(el=>el.addEventListener('keydown',e=>{if(e.key==='e'||e.key==='E'||e.key==='+')e.preventDefault();}));
+    $('mcRows').querySelectorAll('.bcur').forEach(el=>el.addEventListener('change',e=>{mc.rows[+e.target.dataset.i].c=e.target.value;mcCalc();}));
+    $('mcRows').querySelectorAll('.brm').forEach(el=>el.addEventListener('click',e=>{const i=+e.target.dataset.i;if(mc.rows.length>1){mc.rows.splice(i,1);mcRender();}}));
+    mcCalc();
+  }
+  $('mcDir').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+    mc.dir=b.dataset.mcdir;[...$('mcDir').children].forEach(x=>x.classList.toggle('on',x===b));mcRender();});
+  $('mcMode').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+    mc.kmode=b.dataset.mcmode;[...$('mcMode').children].forEach(x=>x.classList.toggle('on',x===b));mcRender();});
+  $('mcAdd').addEventListener('click',()=>{ mc.rows.push({a:'',c:'UAH'}); mcRender();
+    const ins=$('mcRows').querySelectorAll('.bamt'); if(ins.length) ins[ins.length-1].focus(); });
+  $('mcTotal').addEventListener('input',e=>{ fmtNum(e.target); mcCalc(); });
+  $('mcTotal').addEventListener('focus',e=>{try{e.target.select();}catch(_){}});
+  $('mcTotal').addEventListener('keydown',e=>{if(e.key==='e'||e.key==='E'||e.key==='+')e.preventDefault();});
+  $('mcRestCur').addEventListener('change',e=>{ mc.restCur=e.target.value; mcCalc(); });
+  // строка расчёта для клиента: только суммы (без коэффициентов и базовых курсов)
+  function mcRowLine(o){ return o.formula; }  // полная развёрнутая формула строки (курс × коэффициент)
+  function buildCopyMc(){
+    if(mcTotVal==null) return null;
+    let txt;
+    const fmtCash=r=>fmtStr(r.a)+' '+CUS[r.c];
+    if(mc.kmode==='rest'){
+      const t=mcTotVal;
+      const d=t.d||(mc.dir==='recv'?'buy':'sell');
+      const rows=mc.rows.filter(r=>pf(r.a)>0);
+      const lines=rows.map(r=>{const o=mcOne(d,r.c,'money',pf(r.a)); return o?mcRowLine(o):'';}).filter(Boolean);
+      const fixedU=Math.round((t.total-t.rem)*100)/100;
+      const cashSide=rows.map(fmtCash).concat([ffMc(t.restCash)+' '+CUS[t.rc]]).join(' + ');
+      const restF=mcOne(d,t.rc,'crypto',t.rem);
+      lines.push('Залишок: '+ffMc(t.total)+' − '+ffMc(fixedU)+' = '+ffMc(t.rem)+' USDT'+
+        (restF? (d==='buy'? ' — доплата '+restF.formula : ' → '+restF.formula) : ''));
+      txt = d==='buy'
+        ? 'Віддаєте '+cashSide+' → отримуєте '+ffMc(t.total)+' USDT\nРозрахунок:\n'+lines.join('\n')
+        : 'Віддаєте '+ffMc(t.total)+' USDT → отримуєте '+cashSide+'\nРозрахунок:\n'+lines.join('\n');
+      try{ if(d==='sell'&&t.total>0&&window.vSuggestExpected) window.vSuggestExpected(t.total); }catch(e){}
+    } else {
+      const {d,known}=mcState();
+      const rows=mc.rows.filter(r=>pf(r.a)>0);
+      const lines=rows.map(r=>{const o=mcOne(d,r.c,known,pf(r.a)); const cu=r.c.indexOf('>')<0?CUS[r.c]:'грн'; return o?mcRowLine(o):'';}).filter(Boolean);
+      const usdtTotal=ffMc(mcTotVal)+' USDT';
+      const cashList = known==='money'
+        ? rows.map(r=>{const o=mcOne(d,r.c,known,pf(r.a)); return o&&o.quote? (ffMc(o.payAmount)+' грн') : (fmtStr(r.a)+' '+CUS[r.c]);}).join(' + ')
+        : rows.map(r=>{const o=mcOne(d,r.c,known,pf(r.a)); return o?ffMc(o.value)+' '+CUS[r.c]:'';}).filter(Boolean).join(' + ');
+      const gives = d==='buy'? cashList : usdtTotal;
+      const gets  = d==='buy'? usdtTotal : cashList;
+      txt='Віддаєте '+gives+' → отримуєте '+gets+'\nРозрахунок:\n'+lines.join('\n');
+      try{ if(d==='sell'&&mcTotVal>0&&window.vSuggestExpected) window.vSuggestExpected(mcTotVal); }catch(e){}
+    }
+    return txt;
+  }
+  function doCopyMc(){ clip(buildCopyMc(),'mcCopyBtn'); }
+  $('mcCopyBtn').addEventListener('click',doCopyMc);
+
+  // --- сверка присланной суммы (ожидаем то, что клиент ОТДАЁТ) ---
+  function checkRecv(){
+    const el=$('rcV'); if(!el) return;
+    if(!last||last.error){ el.textContent=''; el.className='rcv'; return; }
+    const raw=($('rcIn').value||'').trim();
+    if(!raw){ el.textContent=''; el.className='rcv'; return; }
+    const got=parseFloat(raw.replace(/[\s\u2009\u00a0]/g,'').replace(',','.'));
+    if(!(got>0)){ el.textContent=''; el.className='rcv'; return; }
+    const exp=last.gives.v, u=last.gives.u, d=got-exp;
+    if(Math.abs(d)<0.005){ el.textContent='✓ сходится: '+f2(exp)+' '+u; el.className='rcv ok'; }
+    else if(d<0){ el.textContent='не хватает '+f2(-d)+' '+u+' (ждём '+f2(exp)+' '+u+')'; el.className='rcv bad'; }
+    else { el.textContent='перебор на '+f2(d)+' '+u+' (ждём '+f2(exp)+' '+u+')'; el.className='rcv bad'; }
+  }
+  $('rcIn').addEventListener('input',e=>{ fmtNum(e.target); checkRecv(); });
+  $('rcIn').addEventListener('keydown',e=>{ if(e.key==='e'||e.key==='E'||e.key==='+') e.preventDefault(); });
+
+
+  // --- вкладки единой панели ---
+  function setTab(name){
+    document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===name));
+    document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.dataset.pane===name));
+    if(name==='verify' && !window.__vRecentAuto && typeof window.__vAutoLoad==='function'){
+      if(window.__vAutoLoad()) window.__vRecentAuto=true;
+    }
+  }
+  document.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',()=>setTab(b.dataset.tab)));
+  // единый блок расчёта: переключение режима внутри карточки
+  function switchMode(id){
+    document.querySelectorAll('#modeSeg button').forEach(b=>b.classList.toggle('on',b.dataset.mode===id));
+    ['secEx','secMc','secEu'].forEach(x=>{ const el=document.getElementById(x); if(el) el.classList.toggle('on',x===id); });
+  }
+  $('modeSeg').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; switchMode(b.dataset.mode); });
+  // разбор фразы: включить нужный режим и мягко подсветить карточку
+  function focusSec(id){ setTab('calc'); switchMode(id); }
+
+  mcRender();
+  loadRates(); labels(); render(); euLabels(); euRender(); ratesSummary(); renderUsdtRates(); updateSumHint(); stepVis();
+  updateRatesAge(); setInterval(updateRatesAge,60000); checkSpread();
+  fmtNum($('amount')); fmtNum($('euAmt')); fmtNum($('mcTotal'));
+})();
+</script>
+<script>
+/* ===== Блок «Проверка транзакции» — автономный, свой namespace, ядро расчётов не трогает ===== */
+(function(){
+  const $=id=>document.getElementById(id);
+  const NET={
+    tron:{name:'TRON · TRC20', usdt:'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t', usdtHex:'41a614f803b6fd780986a42c78ec9c7f77e6ded13c', dec:6, kind:'tron'},
+    eth :{name:'Ethereum · ERC20', usdt:'0xdac17f958d2ee523a2206206994597c13d831ec7', dec:6, chainid:1, conf:12, kind:'evm'},
+    bsc :{name:'BSC · BEP20', usdt:'0x55d398326f99059ff775485246999027b3197955', dec:18, chainid:56, conf:15, kind:'evm'}
+  };
+  const TOPIC='0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef';
+  let net='tron';
+  let staleUnit='h';  // 'h' часы | 'm' минуты
+  function staleMs(){ const v=parseFloat(String($('vStaleVal').value).replace(',','.'))||0; if(!(v>0)) return 0; return v*(staleUnit==='m'?60000:3600000); }
+
+  const LSK='usdtVerifyCfg', LSJ='usdtVerifyCounted';
+  function loadCfg(){ try{ const o=JSON.parse(localStorage.getItem(LSK)||'{}');
+    if(o.wallets!=null) $('vWallets').value=o.wallets;
+    if(o.ethKey!=null) $('vEthKey').value=o.ethKey;
+    if(o.tronKey!=null) $('vTronKey').value=o.tronKey;
+    if(o.gridKey!=null && $('vGridKey')) $('vGridKey').value=o.gridKey;
+    // новый формат {staleVal, staleUnit}; старый {staleHrs} мигрируем в часы
+    if(o.staleVal!=null){ $('vStaleVal').value=o.staleVal; staleUnit=(o.staleUnit==='m')?'m':'h'; }
+    else { $('vStaleVal').value = o.staleHrs!=null? o.staleHrs : '2'; staleUnit='h'; }
+    [...$('vStaleUnit').children].forEach(b=>b.classList.toggle('on',b.dataset.u===staleUnit));
+  }catch(e){ $('vStaleVal').value='2'; staleUnit='h'; } }
+  function saveCfg(){ try{ localStorage.setItem(LSK,JSON.stringify({wallets:$('vWallets').value,ethKey:$('vEthKey').value.trim(),tronKey:$('vTronKey').value.trim(),gridKey:$('vGridKey')?$('vGridKey').value.trim():'',staleVal:$('vStaleVal').value.trim(),staleUnit})); }catch(e){} }
+  function journal(){ try{ return new Set(JSON.parse(localStorage.getItem(LSJ)||'[]')); }catch(e){ return new Set(); } }
+  function saveJournal(s){ try{ localStorage.setItem(LSJ,JSON.stringify([...s])); }catch(e){} }
+  const jkey=(n,h)=>n+':'+h.replace(/^0x/,'').toLowerCase();
+
+  // BigInt-форматирование: делим на 10^dec строковой арифметикой (BSC 18 знаков вне Number)
+  function fmtUnits(big,dec){
+    let neg=big<0n; if(neg) big=-big;
+    const s=big.toString().padStart(dec+1,'0');
+    const ip=s.slice(0,s.length-dec)||'0';
+    let fp=dec>0?s.slice(s.length-dec):''; fp=fp.replace(/0+$/,'');
+    const g=ip.replace(/\B(?=(\d{3})+(?!\d))/g,'\u2009');
+    return (neg?'-':'')+(fp?g+','+fp:g);
+  }
+  function toHuman(big,dec){ const s=big.toString().padStart(dec+1,'0'); return Number(s.slice(0,s.length-dec)+'.'+(dec?s.slice(s.length-dec):'0')); }
+  // сумма для списка поступлений: ровно 2 знака, разделение тысяч, коммерческое округление половины вверх
+  function fmtAmt2(big,dec){
+    let neg=big<0n; if(neg) big=-big;
+    if(dec>2){ const div=10n**BigInt(dec-2), r=big%div, q=big/div; if(r*2n>=div) big=q+1n; else big=q; dec=2; }
+    else if(dec<2){ big=big*(10n**BigInt(2-dec)); dec=2; }
+    const s=big.toString().padStart(3,'0');
+    const ip=s.slice(0,s.length-2)||'0', fp=s.slice(s.length-2);
+    const g=ip.replace(/\B(?=(\d{3})+(?!\d))/g,'\u2009');
+    return (neg?'-':'')+g+','+fp;
+  }
+  function fmtTime(ms){ if(!ms) return '—'; try{ return new Date(ms).toLocaleString('ru-RU'); }catch(e){ return '—'; } }
+  function esc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+  function normEvm(a){ a=String(a).trim().toLowerCase(); if(/^[0-9a-f]{40}$/.test(a)) a='0x'+a; return a; }
+  // нормализованный список моих кошельков нужного типа
+  function walletList(kind){
+    const list=String($('vWallets').value).split(/[\s,;]+/).map(x=>x.trim()).filter(Boolean);
+    if(kind==='evm') return list.filter(x=>/^(0x)?[0-9a-fA-F]{40}$/.test(x)).map(normEvm);
+    return list.filter(x=>/^T[1-9A-HJ-NP-Za-km-z]{25,40}$/.test(x));
+  }
+  // сверка получателя по сети: {state:true|false|null, reason}
+  function walletCheck(n,to,raw){
+    const list=String(raw).split(/[\s,;]+/).map(x=>x.trim()).filter(Boolean);
+    if(!list.length) return {state:null,reason:'empty'};
+    if(NET[n].kind==='evm'){
+      const w=list.filter(x=>/^(0x)?[0-9a-fA-F]{40}$/.test(x)).map(normEvm);
+      if(!w.length) return {state:null,reason:'noNet'};
+      return {state:w.includes(normEvm(to||'')),reason:''};
+    } else {
+      const w=list.filter(x=>/^T[1-9A-HJ-NP-Za-km-z]{25,40}$/.test(x)).map(x=>x.trim());
+      if(!w.length) return {state:null,reason:'noNet'};
+      return {state:w.includes(String(to||'').trim()),reason:''};
+    }
+  }
+  function ageStr(ms){ const h=ms/3600000; if(h<1) return Math.max(1,Math.round(ms/60000))+' мин'; if(h<48) return Math.round(h)+' ч'; return Math.round(h/24)+' дн'; }
+
+  const isEvm=h=>/^0x[0-9a-fA-F]{64}$/.test(h);
+  const isTron=h=>/^[0-9a-fA-F]{64}$/.test(h);
+  function setNet(n){ net=n; [...$('vNet').children].forEach(b=>b.classList.toggle('on',b.dataset.net===n)); }
+  function hint(){ const h=$('vHash').value.trim(); let msg='';
+    if(h){ if(NET[net].kind==='evm'&&!isEvm(h)) msg='для ETH/BSC хеш — 0x + 64 hex';
+      else if(net==='tron'&&!isTron(h)) msg='для TRON хеш — 64 hex без 0x'; }
+    $('vHashHint').textContent=msg; }
+  function onHashInput(){
+    const h=$('vHash').value.trim();
+    if(h){ if(isEvm(h)&&net==='tron') setNet('eth');
+      else if(isTron(h)&&NET[net].kind==='evm') setNet('tron'); }
+    hint();
+  }
+
+  // --- ссылка на транзакцию в эксплорере: строится ТОЛЬКО из валидного hex-хеша, данные API не участвуют ---
+  const EXPURL={tron:h=>'https://tronscan.org/#/transaction/'+h.replace(/^0x/,''),
+                eth:h=>'https://etherscan.io/tx/'+h,
+                bsc:h=>'https://bscscan.com/tx/'+h};
+  function txUrl(hash){
+    const h=String(hash||'').trim();
+    if(NET[net].kind==='evm'){ if(!isEvm(h)) return null; } else if(!isTron(h)) return null;
+    return EXPURL[net](h);
+  }
+  function linkHtml(hash){
+    const u=txUrl(hash); if(!u) return '';
+    return '<div style="display:flex;gap:8px;margin-top:12px">'+
+      '<a class="badd" style="flex:1;text-align:center;text-decoration:none;margin-top:0" target="_blank" rel="noopener noreferrer" href="'+esc(u)+'">Відкрити в експлорері ↗</a>'+
+      '<button class="badd" id="vLinkCopy" type="button" style="flex:1;margin-top:0">Скопіювати посилання</button></div>';
+  }
+  function vCopyFb(txt,done){ const t=document.createElement('textarea'); t.value=txt; document.body.appendChild(t); t.select(); try{ document.execCommand('copy'); done(); }catch(e){} document.body.removeChild(t); }
+  function bindLink(hash){
+    const b=$('vLinkCopy'); if(!b) return;
+    const u=txUrl(hash); if(!u) return;
+    b.addEventListener('click',()=>{ const done=()=>{ b.textContent='Скопійовано ✓'; setTimeout(()=>{ b.textContent='Скопіювати посилання'; },1400); };
+      try{ navigator.clipboard.writeText(u).then(done,()=>vCopyFb(u,done)); }catch(e){ vCopyFb(u,done); } });
+  }
+
+  async function fetchJson(url,headers){ const r=await fetch(url,headers?{headers}:undefined); return r.json(); }
+
+  // --- TRON hex(41…) → Base58Check, чтобы сверять адреса TronGrid с твоими кошельками ---
+  const B58='123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+  function sha256(bytes){
+    // minimal SHA-256 over Uint8Array → Uint8Array (для чек-суммы Base58Check)
+    const K=[0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
+    let h=[0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];
+    const l=bytes.length, bl=l*8, k=(((l+8)>>6)+1)<<6, m=new Uint8Array(k); m.set(bytes); m[l]=0x80;
+    const dv=new DataView(m.buffer); dv.setUint32(k-4, bl>>>0); dv.setUint32(k-8, Math.floor(bl/0x100000000));
+    const rr=(x,n)=>(x>>>n)|(x<<(32-n)); const w=new Uint32Array(64);
+    for(let i=0;i<k;i+=64){ for(let t=0;t<16;t++) w[t]=dv.getUint32(i+t*4);
+      for(let t=16;t<64;t++){ const s0=rr(w[t-15],7)^rr(w[t-15],18)^(w[t-15]>>>3), s1=rr(w[t-2],17)^rr(w[t-2],19)^(w[t-2]>>>10); w[t]=(w[t-16]+s0+w[t-7]+s1)|0; }
+      let [a,b,c,d,e,f,g,hh]=h;
+      for(let t=0;t<64;t++){ const S1=rr(e,6)^rr(e,11)^rr(e,25), ch=(e&f)^(~e&g), t1=(hh+S1+ch+K[t]+w[t])|0,
+        S0=rr(a,2)^rr(a,13)^rr(a,22), mj=(a&b)^(a&c)^(b&c), t2=(S0+mj)|0;
+        hh=g;g=f;f=e;e=(d+t1)|0;d=c;c=b;b=a;a=(t1+t2)|0; }
+      h=[(h[0]+a)|0,(h[1]+b)|0,(h[2]+c)|0,(h[3]+d)|0,(h[4]+e)|0,(h[5]+f)|0,(h[6]+g)|0,(h[7]+hh)|0];
+    }
+    const out=new Uint8Array(32), o=new DataView(out.buffer); h.forEach((v,i)=>o.setUint32(i*4,v>>>0)); return out;
+  }
+  function hexToBytes(hx){ hx=String(hx).replace(/^0x/,''); if(hx.length%2) hx='0'+hx; const a=new Uint8Array(hx.length/2); for(let i=0;i<a.length;i++) a[i]=parseInt(hx.substr(i*2,2),16); return a; }
+  function b58enc(bytes){ let x=0n; for(const b of bytes) x=x*256n+BigInt(b); let s=''; while(x>0n){ s=B58[Number(x%58n)]+s; x/=58n; } for(const b of bytes){ if(b===0) s='1'+s; else break; } return s; }
+  function tronHexToBase58(hex){
+    try{ let h=String(hex||'').toLowerCase().replace(/^0x/,''); if(h.length===40) h='41'+h; if(!/^41[0-9a-f]{40}$/.test(h)) return null;
+      const body=hexToBytes(h); const chk=sha256(sha256(body)).slice(0,4);
+      const full=new Uint8Array(body.length+4); full.set(body); full.set(chk, body.length);
+      return b58enc(full);
+    }catch(e){ return null; }
+  }
+
+  // --- TronGrid как резервный источник (отдаёт CORS; формат сырой: hex-адреса, hex-сумма в логе Transfer) ---
+  async function checkTronGrid(hash){
+    const h=hash.replace(/^0x/,''), key=$('vGridKey')?$('vGridKey').value.trim():'';
+    const hdr=key?{'TRON-PRO-API-KEY':key,'Content-Type':'application/json'}:{'Content-Type':'application/json'};
+    const post=async(path)=>{ const r=await fetch('https://api.trongrid.io'+path,{method:'POST',headers:hdr,body:JSON.stringify({value:h})}); return r.json(); };
+    let info, tx;
+    try{ info=await post('/wallet/gettransactioninfobyid'); }catch(e){ throw {net:true}; }
+    if(!info || (info.id===undefined && info.receipt===undefined && !info.log)) throw {notfound:true};
+    try{ tx=await post('/wallet/gettransactionbyid'); }catch(e){ tx=null; }
+    const off=NET.tron.usdtHex.toLowerCase();
+    const TR='ddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef';
+    const logs=Array.isArray(info.log)?info.log:[];
+    const norm=a=>('41'+String(a||'').toLowerCase().replace(/^0x/,'').slice(-40));
+    const usdtLogs=logs.filter(l=>l.topics&&l.topics[0]&&l.topics[0].toLowerCase()===TR && norm(l.address)===off);
+    const myW=walletList('tron');
+    const toB58=l=>tronHexToBase58(norm(l.topics&&l.topics[2]));
+    const pick=usdtLogs.find(l=>myW.includes(toB58(l)))||usdtLogs[0]||null;
+    const nOff=usdtLogs.length;
+    let amount=0n; try{ if(pick&&pick.data) amount=BigInt('0x'+String(pick.data).replace(/^0x/,'')); }catch(e){}
+    const cret=(info.receipt&&info.receipt.result)|| (Array.isArray(info.contractResult)?'':'') ;
+    const revert = info.result==='FAILED' || (info.receipt&&info.receipt.result&&info.receipt.result!=='SUCCESS');
+    const status = revert? 'FAILED':'SUCCESS';
+    const confirmed = info.blockNumber!=null && info.blockNumber>0;
+    return {kind:'tron',status,confirmed,confs:null,
+      isUsdt:!!pick, contract: pick? tronHexToBase58(norm(pick.address)) : null,
+      from: pick? tronHexToBase58(norm(pick.topics[1])) : '',
+      to:   pick? toB58(pick) : '',
+      amount,dec:6,ts:info.blockTimeStamp||null,hasTransfer:!!pick,nOff,src:'TronGrid'};
+  }
+
+  async function checkTron(hash){
+    const h=hash.replace(/^0x/,''), key=$('vTronKey').value.trim();
+    const url='https://apilist.tronscanapi.com/api/transaction-info?hash='+encodeURIComponent(h);
+    let j; try{ j=await fetchJson(url,key?{'TRON-PRO-API-KEY':key}:null); }catch(e){ throw {net:true}; }
+    if(!j || (!j.trc20TransferInfo && !j.tokenTransferInfo && j.confirmed===undefined && !j.contractRet)) throw {notfound:true};
+    const off=NET.tron.usdt;
+    const trs = (Array.isArray(j.trc20TransferInfo)&&j.trc20TransferInfo.length)? j.trc20TransferInfo : (j.tokenTransferInfo?[j.tokenTransferInfo]:[]);
+    const offTrs=trs.filter(x=>x.contract_address===off);
+    const myW=walletList('tron');
+    const tr = offTrs.find(x=>myW.includes(String(x.to_address||'').trim())) || offTrs[0] || trs[0] || null;
+    const nOff=offTrs.length;
+    const status = j.revert===true ? 'FAILED' : ((j.contractRet && j.contractRet!=='SUCCESS')?'FAILED':'SUCCESS');
+    const dec = tr&&tr.decimals!=null? Number(tr.decimals):6;
+    let amount=0n; try{ if(tr&&tr.amount_str!=null) amount=BigInt(tr.amount_str); }catch(e){}
+    return {kind:'tron',status,confirmed:j.confirmed===true,confs:null,
+      isUsdt:!!(tr&&tr.contract_address===off), contract:tr?tr.contract_address:null,
+      from:tr?tr.from_address:(j.ownerAddress||''), to:tr?tr.to_address:(j.toAddress||''),
+      amount,dec,ts:j.timestamp||null,hasTransfer:!!tr,nOff};
+  }
+
+  async function checkEvm(hash){
+    const cfg=NET[net], key=$('vEthKey').value.trim();
+    if(!key) throw {nokey:true};
+    const base='https://api.etherscan.io/v2/api?chainid='+cfg.chainid+'&apikey='+encodeURIComponent(key);
+    let rec; try{ rec=await fetchJson(base+'&module=proxy&action=eth_getTransactionReceipt&txhash='+hash); }catch(e){ throw {net:true}; }
+    const r=rec&&rec.result; if(!r) throw {notfound:true};
+    if(typeof r!=='object') throw {api:String(r)};
+    const logs=r.logs||[];
+    const tlogs=logs.filter(l=>l.topics&&l.topics[0]&&l.topics[0].toLowerCase()===TOPIC);
+    const usdtLogs=tlogs.filter(l=>l.address&&l.address.toLowerCase()===cfg.usdt);
+    const myW=walletList('evm');
+    const toOf=l=>(l&&l.topics&&l.topics[2])?normEvm('0x'+l.topics[2].slice(-40)):'';
+    const usdtLog=usdtLogs.find(l=>myW.includes(toOf(l)))||usdtLogs[0]||null;
+    const pick=usdtLog||tlogs[0]||null;
+    const nOff=usdtLogs.length;
+    const status = r.status==='0x0'?'FAILED':'SUCCESS';
+    let confs=null, ts=null;
+    try{ const head=await fetchJson(base+'&module=proxy&action=eth_blockNumber');
+      if(head&&typeof head.result==='string'&&/^0x[0-9a-fA-F]+$/.test(head.result)&&r.blockNumber) confs=parseInt(head.result,16)-parseInt(r.blockNumber,16);
+      const blk=await fetchJson(base+'&module=proxy&action=eth_getBlockByNumber&boolean=false&tag='+r.blockNumber);
+      if(blk&&blk.result&&blk.result.timestamp) ts=parseInt(blk.result.timestamp,16)*1000;
+    }catch(e){}
+    let amount=0n; try{ if(pick&&pick.data&&pick.data!=='0x') amount=BigInt(pick.data); }catch(e){}
+    return {kind:'evm',status,confirmed:confs!=null&&confs>=cfg.conf,confs,
+      isUsdt:!!usdtLog, contract:pick?pick.address:null,
+      from:pick&&pick.topics[1]?'0x'+pick.topics[1].slice(-40):(r.from||''),
+      to:pick&&pick.topics[2]?'0x'+pick.topics[2].slice(-40):(r.to||''),
+      amount,dec:cfg.dec,ts,hasTransfer:!!pick,nOff};
+  }
+
+  async function doCheck(){
+    const hash=$('vHash').value.trim(), box=$('vResult'); box.style.display='block';
+    const show=h=>{ box.innerHTML=h+linkHtml(hash); bindLink(hash); };
+    if(!hash){ box.innerHTML='<div class="vverdict vwarn">Впиши хеш транзакции</div>'; return; }
+    const cfg=NET[net];
+    if(cfg.kind==='evm'&&!isEvm(hash)){ show('<div class="vverdict vwarn">Для ETH/BSC хеш должен быть 0x + 64 hex-символа</div>'); return; }
+    if(cfg.kind==='tron'&&!isTron(hash)){ show('<div class="vverdict vwarn">Для TRON хеш — 64 hex-символа без 0x</div>'); return; }
+    show('<div class="vrow" style="color:var(--muted)"><span>Проверяю в сети '+esc(cfg.name)+'…</span></div>');
+    let d;
+    if(cfg.kind==='tron'){
+      try{ d=await checkTron(hash); }
+      catch(e1){
+        // основной источник (TronScan) недоступен/пуст → пробуем TronGrid
+        try{ d=await checkTronGrid(hash); }
+        catch(e2){
+          const e = (e1&&e1.notfound&&e2&&e2.notfound)? e1 : (e1&&e1.net&&e2&&e2.net)? {net:true} : (e2||e1);
+          if(e&&e.net){ show('<div class="vverdict vwarn">Оба источника недоступны (сеть или CORS). Попробуй ещё раз или задай ключ TronGrid в настройках.</div>'); return; }
+          if(e&&e.notfound){ show('<div class="vverdict vwarn">Транзакция не найдена или ещё не в блоке. Подожди и проверь снова.</div>'); return; }
+          show('<div class="vverdict vwarn">Ошибка запроса. Проверь хеш и сеть, попробуй ещё раз.</div>'); return;
+        }
+      }
+    } else {
+      try{ d=await checkEvm(hash); }
+      catch(e){
+        if(e&&e.nokey){ show('<div class="vverdict vwarn">Нужен API-ключ Etherscan — впиши в «Настройки проверки» ниже.</div>'); return; }
+        if(e&&e.api){ show('<div class="vverdict vwarn">Ошибка ответа API: '+esc(String(e.api).slice(0,160))+'. Проверь ключ и лимиты, попробуй ещё раз.</div>'); return; }
+        if(e&&e.net){ show('<div class="vverdict vwarn">Не удалось соединиться (сеть или CORS). Из статичного файла TronScan иногда режется — тогда нужен серверный прокси/бот.</div>'); return; }
+        if(e&&e.notfound){ show('<div class="vverdict vwarn">Транзакция не найдена или ещё не в блоке. Подожди и проверь снова.</div>'); return; }
+        show('<div class="vverdict vwarn">Ошибка запроса. Проверь хеш и сеть, попробуй ещё раз.</div>'); return;
+      }
+    }
+    renderResult(hash,d);
+  }
+
+  function renderResult(hash,d){
+    const cfg=NET[net], box=$('vResult');
+    const wc=walletCheck(net, d.to, $('vWallets').value);
+    const recipOk=wc.state;
+    const expRaw=$('vExpected').value.replace(/[\s\u2009\u00a0]/g,'').replace(',','.');
+    const expected = expRaw? parseFloat(expRaw) : null;
+    const human=toHuman(d.amount,d.dec);
+    const amountMatch = (expected!=null&&isFinite(expected))? Math.abs(human-expected)<=0.01 : null;
+    const counted=journal().has(jkey(net,hash));
+    const staleThr=staleMs();
+    const ageMs = d.ts? (Date.now()-d.ts) : null;
+    const stale = (staleThr>0 && ageMs!=null && ageMs> staleThr);
+
+    let vcls='vok',vico='✓',vtxt='Всё чисто',extra='';
+    if(!d.isUsdt){ vcls='vbad';vico='⚠';vtxt='Это НЕ официальный USDT сети '+cfg.name;
+      extra='<div class="vrow vbad"><b>Контракт</b><span>'+esc(d.contract||'не найден')+' — не совпадает с официальным USDT. Сумме доверять нельзя.</span></div>'; }
+    else if(d.status==='FAILED'){ vcls='vbad';vico='✗';vtxt='Транзакция не прошла (FAILED)'; }
+    else if(recipOk===false){ vcls='vwarn';vico='⚠';vtxt='Получатель — НЕ твой кошелёк'; }
+    else if(!d.confirmed){ vcls='vwarn';vico='⏳';vtxt='Ещё не подтверждён'+(d.confs!=null?(' ('+d.confs+'/'+cfg.conf+')'):''); }
+    else if(amountMatch===false){ vcls='vwarn';vico='⚠';vtxt='Сумма не совпадает — ждали '+expected+', пришло '+fmtUnits(d.amount,d.dec); }
+    else if(counted){ vcls='vwarn';vico='⚠';vtxt='Этот хеш уже засчитывался ранее'; }
+    else if(stale){ vcls='vwarn';vico='⚠';vtxt='Транзакция не сегодняшняя ('+ageStr(ageMs)+' назад) — проверь дату, возможен повтор старого хеша'; }
+    if(vcls==='vok' && recipOk===null){ vcls='vwarn';vico='⚠';vtxt='Сумма и статус в порядке, но получатель не сверялся — добавь свой кошелёк в «Настройки проверки»'; }
+    if(d.nOff>1){
+      extra += recipOk===true
+        ? '<div class="vrow"><b>Переводы</b><span>в транзакции '+d.nOff+' переводов USDT — показан перевод на твой кошелёк</span></div>'
+        : '<div class="vrow vwarn"><b>Переводы</b><span>⚠ в транзакции '+d.nOff+' переводов USDT — показанный может быть не твоим</span></div>';
+    }
+
+    // плашка «сверка получателя выключена / нет кошелька для сети»
+    if(recipOk===null){
+      const msg = wc.reason==='noNet' ? 'сверка получателя пропущена — нет твоего '+cfg.name.split(' ')[0]+'-кошелька в настройках'
+                                       : 'сверка получателя выключена — список кошельков пуст';
+      extra += '<div class="vrow vwarn"><b>Кошелёк</b><span>⚠ '+esc(msg)+'</span></div>';
+    }
+
+    const rows=[];
+    rows.push(['Токен', d.isUsdt?'USDT ✓':'НЕ USDT ⚠']);
+    rows.push(['Сеть', cfg.name+(d.src?' · '+d.src:'')]);
+    rows.push(['Статус', d.status==='SUCCESS'?'успешно':'FAILED']);
+    rows.push(['Подтвержд.', d.kind==='tron'?(d.confirmed?'подтверждён':'ещё нет'):((d.confs!=null?d.confs:'—')+' (нужно ≥'+cfg.conf+')')]);
+    if(expected!=null&&isFinite(expected)) rows.push(['Ожидалось', expected+' USDT'+(amountMatch?'  ✓':'  ✗')]);
+    rows.push(['Отправитель', d.from||'—']);
+    rows.push(['Получатель', (d.to||'—')+(recipOk===true?'  ✓':recipOk===false?'  ✗':'  (не сверялся)')]);
+    rows.push(['Время', fmtTime(d.ts)+(ageMs!=null?' ('+ageStr(ageMs)+' назад)':'')]);
+    rows.push(['Контракт', d.contract||'—']);
+    const rowsHtml=rows.map(r=>'<div class="vrow"><b>'+r[0]+'</b><span>'+esc(String(r[1]))+'</span></div>').join('');
+
+    const jbtn = counted
+      ? '<button class="badd" id="vUnmark" type="button" style="margin-top:14px">Убрать отметку «засчитан»</button>'
+      : '<button class="badd" id="vMark" type="button" style="margin-top:14px">Отметить засчитанным</button>';
+
+    const confirmBtn = vcls==='vok'
+      ? '<button class="badd" id="vConfirmCopy" type="button" style="margin-top:10px;width:100%">Скопіювати підтвердження для клієнта</button>' : '';
+
+    box.innerHTML =
+      '<div class="vverdict '+vcls+'">'+vico+' '+esc(vtxt)+'</div>'+
+      '<div class="vamt '+(d.isUsdt?'':'vbad')+'">'+fmtUnits(d.amount,d.dec)+'<span class="u">USDT</span></div>'+
+      extra + rowsHtml + jbtn + confirmBtn + linkHtml(hash);
+
+    const cc=$('vConfirmCopy');
+    if(cc) cc.addEventListener('click',()=>{ const txt='Платіж отримано: '+fmtUnits(d.amount,d.dec)+' USDT ✓';
+      const done=()=>{ cc.textContent='Скопійовано ✓'; setTimeout(()=>{ cc.textContent='Скопіювати підтвердження для клієнта'; },1400); };
+      try{ navigator.clipboard.writeText(txt).then(done,()=>vCopyFb(txt,done)); }catch(e){ vCopyFb(txt,done); } });
+
+    const mk=$('vMark'), um=$('vUnmark');
+    if(mk) mk.addEventListener('click',()=>{ const s=journal(); s.add(jkey(net,hash)); saveJournal(s); renderResult(hash,d); });
+    if(um) um.addEventListener('click',()=>{ const s=journal(); s.delete(jkey(net,hash)); saveJournal(s); renderResult(hash,d); });
+    bindLink(hash);
+  }
+
+  $('vNet').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return; setNet(b.dataset.net); hint();});
+  $('vHash').addEventListener('input',onHashInput);
+  $('vHash').addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); doCheck(); }});
+  $('vCheck').addEventListener('click',doCheck);
+
+  // --- последние входящие USDT на кошелёк (TRON): TronScan → фолбэк TronGrid ---
+  const isTronAddr=a=>/^T[1-9A-HJ-NP-Za-km-z]{25,40}$/.test(String(a||'').trim());
+  async function fetchRecentTron(addr,start,dir){
+    const key=$('vTronKey').value.trim();
+    const url='https://apilist.tronscanapi.com/api/token_trc20/transfers?limit=25&start='+(start||0)+'&contract_address='+NET.tron.usdt+'&relatedAddress='+encodeURIComponent(addr);
+    let j; try{ j=await fetchJson(url,key?{'TRON-PRO-API-KEY':key}:null); }catch(e){ throw {net:true}; }
+    const arr=Array.isArray(j&&j.token_transfers)?j.token_transfers:(Array.isArray(j&&j.data)?j.data:null);
+    if(!arr) throw {notfound:true};
+    const out=(dir==='out');
+    return arr.filter(t=>String(t.contract_address||'')===NET.tron.usdt &&
+        (out? String(t.from_address||'').trim()===addr : String(t.to_address||'').trim()===addr))
+      .map(t=>({hash:String(t.transaction_id||t.hash||''), ts:t.block_ts||t.block_timestamp||null,
+        from:String(t.from_address||''), to:String(t.to_address||''),
+        peer:out?String(t.to_address||''):String(t.from_address||''),
+        amt:String(t.quant!=null?t.quant:(t.amount_str!=null?t.amount_str:'0')),
+        block:(t.block!=null?t.block:(t.blockNumber!=null?t.blockNumber:null)),
+        dec:(t.tokenInfo&&t.tokenInfo.tokenDecimal!=null)?Number(t.tokenInfo.tokenDecimal):6, src:'TronScan'}));
+  }
+  async function fetchRecentGrid(addr,dir){
+    const key=$('vGridKey')?$('vGridKey').value.trim():'';
+    const out=(dir==='out');
+    const url='https://api.trongrid.io/v1/accounts/'+encodeURIComponent(addr)+'/transactions/trc20?limit=15&'+(out?'only_from=true':'only_to=true')+'&contract_address='+NET.tron.usdt;
+    let j; try{ j=await fetchJson(url,key?{'TRON-PRO-API-KEY':key}:null); }catch(e){ throw {net:true}; }
+    const arr=j&&Array.isArray(j.data)?j.data:null;
+    if(!arr) throw {notfound:true};
+    return arr.filter(t=> out? String(t.from||'').trim()===addr : String(t.to||'').trim()===addr)
+      .map(t=>({hash:String(t.transaction_id||''), ts:t.block_timestamp||null, from:String(t.from||''), to:String(t.to||''),
+        peer:out?String(t.to||''):String(t.from||''),
+        amt:String(t.value!=null?t.value:'0'), block:(t.blockNumber!=null?t.blockNumber:null), dec:(t.token_info&&t.token_info.decimals!=null)?Number(t.token_info.decimals):6, src:'TronGrid'}));
+  }
+  const shortA=a=>{a=String(a);return a.length>14?a.slice(0,7)+'…'+a.slice(-5):a;};
+  const shortH=h=>{h=String(h);return h.length>16?h.slice(0,8)+'…'+h.slice(-6):h;};
+  const isTronAddr2=a=>/^T[1-9A-HJ-NP-Za-km-z]{25,40}$/.test(String(a||'').trim());
+  // --- состояние блока поступлений ---
+  const RS={addr:'',dir:'in',items:[],src:'',page:0,watching:false,timer:null,hashSet:new Set(),flash:new Set(),unack:new Set(),seeded:false,lastNewAt:0,errStreak:0,lastPollAt:0};
+  const SEENK='usdtRecentSeen';
+  function seenGet(a){ try{ return (JSON.parse(localStorage.getItem(SEENK)||'{}')[a])||0; }catch(e){ return 0; } }
+  function seenSet(a,ts){ try{ const o=JSON.parse(localStorage.getItem(SEENK)||'{}'); o[a]=ts; localStorage.setItem(SEENK,JSON.stringify(o)); }catch(e){} }
+  // --- «новые» транзакции: пометка держится, пока оператор не откроет Scan или не скопирует хеш/адрес этой строки ---
+  const UNACKK='usdtUnack';
+  function unackLoad(a){ try{ return new Set((JSON.parse(localStorage.getItem(UNACKK)||'{}')[a])||[]); }catch(e){ return new Set(); } }
+  function unackSave(a,set){ try{ const o=JSON.parse(localStorage.getItem(UNACKK)||'{}'); o[a]=[...set].slice(-300); localStorage.setItem(UNACKK,JSON.stringify(o)); }catch(e){} }
+  function unackAdd(hashes){ for(const h of hashes) RS.unack.add(h); unackSave(RS.addr,RS.unack); }
+  function unackClear(h){ if(!RS.unack.delete(h)) return; unackSave(RS.addr,RS.unack);
+    // снимаем пометку прямо в строке, не перерисовывая список (иначе пропадёт «✓» на кнопке)
+    try{ const row=$('vRecent').querySelector('.trow[data-h="'+h+'"]');
+      if(row){ row.classList.remove('lnew'); const d=row.querySelector('.ldot'); if(d) d.remove(); } }catch(e){} }
+  let beepCtx=null; // общий AudioContext: создаётся по клику «Ждать», иначе браузер глушит звук из таймера
+  function beepPrime(){ try{ const AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
+    if(!beepCtx) beepCtx=new AC(); if(beepCtx.state==='suspended') beepCtx.resume(); }catch(e){} }
+  // один тон: частота f (Гц), старт через at сек, длительность dur сек, громкость vol
+  function tone(f,at,dur,vol){
+    try{ const t0=beepCtx.currentTime+at;
+      const o=beepCtx.createOscillator(), g=beepCtx.createGain();
+      o.type='sine'; o.frequency.value=f;
+      g.gain.setValueAtTime(0.0001,t0);
+      g.gain.exponentialRampToValueAtTime(vol,t0+0.02);      // мягкая атака, без щелчка
+      g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
+      o.connect(g); g.connect(beepCtx.destination);
+      o.start(t0); o.stop(t0+dur+0.02);
+    }catch(e){}
+  }
+  function beepNew(){
+    try{ if(navigator.vibrate) navigator.vibrate([160,90,160]); }catch(e){}
+    try{ if(!beepCtx){ const AC=window.AudioContext||window.webkitAudioContext; if(!AC) return; beepCtx=new AC(); }
+      if(beepCtx.state==='suspended') beepCtx.resume();
+      // восходящая «дзинь-дзинь»: два аккорда, заметно, но не резко
+      tone(784,0,   0.16,0.16); tone(1047,0.10,0.20,0.16);   // соль → до
+      tone(784,0.34,0.16,0.16); tone(1047,0.44,0.24,0.16);   // повтор
+    }catch(e){}
+  }
+  // --- мигание заголовка вкладки: видно, когда калькулятор не в фокусе ---
+  let titleTimer=null; const baseTitle=document.title;
+  function titleFlash(msg){
+    titleStop();
+    let on=true;
+    document.title='🔔 '+msg;
+    titleTimer=setInterval(()=>{ on=!on; document.title=on?('🔔 '+msg):baseTitle; },1000);
+  }
+  function titleStop(){ if(titleTimer){ clearInterval(titleTimer); titleTimer=null; } document.title=baseTitle; }
+  try{ window.addEventListener('focus',titleStop); }catch(e){}
+  try{ document.addEventListener('visibilitychange',()=>{ if(!document.hidden) titleStop(); }); }catch(e){}
+  // --- всплывающая плашка ---
+  function goToTx(hashes){
+    try{ window.focus(); }catch(e){}
+    titleStop();
+    // переключение вкладок живёт в другом IIFE — жмём кнопку вкладки программно
+    try{ const tb=document.querySelector('.tabs button[data-tab="verify"]'); if(tb) tb.click(); }catch(e){}
+    const box=$('vRecent');
+    if(box){ box.style.display='block'; try{ box.scrollIntoView({behavior:'smooth',block:'center'}); }catch(e){} }
+    if(hashes&&hashes.length) renderRecent();  // пометки «новая» уже в unack — просто перерисуем
+  }
+  function showToast(t){
+    const wrap=$('toastWrap'); if(!wrap) return;
+    const out=RS.dir==='out';
+    let amt='—'; try{ amt=fmtAmt2(BigInt(t.amt),t.dec); }catch(e){}
+    const peer=t.peer||t.from||t.to||'';
+    const el=document.createElement('div');
+    el.className='toast'+(out?' out-dir':'');
+    el.innerHTML=
+      '<div class="th"><span class="tdot"></span>'+
+      '<span class="ttl">'+(out?'Відправлення USDT':'Надходження USDT')+'</span>'+
+      '<span class="tclose" data-close="1">×</span></div>'+
+      '<div class="tamt">'+(out?'−':'+')+esc(amt)+' USDT</div>'+
+      (peer?'<div class="tsub">'+(out?'кому: ':'від: ')+esc(shortA(peer))+'</div>':'')+
+      '<div class="thint">натисніть, щоб відкрити транзакції</div>';
+    const close=()=>{ el.classList.add('out'); setTimeout(()=>{ try{el.remove();}catch(e){} },260); };
+    el.addEventListener('click',ev=>{
+      if(ev.target&&ev.target.dataset&&ev.target.dataset.close){ close(); return; }
+      goToTx([t.hash]); close();
+    });
+    wrap.appendChild(el);
+    // ограничим стопку 4 плашками
+    while(wrap.children.length>4) wrap.firstChild.remove();
+    setTimeout(close,12000);  // сами исчезают через 12 с
+  }
+  // --- уведомление ОС (сработает при размещении на https; на file:// Chrome блокирует — тихо игнорируем) ---
+  function osNotify(fresh){
+    try{
+      if(!('Notification' in window) || Notification.permission!=='granted') return;
+      const out=RS.dir==='out';
+      let total=0; for(const t of fresh){ try{ total+=toHuman(BigInt(t.amt),t.dec)||0; }catch(e){} }
+      const title=(out?'Відправлення':'Надходження')+' USDT';
+      const body=(out?'−':'+')+(Math.round(total*100)/100).toLocaleString('ru-RU')+' USDT'+
+        (fresh.length>1?(' · '+fresh.length+' транзакції'):'');
+      const n=new Notification(title,{body,tag:'usdt-in',renotify:true});
+      n.onclick=()=>{ goToTx(fresh.map(t=>t.hash)); try{n.close();}catch(e){} };
+    }catch(e){}
+  }
+  // общий вход: вызвать при обнаружении новых транзакций
+  function notifyFresh(fresh){
+    if(!fresh||!fresh.length) return;
+    beepNew();
+    for(const t of fresh) showToast(t);
+    osNotify(fresh);
+    if(document.hidden){
+      const out=RS.dir==='out';
+      let amt='—'; try{ amt=fmtAmt2(BigInt(fresh[0].amt),fresh[0].dec); }catch(e){}
+      titleFlash((out?'−':'+')+amt+' USDT'+(fresh.length>1?(' +'+(fresh.length-1)):''));
+    }
+  }
+  function pickAddr(){
+    let addr=$('vAddr').value.trim();
+    if(!addr){ const w=walletList('tron'); addr=w[0]||''; if(addr) $('vAddr').value=addr; }
+    return addr;
+  }
+  function fillAddrPick(){
+    const sel=$('vAddrPick'); if(!sel) return;
+    const w=walletList('tron');
+    if(w.length>1){ sel.style.display='';
+      sel.innerHTML=w.map(a=>'<option value="'+esc(a)+'">'+esc(shortA(a))+'</option>').join('');
+      if(w.includes($('vAddr').value.trim())) sel.value=$('vAddr').value.trim();
+    } else sel.style.display='none';
+  }
+  async function fetchPage(addr,page){
+    const d=RS.dir==='out'?'out':'in';
+    if(page>0){ // пагинация есть только у TronScan
+      return {list:await fetchRecentTron(addr,page*25,d), src:'TronScan'};
+    }
+    try{ return {list:await fetchRecentTron(addr,0,d), src:'TronScan'}; }
+    catch(e1){ const l=await fetchRecentGrid(addr,d); return {list:l, src:'TronGrid'}; }
+  }
+  function mergeItems(list){
+    for(const t of list){ if(!RS.hashSet.has(t.hash)){ RS.items.push(t); RS.hashSet.add(t.hash); } }
+    RS.items.sort((a,b)=>(b.ts||0)-(a.ts||0));
+  }
+  function renderRecent(){
+    const box=$('vRecent'); box.style.display='block';
+    const J=journal();
+    const onlyNew=$('vOnlyNew')&&$('vOnlyNew').checked;
+    const expRaw=($('vWaitAmt')?$('vWaitAmt').value:'').replace(/[\s\u2009\u00a0]/g,'').replace(',','.');
+    const exp=expRaw?parseFloat(expRaw):null;
+    const findRaw=($('vFindAmt')?$('vFindAmt').value:'').replace(/[\s\u2009\u00a0]/g,'').replace(',','.');
+    const findAmt=findRaw?parseFloat(findRaw):null;
+    const findAddr=($('vFindAddr')?$('vFindAddr').value:'').trim().toLowerCase();
+    const seenTs=seenGet(RS.addr);
+    const isOut=RS.dir==='out';
+    let shown=0, maxTs=seenTs;
+    const rows=[];
+    for(const t of RS.items){
+      const okHash=/^[0-9a-fA-F]{64}$/.test(String(t.hash).replace(/^0x/,''));
+      const counted=okHash&&J.has(jkey('tron',t.hash));
+      if(onlyNew&&counted) continue;
+      let hAmt=null; try{ hAmt=toHuman(BigInt(t.amt),t.dec); }catch(e){}
+      if(findAmt!=null&&isFinite(findAmt)&&!(hAmt!=null&&Math.abs(hAmt-findAmt)<=0.01)) continue;
+      const peer=t.peer||t.from||'';
+      if(findAddr&&String(peer).toLowerCase().indexOf(findAddr)<0) continue;
+      shown++; if(t.ts&&t.ts>maxTs) maxTs=t.ts;
+      let amt='—', human=null; try{ amt=fmtAmt2(BigInt(t.amt),t.dec); human=toHuman(BigInt(t.amt),t.dec); }catch(e){}
+      const match = exp!=null&&isFinite(exp)&&human!=null&&Math.abs(human-exp)<=0.01;
+      const cls='trow'+(match?' lmatch':(exp!=null&&isFinite(exp)?' ldim':''))+(RS.unack.has(t.hash)?' lnew':'');
+      const dt=t.ts?new Date(t.ts):null;
+      const tmDate=dt?(String(dt.getDate()).padStart(2,'0')+'.'+String(dt.getMonth()+1).padStart(2,'0')):'—';
+      const tmTime=dt?(String(dt.getHours()).padStart(2,'0')+':'+String(dt.getMinutes()).padStart(2,'0')):'';
+      const isNew=RS.unack.has(t.hash);
+      const blk=(t.block!=null&&/^\d+$/.test(String(t.block)))?String(t.block):null;
+      const scanUrl=okHash?('https://tronscan.org/#/transaction/'+t.hash):null;
+      const peerLbl=isOut?'кому':'от';
+      const amtColor=isOut?'var(--buy)':'var(--sell)';
+      const amtSign=isOut?'−':'+';
+      rows.push('<div class="'+cls+'" data-h="'+esc(okHash?t.hash:'')+'">'+
+        '<span class="tc tc-t">'+(isNew?'<span class="ldot">●</span>':'')+esc(tmDate)+(tmTime?'<br>'+esc(tmTime):'')+'</span>'+
+        '<span class="tc tc-a"><b style="color:'+amtColor+'">'+amtSign+esc(amt)+'</b><span class="tu">USDT</span>'+
+          (counted?'<span class="tcnt">✓</span>':'')+'</span>'+
+        '<span class="tc tc-p"><span class="tlbl">'+peerLbl+'</span>'+esc(shortA(peer))+'</span>'+
+        '<span class="tc tc-h">'+esc(shortH(t.hash))+(blk?'<span class="tblk">блок '+esc(blk)+'</span>':'')+'</span>'+
+        '<span class="tc tc-act">'+
+          (okHash?'<button class="cpbtn" type="button" data-cp="'+esc(t.hash)+'" title="Скопировать хеш">⧉ хеш</button>':'')+
+          (isTronAddr2(peer)?'<button class="cpbtn" type="button" data-cp="'+esc(peer)+'" title="Скопировать адрес">⧉ адрес</button>':'')+
+          (scanUrl?'<a class="cpbtn scanlink" target="_blank" rel="noopener noreferrer" href="'+esc(scanUrl)+'" title="Открыть транзакцию на TronScan">↗ Scan</a>':'')+
+        '</span></div>');
+    }
+    const filtering = (findAmt!=null&&isFinite(findAmt)) || !!findAddr || onlyNew;
+    const head='<div class="thead"><span class="tc tc-t">Время</span><span class="tc tc-a">Сумма</span><span class="tc tc-p">'+(isOut?'Кому':'От кого')+'</span><span class="tc tc-h">Хеш · блок</span><span class="tc tc-act">Действия</span></div>';
+    const noneMsg = isOut?'исходящих USDT-переводов не найдено':'входящих USDT-переводов не найдено';
+    box.innerHTML = shown? head+rows.join('')+'<div class="lempty" style="border-top:1px solid var(--line);padding-top:8px">нажми строку — хеш подставится и проверится · источник: '+esc(RS.src)+'</div>'
+      : '<div class="lempty">'+(RS.items.length?(filtering?'по фильтру ничего не найдено':'все загруженные уже засчитаны'):noneMsg)+'</div>';
+    box.querySelectorAll('.trow[data-h]').forEach(el=>el.addEventListener('click',()=>{
+      const h=el.dataset.h; if(!h) return;
+      $('vHash').value=h; setNet('tron'); hint(); doCheck();
+      try{ $('vResult').scrollIntoView({behavior:'smooth',block:'nearest'}); }catch(e){}
+    }));
+    box.querySelectorAll('.cpbtn').forEach(b=>b.addEventListener('click',ev=>{
+      ev.stopPropagation();
+      const row=b.closest('.trow'); const rh=row?row.dataset.h:'';
+      if(b.classList.contains('scanlink')){ if(rh) unackClear(rh); return; } // переход на TronScan = увидел
+      const v=b.dataset.cp||''; const old=b.textContent;
+      const done=()=>{ b.textContent='✓'; setTimeout(()=>{ b.textContent=old; },1100); };
+      try{ navigator.clipboard.writeText(v).then(done,()=>vCopyFb(v,done)); }catch(e){ vCopyFb(v,done); }
+      if(rh) unackClear(rh); // копия хеша или адреса = увидел
+    }));
+    // итог за сегодня по загруженным
+    const sum=$('vRecentSum');
+    if(RS.items.length){
+      const d0=new Date(); d0.setHours(0,0,0,0); const t0=d0.getTime();
+      let tot=0n, n=0, un=0;
+      for(const t of RS.items){ if(t.ts&&t.ts>=t0){ n++; try{ tot+=BigInt(t.amt); }catch(e){}
+        if(!J.has(jkey('tron',t.hash))) un++; } }
+      sum.style.display='';
+      const word=RS.dir==='out'?'отправлено':'пришло';
+      sum.textContent = n? ('сегодня '+word+': '+fmtUnits(tot,6)+' USDT ('+n+' перев.)'+(RS.dir==='out'?'':(un?(' · незасчитанных: '+un):' · все засчитаны'))+' — по загруженным '+RS.items.length)
+                         : ('сегодня '+(RS.dir==='out'?'отправлений':'поступлений')+' нет (по загруженным '+RS.items.length+')');
+    } else sum.style.display='none';
+    $('vMoreBtn').style.display = (RS.src==='TronScan' && RS.items.length>=10+RS.page*10)?'':'none';
+    $('vExportBtn').style.display = RS.items.length?'':'none';
+    renderWalletHead();
+    if(maxTs>seenTs) seenSet(RS.addr,maxTs);
+  }
+  function renderWalletHead(){
+    const el=$('vWalletHead'); if(!el) return;
+    if(!isTronAddr2(RS.addr)){ el.style.display='none'; return; }
+    el.style.display='';
+    const u='https://tronscan.org/#/address/'+RS.addr;
+    el.innerHTML='кошелёк: <b style="color:#C0CAD6">'+esc(RS.addr)+'</b> '+
+      '<a class="cpbtn scanlink" target="_blank" rel="noopener noreferrer" href="'+esc(u)+'" style="margin-left:6px" title="Открыть кошелёк на TronScan">↗ Scan</a> '+
+      '<button class="cpbtn" type="button" id="vAddrCopy" style="margin-left:4px" title="Скопировать адрес">⧉</button>';
+    const cb=$('vAddrCopy');
+    if(cb) cb.addEventListener('click',()=>{ const done=()=>{ cb.textContent='✓'; setTimeout(()=>{cb.textContent='⧉';},1100); };
+      try{ navigator.clipboard.writeText(RS.addr).then(done,()=>vCopyFb(RS.addr,done)); }catch(e){ vCopyFb(RS.addr,done); } });
+  }
+  function exportRecent(){
+    const J=journal();
+    const lbl=RS.dir==='out'?'кому':'от';
+    const lines=RS.items.map(t=>{ let a='—'; try{ a=fmtAmt2(BigInt(t.amt),t.dec); }catch(e){}
+      const dt=t.ts?new Date(t.ts):null;
+      const tm=dt?(String(dt.getDate()).padStart(2,'0')+'.'+String(dt.getMonth()+1).padStart(2,'0')+' '+String(dt.getHours()).padStart(2,'0')+':'+String(dt.getMinutes()).padStart(2,'0')):'—';
+      return tm+'  '+a+' USDT  '+lbl+' '+(t.peer||t.from||'')+'  '+t.hash+(J.has(jkey('tron',t.hash))?'  [засчитан]':''); });
+    const hdr=RS.dir==='out'?'Отправленные с ':'Поступления на ';
+    const txt=hdr+RS.addr+' (USDT, TRON):\n'+lines.join('\n');
+    const b=$('vExportBtn'), old=b.textContent;
+    const done=()=>{ b.textContent='Скопировано ✓'; setTimeout(()=>{b.textContent=old;},1400); };
+    try{ navigator.clipboard.writeText(txt).then(done,()=>vCopyFb(txt,done)); }catch(e){ vCopyFb(txt,done); }
+  }
+  async function showRecent(){
+    // наблюдение НЕ останавливаем: «Показать» лишь обновляет список
+    const box=$('vRecent'); box.style.display='block';
+    const addr=pickAddr(); fillAddrPick();
+    if(!isTronAddr2(addr)){ box.innerHTML='<div class="lempty">впиши TRON-кошелёк (начинается с T) или добавь его в «Мои кошельки-получатели» в настройках</div>'; $('vRecentSum').style.display='none'; $('vMoreBtn').style.display='none'; return; }
+    box.innerHTML='<div class="lempty">'+(RS.dir==='out'?'запрашиваю отправленные…':'запрашиваю последние поступления…')+'</div>';
+    if(RS.addr!==addr){ RS.addr=addr; RS.seeded=false; }
+    RS.items=[]; RS.hashSet=new Set(); RS.flash=new Set(); RS.page=0;
+    RS.unack=unackLoad(addr);
+    let full=[];
+    try{ const r=await fetchPage(addr,0); RS.src=r.src; full=r.list.slice(0,25); mergeItems(full); }
+    catch(e){ box.innerHTML='<div class="lempty" style="color:var(--buy)">не удалось получить список (сеть/CORS/лимит). Попробуй ещё раз или задай ключ TronGrid в настройках.</div>'; $('vRecentSum').style.display='none'; $('vMoreBtn').style.display='none'; return; }
+    RS.items=RS.items.slice(0,10+RS.page*10);
+    // память о виденном — ВСЕ загруженные хеши (а не только 10 показанных), иначе watch шлёт плашки по старым транзам
+    RS.hashSet=new Set(full.map(t=>t.hash));
+    RS.seeded=true;
+    renderRecent();
+  }
+  async function moreRecent(){
+    if(RS.src!=='TronScan'||!RS.addr) return;
+    RS.page++;
+    try{ const l=await fetchRecentTron(RS.addr,RS.page*25,RS.dir==='out'?'out':'in'); mergeItems(l); }catch(e){ RS.page--; return; }
+    RS.items=RS.items.slice(0,10+RS.page*10);
+    renderRecent();
+  }
+  // --- режим ожидания платежа ---
+  const pollMs=()=> (window.__recentPollMs|0)||60000;   // раз в минуту
+  const idleMs=()=> (window.__recentIdleMs|0)||15*60000;
+  function updateWatchInfo(){
+    const el=$('vWatchInfo'); if(!el) return;
+    if(!RS.watching){ el.style.display='none'; return; }
+    el.style.display='';
+    if(RS.errStreak>0){ el.textContent='источник недоступен ('+RS.errStreak+') — наблюдаю, пробую каждые '+Math.round(pollMs()/1000)+' с'; return; }
+    const s=RS.lastPollAt?Math.max(0,Math.round((Date.now()-RS.lastPollAt)/1000)):0;
+    el.textContent='наблюдаю за кошельком · обновление каждые '+Math.round(pollMs()/1000)+' с · обновлено '+(s<3?'только что':s+' с назад');
+  }
+  function stopWatch(msg){
+    if(RS.timer){ clearInterval(RS.timer); RS.timer=null; }
+    titleStop();
+    RS.watching=false; $('vWatchBtn').textContent='Ждать';
+    const el=$('vWatchInfo');
+    if(msg){ el.style.display=''; el.textContent=msg; } else if(el) el.style.display='none';
+  }
+  async function pollOnce(){
+    // опрос идёт постоянно, и когда вкладка не в фокусе (браузер в фоне сам замедляет таймеры — это нормально).
+    // при ошибках источника наблюдение НЕ останавливается — пробуем на следующем цикле.
+    let r;
+    try{ r=await fetchPage(RS.addr,0); RS.errStreak=0; }
+    catch(e){ RS.errStreak++; updateWatchInfo(); return; }
+    RS.lastPollAt=Date.now(); RS.src=r.src;
+    if(!RS.seeded){
+      // первый удачный ответ после автозапуска — только запоминаем, без уведомлений (это старые транзакции)
+      RS.hashSet=new Set(r.list.slice(0,25).map(t=>t.hash));
+      RS.seeded=true; updateWatchInfo(); return;
+    }
+    const fresh=r.list.filter(t=>!RS.hashSet.has(t.hash));
+    if(fresh.length){
+      RS.lastNewAt=Date.now(); mergeItems(fresh);
+      unackAdd(fresh.map(t=>t.hash));   // пометка «новая» — до Scan/копии хеша/адреса
+      renderRecent(); notifyFresh(fresh);
+    }
+    updateWatchInfo();
+  }
+  function startWatch(){
+    if(RS.watching) return;
+    RS.watching=true; RS.lastNewAt=Date.now(); RS.errStreak=0;
+    $('vWatchBtn').textContent='Стоп';
+    updateWatchInfo();
+    RS.timer=setInterval(pollOnce, pollMs());
+  }
+  async function toggleWatch(){
+    if(RS.watching){ stopWatch('наблюдение на паузе — «Ждать» включит снова'); return; }
+    beepPrime();
+    // разрешение на уведомления ОС — запрашиваем по клику (жест). На file:// Chrome откажет молча — не мешает.
+    try{ if('Notification' in window && Notification.permission==='default') Notification.requestPermission(); }catch(e){}
+    await showRecent();
+    if(!isTronAddr2(RS.addr)) return;
+    startWatch();
+  }
+  // автозапуск наблюдения: если задан TRON-кошелёк — следим сразу, без кнопки.
+  // список не грузим и вкладку не трогаем: первый удачный опрос сам засеет память (без уведомлений).
+  function autoWatch(){
+    try{
+      if(RS.watching) return;
+      const addr=pickAddr(); if(!isTronAddr2(addr)) return;
+      RS.addr=addr; RS.seeded=false; RS.unack=unackLoad(addr);
+      startWatch();
+      pollOnce();   // не ждать первую минуту — засеять сразу
+    }catch(e){}
+  }
+  // звук требует жеста пользователя: разблокируем аудио первым же кликом/клавишей где угодно на странице
+  try{ ['click','keydown','touchstart'].forEach(ev=>document.addEventListener(ev,beepPrime,{once:true,capture:true})); }catch(e){}
+  $('vRecentBtn').addEventListener('click',showRecent);
+  window.__vAutoLoad=function(){ try{ const w=walletList('tron'); if(w.length){ showRecent(); return true; } }catch(e){} return false; };
+  $('vWatchBtn').addEventListener('click',toggleWatch);
+  function notifyTest(){
+    beepPrime();  // разблокировать звук по клику
+    try{ if('Notification' in window && Notification.permission==='default') Notification.requestPermission(); }catch(e){}
+    const demo={hash:'test-'+Date.now(), ts:Date.now(),
+      peer:'TПример0тправителя000000000000aaa', from:'TПример0тправителя000000000000aaa',
+      amt:'253300000', dec:6};
+    notifyFresh([demo]);
+  }
+  if($('vTestBtn')) $('vTestBtn').addEventListener('click',notifyTest);
+  $('vDir').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return;
+    const nd=b.dataset.dir==='out'?'out':'in'; if(nd===RS.dir) return;
+    RS.dir=nd; [...$('vDir').children].forEach(x=>x.classList.toggle('on',x===b));
+    if(isTronAddr2(RS.addr)||isTronAddr2($('vAddr').value.trim())) showRecent();
+  });
+  $('vMoreBtn').addEventListener('click',moreRecent);
+  $('vAddr').addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); showRecent(); }});
+  $('vAddrPick').addEventListener('change',e=>{ $('vAddr').value=e.target.value; showRecent(); });
+  $('vWaitAmt').addEventListener('input',()=>{ if(RS.items.length) renderRecent(); });
+  $('vOnlyNew').addEventListener('change',()=>{ if(RS.items.length) renderRecent(); });
+  $('vFindAmt').addEventListener('input',()=>{ if(RS.items.length) renderRecent(); });
+  $('vFindAddr').addEventListener('input',()=>{ if(RS.items.length) renderRecent(); });
+  $('vFindClear').addEventListener('click',()=>{ $('vFindAmt').value=''; $('vFindAddr').value=''; if(RS.items.length) renderRecent(); });
+  $('vExportBtn').addEventListener('click',exportRecent);
+  // связка с расчётом: если поле «ожидаемая сумма»/«жду сумму» пустые — подставим из последнего копирования
+  window.vSuggestExpected=function(v){ if(!(v>0)) return;
+    const f=n=>String(Math.round(n*100)/100).replace('.',',');
+    if($('vExpected')&&!$('vExpected').value.trim()) $('vExpected').value=f(v);
+    if($('vWaitAmt')&&!$('vWaitAmt').value.trim()){ $('vWaitAmt').value=f(v); if(RS.items.length) renderRecent(); }
+  };
+  $('vWallets').addEventListener('input',fillAddrPick);
+  fillAddrPick();
+  $('vSetTog').addEventListener('click',()=>{ const b=$('vSetBody'), open=b.style.display==='none'; b.style.display=open?'block':'none'; $('vSetTog').textContent=open?'скрыть':'показать'; });
+  ['vWallets','vEthKey','vTronKey','vGridKey','vStaleVal'].forEach(id=>{ if($(id)) $(id).addEventListener('input',saveCfg); });
+  $('vStaleUnit').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return;
+    staleUnit=b.dataset.u; [...$('vStaleUnit').children].forEach(x=>x.classList.toggle('on',x===b)); saveCfg(); });
+  loadCfg();
+  autoWatch();
+})();
+</script>
+<div id="toastWrap" aria-live="polite"></div>
+</body>
+</html>
