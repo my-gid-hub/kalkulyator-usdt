@@ -29,39 +29,17 @@
     background-attachment:fixed;
     color:var(--ink);font-family:var(--body);padding:16px 12px 48px;-webkit-font-smoothing:antialiased;min-height:100vh}
   .wrap{max-width:1000px;margin:0 auto}
-  .grid{display:grid;grid-template-columns:1fr;gap:13px;align-items:stretch;justify-content:center}
-  @media(min-width:780px){
-    .grid{grid-template-columns:repeat(2,minmax(0,1fr));
-      grid-template-areas:"a a" "b e" "c d" "f f";}
-    .gr-a{grid-area:a} .gr-b{grid-area:b} .gr-c{grid-area:c} .gr-d{grid-area:d} .gr-e{grid-area:e} .gr-f{grid-area:f}
-    .rates .rbody{max-width:560px}
-  }
-  h1{font-family:var(--disp);font-weight:800;font-size:22px;letter-spacing:-.02em;margin-bottom:3px;text-align:center}
-  .sub{color:var(--muted);font-size:12.5px;margin-bottom:22px;text-align:center;letter-spacing:.01em}
-  .card{background:linear-gradient(180deg,#212D3D 0%,#1A2431 100%);border:1px solid var(--line);border-radius:16px;padding:17px;
-    box-shadow:var(--sh1),inset 0 1px 0 var(--hiline);display:flex;flex-direction:column}
-  /* итог/результат прижаты к низу карточки → в строке кнопки «Скопировать» на одной линии */
-  @media(min-width:780px){
-    .gr-b>.res,.gr-d>.res{margin-top:auto}
-    .gr-e #mcTotBox{margin-top:auto}
-  }
-  .lab{font-family:var(--disp);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
-    color:#AEB8C4;margin-bottom:14px;display:flex;align-items:center;gap:8px}
-  .lab .tog{margin-left:auto;font-size:10px;color:var(--faint);font-family:var(--body);letter-spacing:0;text-transform:none;cursor:pointer}
-  .lab .saved{margin-left:auto;font-size:9.5px;color:var(--sell);font-family:var(--body);letter-spacing:.04em;text-transform:none;opacity:0;transition:.3s}
-  .lab .tog{margin-left:8px}
-  .labttl{white-space:nowrap}
   .rgrid{display:grid;grid-template-columns:64px 1fr 1fr;gap:7px;align-items:center}
-  .rgrid .rh{font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);text-align:center;font-family:var(--disp);font-weight:600}
-  .rgrid .rn{font-family:var(--mono);font-size:12.5px;color:var(--ink);white-space:nowrap}
-  .rgrid input{width:100%;font-family:var(--mono);font-size:14px;font-weight:500;color:var(--ink);
+  .rgrid .rh{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);text-align:center;font-family:var(--disp);font-weight:600}
+  .rgrid .rn{font-family:var(--mono);font-size:13px;color:var(--ink);white-space:nowrap}
+  .rgrid input{width:100%;font-family:var(--mono);font-size:15px;font-weight:600;color:var(--ink);
     background:#121A24;border:1px solid #26323F;border-radius:8px;padding:8px;text-align:right;box-shadow:var(--inset)}
   .rgrid input:focus{outline:none;border-color:var(--accent)}
   .rsep{height:1px;background:var(--line);margin:12px 0}
   .cgrid{display:grid;grid-template-columns:64px 1fr 1fr;gap:7px;row-gap:6px;align-items:center}
   .cgrid .ch{font-family:var(--mono);font-size:10.5px;color:var(--muted);line-height:1.25}
   .cgrid .ch b{font-weight:600} .cgrid .ch .s{color:var(--sell)} .cgrid .ch .b{color:var(--buy)}
-  .cgrid .ch em{font-style:normal;color:var(--faint);font-size:9.5px}
+  .cgrid .ch em{font-style:normal;color:var(--faint);font-size:10px}
   .cgrid .cml{font-size:11px}
   .cgrid input{width:100%;font-family:var(--mono);font-size:15px;font-weight:600;color:var(--ink);
     background:#121A24;border:1px solid #26323F;border-radius:8px;padding:8px;text-align:right;box-shadow:var(--inset)}
@@ -74,16 +52,11 @@
   .cinp .pm:hover{border-color:var(--accent);color:var(--accent)}
   .cinp .pm:active{transform:scale(.97)}
   .cinp input{flex:1}
-  .rates.collapsed .rbody{display:none}
-  .rsum{display:none}
-  .rates.collapsed .rsum{display:block;font-family:var(--mono);font-size:12.5px;color:var(--muted);margin-top:9px;line-height:1.7;word-break:break-word}
-  .rsum b{color:var(--ink);font-weight:600}
-  .rates.collapsed #resetBtn{display:none}
   .seg{display:grid;gap:4px;background:#131D28;padding:4px;border-radius:12px;border:1px solid #2C3947;box-shadow:inset 0 2px 6px rgba(0,0,0,.42),inset 0 1px 2px rgba(0,0,0,.5)}
   .seg.two{grid-template-columns:1fr 1fr}
   .seg.three{grid-template-columns:1fr 1fr 1fr}
   .seg.four{grid-template-columns:1fr 1fr 1fr 1fr}
-  .seg button{font-family:var(--disp);font-weight:600;font-size:13.5px;color:var(--muted);
+  .seg button{font-family:var(--disp);font-weight:600;font-size:14px;color:var(--muted);
     background:transparent;border:none;border-radius:9px;padding:10px 6px;cursor:pointer;transition:background .12s,color .12s,box-shadow .12s}
   .seg button:hover{color:#C6D1DC}
   .seg button.on{color:var(--ink);background:linear-gradient(180deg,#42536A 0%,#33445A 100%);
@@ -91,23 +64,23 @@
   .seg.dir button.on[data-dir="sell"]{color:var(--sell)}
   .seg.dir button.on[data-dir="buy"]{color:var(--buy)}
   .seg.cur button.on,.seg.kn button.on{color:var(--sell)}
-  .ql{font-family:var(--body);font-size:13px;font-weight:600;color:#C0CAD6;margin:12px 0 6px;letter-spacing:.01em}
+  .ql{font-family:var(--body);font-size:13px;font-weight:600;color:#C0CAD6;margin:14px 0 6px;letter-spacing:.01em}
   .cl{font-family:var(--body);font-size:13px;font-weight:600;color:#B9C2CD}
-  .hint{font-family:var(--body);font-size:12px;color:var(--muted);margin-top:7px;line-height:1.5}
+  .hint{font-family:var(--body);font-size:12px;color:var(--muted);margin-top:8px;line-height:1.5}
   #phrase:focus{border-color:var(--accent)!important;box-shadow:0 0 0 3px rgba(59,130,246,.20)}
-  .phrase-info{font-family:var(--body);font-size:12.5px;margin-top:9px;line-height:1.5;color:var(--muted)}
+  .phrase-info{font-family:var(--body);font-size:13px;margin-top:9px;line-height:1.5;color:var(--muted)}
   .phrase-info b{color:var(--ink);font-weight:600}
   .phrase-info.ok{color:var(--sell)}
   .phrase-info.err{color:var(--buy)}
   /* панель «что понял калькулятор» — компактно, под полем ввода */
   .understood{display:none;margin:8px 0 0;padding:9px 12px;border-radius:10px;
     background:rgba(59,130,246,.09);border:1px solid rgba(96,150,220,.34);
-    font-family:var(--body);font-size:12.5px;line-height:1.5;color:var(--ink)}
+    font-family:var(--body);font-size:13px;line-height:1.5;color:var(--ink)}
   .understood.err{background:rgba(224,122,95,.10);border-color:rgba(224,122,95,.42);color:#E0A05F}
   .understood .udir{font-weight:700;color:var(--ink)}
   .understood .urow{margin-top:2px}
   .understood .ucur{color:var(--muted)}
-  .understood .uwarn{margin-top:6px;padding-top:6px;border-top:1px solid rgba(96,150,220,.20);font-size:11.5px;color:#E0A05F;line-height:1.45}
+  .understood .uwarn{margin-top:6px;padding-top:6px;border-top:1px solid rgba(96,150,220,.20);font-size:12px;color:#E0A05F;line-height:1.45}
   .understood b{font-weight:600}
   /* поле фразы: крестик, клавиши, чипы */
   .pwrap{position:relative}
@@ -117,21 +90,21 @@
   #pClear:hover{color:var(--ink)}
   .pkeys{margin-top:5px;font-family:var(--body);font-size:10.5px;color:var(--faint)}
   .pkeys b{color:var(--muted);font-weight:600}
-  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
   .chips button{font-family:var(--body);font-size:11px;color:var(--muted);background:rgba(96,150,220,.08);
-    border:1px solid rgba(96,150,220,.25);border-radius:20px;padding:4px 10px;cursor:pointer;transition:.15s}
+    border:1px solid rgba(96,150,220,.25);border-radius:999px;padding:4px 10px;cursor:pointer;transition:.15s}
   .chips button:hover{color:var(--ink);border-color:rgba(96,150,220,.55)}
   /* превью ответа клиенту */
-  .uans{margin-top:9px;padding:10px 12px;border-radius:11px;background:rgba(60,220,163,.07);
+  .uans{margin-top:8px;padding:10px 12px;border-radius:12px;background:rgba(60,220,163,.07);
     border:1px solid rgba(60,220,163,.30)}
   .uans .uansh{font-family:var(--disp);font-size:10px;font-weight:700;letter-spacing:.05em;
     text-transform:uppercase;color:var(--sell);margin-bottom:5px}
-  .uans pre{margin:0;font-family:var(--mono);font-size:12.5px;line-height:1.5;color:var(--ink);
+  .uans pre{margin:0;font-family:var(--mono);font-size:13px;line-height:1.5;color:var(--ink);
     white-space:pre-wrap;word-break:break-word}
-  .uans .uansbtn{margin-top:8px;width:auto;padding:8px 16px;font-size:12.5px}
+  .uans .uansbtn{margin-top:8px;width:auto;padding:8px 16px;font-size:13px}
   /* история */
-  .hist{margin-top:9px;font-family:var(--body)}
-  .hist summary{cursor:pointer;font-size:11.5px;color:var(--muted);user-select:none;padding:3px 0}
+  .hist{margin-top:8px;font-family:var(--body)}
+  .hist summary{cursor:pointer;font-size:12px;color:var(--muted);user-select:none;padding:3px 0}
   .hist summary:hover{color:var(--ink)}
   .hist #histCnt{color:var(--faint)}
   .hrow{display:flex;align-items:center;gap:8px;padding:5px 2px;border-bottom:1px solid rgba(96,150,220,.12)}
@@ -139,26 +112,26 @@
   .hrow .hp{font-size:12px;color:var(--muted);flex:1 1 auto;overflow:hidden;text-overflow:ellipsis;
     white-space:nowrap;cursor:pointer}
   .hrow .hp:hover{color:var(--ink)}
-  .hrow button{border:1px solid rgba(96,150,220,.30);background:none;color:var(--muted);border-radius:7px;
+  .hrow button{border:1px solid rgba(96,150,220,.30);background:none;color:var(--muted);border-radius:8px;
     font-size:11px;padding:3px 8px;cursor:pointer;flex:0 0 auto}
   .hrow button:hover{color:var(--ink);border-color:rgba(96,150,220,.6)}
   #histClear{margin-top:7px;border:none;background:none;color:var(--faint);font-size:11px;cursor:pointer;text-decoration:underline}
   #histClear:hover{color:var(--buy)}
   /* ===== вкладка «Ответы клиентам» ===== */
   #tplSearch{margin-bottom:10px}
-  .tplrow{background:linear-gradient(180deg,#1C2836,#16202C);border:1px solid #2C3947;border-radius:11px;
-    padding:11px 13px;margin-bottom:9px}
+  .tplrow{background:linear-gradient(180deg,#1C2836,#16202C);border:1px solid #2C3947;border-radius:12px;
+    padding:12px 14px;margin-bottom:8px}
   .tplrow .tph{display:flex;align-items:center;gap:8px;margin-bottom:6px}
   .tplrow .tpt{font-family:var(--disp);font-size:12px;font-weight:700;letter-spacing:.03em;color:#C9D5E1;flex:1 1 auto}
   .tplrow .tpb{font-family:var(--body);font-size:11px;color:var(--muted);background:linear-gradient(180deg,#26313F,#1F2937);
-    border:1px solid #384757;border-radius:7px;padding:5px 10px;cursor:pointer;white-space:nowrap;flex:0 0 auto}
+    border:1px solid #384757;border-radius:8px;padding:5px 10px;cursor:pointer;white-space:nowrap;flex:0 0 auto}
   .tplrow .tpb:hover{border-color:var(--accent);color:var(--accent)}
   .tplrow .tpb.tcopy:hover{border-color:var(--sell);color:var(--sell)}
   .tplrow .tpb.tdel:hover{border-color:var(--buy);color:var(--buy)}
   .tplrow pre{margin:0;font-family:var(--body);font-size:13px;line-height:1.55;color:var(--ink);
     white-space:pre-wrap;word-break:break-word}
   .tplrow input.tpe-t{width:100%;box-sizing:border-box;margin-bottom:7px;font-family:var(--disp);font-weight:700;
-    font-size:12.5px;color:var(--ink);background:#101821;border:1px solid #26323F;border-radius:8px;padding:8px 10px}
+    font-size:13px;color:var(--ink);background:#101821;border:1px solid #26323F;border-radius:8px;padding:8px 10px}
   .tplrow textarea.tpe-x{width:100%;box-sizing:border-box;min-height:88px;resize:vertical;font-family:var(--body);
     font-size:13px;line-height:1.5;color:var(--ink);background:#101821;border:1px solid #26323F;border-radius:8px;padding:9px 11px}
   .tplrow input.tpe-t:focus,.tplrow textarea.tpe-x:focus{outline:none;border-color:var(--accent)}
@@ -181,21 +154,21 @@
     .chips button{flex:0 0 auto;min-height:38px;padding:8px 13px;font-size:12px}
     .uans .uansbtn{width:100%;min-height:46px;font-size:14px}
     .uans pre{font-size:13px}
-    .hist summary{padding:10px 0;font-size:12.5px}         /* лёгкое попадание пальцем */
+    .hist summary{padding:10px 0;font-size:13px}         /* лёгкое попадание пальцем */
     .hrow{padding:8px 2px}
     .hrow button{min-height:38px;padding:6px 12px;font-size:12px}
     .hrow .hp{font-size:13px}
   }
-  .amount-wrap{position:relative;margin-top:7px}
+  .amount-wrap{position:relative;margin-top:8px}
   .amount-wrap input{width:100%;font-family:var(--mono);font-size:30px;font-weight:600;color:#F5F9FD;letter-spacing:.01em;
-    background:linear-gradient(180deg,#0B131D 0%,#12202F 100%);border:1px solid #35485C;border-radius:15px;padding:15px 96px 15px 17px;transition:box-shadow .18s,border-color .18s;
+    background:linear-gradient(180deg,#0B131D 0%,#12202F 100%);border:1px solid #35485C;border-radius:16px;padding:15px 96px 15px 17px;transition:box-shadow .18s,border-color .18s;
     box-shadow:inset 0 3px 10px rgba(0,0,0,.62),inset 0 1px 2px rgba(0,0,0,.55),inset 0 -1px 0 rgba(255,255,255,.045),0 0 0 1px rgba(91,155,255,.11),0 8px 22px -12px rgba(91,155,255,.32)}
   .amount-wrap input:focus{outline:none;border-color:var(--accent);box-shadow:inset 0 3px 10px rgba(0,0,0,.62),inset 0 -1px 0 rgba(255,255,255,.05),0 0 0 3px rgba(91,155,255,.30),0 0 28px -6px rgba(91,155,255,.62)}
   .amount-wrap .u{position:absolute;right:15px;top:50%;transform:translateY(-50%);
     font-family:var(--disp);font-weight:600;font-size:15px;color:#8C9AA9;text-shadow:0 1px 0 rgba(0,0,0,.5)}
   .res{position:relative;background:linear-gradient(165deg,#34475C 0%,#283646 52%,#202C3A 100%);border:1px solid #48596C;border-radius:18px;padding:22px;margin-top:14px;
     box-shadow:0 2px 4px rgba(0,0,0,.4),0 16px 36px -16px rgba(0,0,0,.7),0 34px 66px -32px rgba(2,12,10,.6),inset 0 1px 0 rgba(255,255,255,.12),inset 0 0 44px -18px rgba(67,224,171,.20)}
-  .res .rl{font-family:var(--disp);font-size:10.5px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:9px}
+  .res .rl{font-family:var(--disp);font-size:10.5px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
   .res .big{font-family:var(--disp);font-weight:700;font-size:42px;line-height:1.04;letter-spacing:-.015em;color:var(--green);word-break:break-all;font-variant-numeric:tabular-nums;text-shadow:0 1px 0 rgba(0,0,0,.45),0 2px 5px rgba(0,0,0,.4),0 0 34px rgba(113,233,188,.36)}
   .res .big .u{font-size:18px;color:var(--muted);margin-left:9px;font-weight:600;letter-spacing:0}
   .res .deal{font-family:var(--mono);font-size:13px;color:var(--ink);margin-top:14px;padding-top:12px;border-top:1px solid var(--line);line-height:1.55}
@@ -206,13 +179,13 @@
   .profit b{font-weight:700}
   .res .profit{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)}
   .res .big{cursor:pointer}
-  .fround{font-family:var(--mono);font-size:11.5px;color:var(--buy);margin-top:8px;line-height:1.5;word-break:break-word}
+  .fround{font-family:var(--mono);font-size:12px;color:var(--buy);margin-top:8px;line-height:1.5;word-break:break-word}
   .fcomm{font-family:var(--mono);font-size:12px;color:var(--sell);margin-top:8px}
   .brow{display:flex;align-items:center;gap:8px;margin-bottom:8px}
   .brow .bamt{flex:1;min-width:0;font-family:var(--mono);font-size:16px;font-weight:600;color:var(--ink);background:#121A24;border:1px solid #26323F;border-radius:8px;padding:9px;text-align:right;box-shadow:var(--inset)}
   .brow .bamt:focus{outline:none;border-color:var(--accent)}
   .brow .bcur{font-family:var(--mono);font-size:14px;color:var(--ink);background:#121A24;border:1px solid #26323F;border-radius:8px;padding:9px 4px;box-shadow:var(--inset)}
-  .brow .bres{font-family:var(--mono);font-size:12.5px;color:var(--sell);flex:0 0 132px;text-align:right;white-space:nowrap}
+  .brow .bres{font-family:var(--mono);font-size:13px;color:var(--sell);flex:0 0 132px;text-align:right;white-space:nowrap}
   .brow .brm{background:none;border:none;color:var(--faint);font-size:20px;line-height:1;cursor:pointer;padding:0 2px}
   .brow .brm:hover{color:var(--buy)}
   .brow .bunit{font-family:var(--mono);font-size:12px;color:var(--muted);flex:0 0 auto;white-space:nowrap}
@@ -223,26 +196,26 @@
   .btot{margin-top:16px;padding-top:16px;border-top:1px solid var(--line);font-family:var(--body);font-size:14px;font-weight:500;color:var(--muted);display:flex;justify-content:space-between;align-items:baseline;gap:10px}
   .btot b{font-family:var(--disp);font-size:27px;font-weight:800;letter-spacing:-.02em;color:var(--sell);text-shadow:0 1px 0 rgba(0,0,0,.45),0 2px 5px rgba(0,0,0,.35),0 0 26px rgba(67,224,171,.3)}
   @media(max-width:520px){ .brow .bres{flex-basis:96px;font-size:11px} }
-  .res .formula{font-family:var(--mono);font-size:11.5px;color:var(--faint);margin-top:8px;line-height:1.5;word-break:break-word}
+  .res .formula{font-family:var(--mono);font-size:12px;color:var(--faint);margin-top:8px;line-height:1.5;word-break:break-word}
   .fsym{font-family:var(--mono);font-size:13px;color:var(--muted);line-height:1.6;word-break:break-word}
-  .fnum{font-family:var(--mono);font-size:14.5px;color:var(--ink);font-weight:500;line-height:1.62;margin-top:8px;word-break:break-word}
-  .frate{font-family:var(--mono);font-size:12.5px;color:var(--muted);line-height:1.6;margin-top:10px;padding-top:10px;border-top:1px solid var(--line);word-break:break-word}
+  .fnum{font-family:var(--mono);font-size:15px;color:var(--ink);font-weight:500;line-height:1.62;margin-top:8px;word-break:break-word}
+  .frate{font-family:var(--mono);font-size:13px;color:var(--muted);line-height:1.6;margin-top:10px;padding-top:10px;border-top:1px solid var(--line);word-break:break-word}
   .res .err{font-family:var(--mono);font-size:15px;color:var(--muted)}
-  .copy{margin-top:13px;width:100%;font-family:var(--disp);font-weight:600;font-size:14.5px;color:#fff;
-    background:linear-gradient(115deg,#4F5BD5 0%,#6E6AF0 30%,#8F7BFA 50%,#6E6AF0 70%,#4F5BD5 100%);background-size:220% 100%;
-    border:none;border-radius:11px;padding:12px;cursor:pointer;letter-spacing:.01em;
-    box-shadow:0 6px 16px -6px rgba(101,96,235,.55),inset 0 1px 0 rgba(255,255,255,.22);
+  .copy{margin-top:13px;width:100%;font-family:var(--disp);font-weight:600;font-size:15px;color:#fff;
+    background:linear-gradient(115deg,#2F6BD9 0%,#4A8BF2 30%,#6FAAFF 50%,#4A8BF2 70%,#2F6BD9 100%);background-size:220% 100%;
+    border:none;border-radius:12px;padding:12px;cursor:pointer;letter-spacing:.01em;
+    box-shadow:0 6px 16px -6px rgba(74,139,242,.55),inset 0 1px 0 rgba(255,255,255,.22);
     animation:copySheen 4.5s ease-in-out infinite;
     transition:filter .15s, transform .1s, box-shadow .15s}
   @keyframes copySheen{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
   @media(prefers-reduced-motion:reduce){.copy{animation:none}}
-  .copy:hover{filter:brightness(1.06);transform:translateY(-1px);box-shadow:0 9px 22px -7px rgba(101,96,235,.62),inset 0 1px 0 rgba(255,255,255,.22)}
+  .copy:hover{filter:brightness(1.06);transform:translateY(-1px);box-shadow:0 9px 22px -7px rgba(74,139,242,.62),inset 0 1px 0 rgba(255,255,255,.22)}
   .copy:active{transform:translateY(0) scale(.99)}
   .copy.done{background:var(--sell2);color:var(--sell);animation:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
-  .rage{font-family:var(--mono);font-size:11px;color:var(--muted);margin:-6px 0 12px;line-height:1.4}
+  .rage{font-family:var(--mono);font-size:11px;color:var(--muted);margin:0;line-height:1.4}
   .rage.warn{color:var(--buy)} .rage.old{color:#F87171;font-weight:600}
   .rchk{margin-top:14px;padding-top:14px;border-top:1px dashed var(--line)}
-  .rchk .rcl{font-family:var(--body);font-size:12.5px;color:var(--muted);margin-bottom:7px}
+  .rchk .rcl{font-family:var(--body);font-size:13px;color:var(--muted);margin-bottom:7px}
   .rchk .rcrow{display:flex;align-items:stretch;gap:8px}
   .rchk input{flex:1;min-width:0;font-family:var(--mono);font-size:15px;font-weight:600;color:var(--ink);
     background:#101821;border:1px solid #26323F;border-radius:8px;padding:9px 12px;text-align:right;box-shadow:var(--inset)}
@@ -254,7 +227,7 @@
   .log .lrow:last-child{border-bottom:none}
   .log .lrow:hover{background:var(--panel2)}
   .log .lt{flex:0 0 42px;font-family:var(--mono);font-size:11px;color:var(--faint)}
-  .log .lx{flex:1;min-width:0;font-family:var(--mono);font-size:12.5px;color:var(--ink);line-height:1.45;word-break:break-word}
+  .log .lx{flex:1;min-width:0;font-family:var(--mono);font-size:13px;color:var(--ink);line-height:1.45;word-break:break-word}
   .log .lempty{font-family:var(--body);font-size:13px;color:var(--muted);padding:6px 0}
   .log .lcopied{color:var(--sell)}
   .log .lrow.lmatch{border-left:3px solid var(--sell);background:rgba(60,220,163,.08);padding-left:6px}
@@ -263,14 +236,14 @@
   .log .lrow .ldot{color:var(--accent);margin-right:4px}
   .log .lrow{align-items:center}
   .log .lcopy{flex:0 0 auto;display:flex;gap:5px;margin-left:8px}
-  .log .cpbtn{font-family:var(--body);font-size:11px;color:var(--muted);background:linear-gradient(180deg,#26313F,#1F2937);border:1px solid #384757;border-radius:7px;padding:4px 8px;cursor:pointer;white-space:nowrap;transition:border-color .12s,color .12s}
+  .log .cpbtn{font-family:var(--body);font-size:11px;color:var(--muted);background:linear-gradient(180deg,#26313F,#1F2937);border:1px solid #384757;border-radius:8px;padding:4px 8px;cursor:pointer;white-space:nowrap;transition:border-color .12s,color .12s}
   .log .cpbtn:hover{border-color:var(--accent);color:var(--accent)}
   .log a.cpbtn.scanlink{text-decoration:none;display:inline-block}
   .log a.cpbtn.scanlink:hover{border-color:var(--sell);color:var(--sell)}
   .vcard{background:linear-gradient(180deg,#212D3D,#19232F);border:1px solid #33404F;border-radius:14px;padding:16px;margin-top:14px;box-shadow:var(--sh1),inset 0 1px 0 var(--hiline)}
   .vcard:first-of-type{margin-top:12px}
   .vcard-h{font-family:var(--disp);font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#AEB8C4;margin:0 0 12px;display:flex;align-items:center;gap:8px}
-  .vcard-h .sub{font-family:var(--body);font-size:10.5px;font-weight:400;letter-spacing:0;text-transform:none;color:var(--faint);margin-left:auto}
+  .vcard-h .sub{font-family:var(--body);font-size:10.5px;font-weight:400;letter-spacing:0;text-transform:none;color:var(--faint);margin:0 0 0 auto;text-align:right}
   .vfilters{border:1px solid #2C3947;border-radius:10px;background:#182330;padding:0 12px;margin-top:10px}
   .vfilters summary{font-family:var(--disp);font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);padding:10px 0;cursor:pointer;list-style:none;user-select:none}
   .vfilters summary::-webkit-details-marker{display:none}
@@ -283,7 +256,7 @@
   .trow.lmatch{background:rgba(60,220,163,.08);box-shadow:inset 3px 0 0 var(--sell)}
   .trow.ldim{opacity:.45}
   .trow.lnew{background:rgba(60,220,163,.13)}
-  .tc{font-family:var(--mono);font-size:12.5px;color:var(--ink);min-width:0}
+  .tc{font-family:var(--mono);font-size:13px;color:var(--ink);min-width:0}
   .tc-t{flex:0 0 52px;font-size:11px;color:var(--muted);line-height:1.35}
   .tc-t .ldot{color:var(--accent);margin-right:2px}
   .tc-a{flex:0 0 128px;white-space:nowrap}
@@ -301,8 +274,8 @@
     .trow{flex-wrap:wrap;gap:4px 8px;padding:10px 4px}
     .tc-t{flex:0 0 46px}
     .tc-a{flex:0 0 auto}
-    .tc-p{flex:1 1 100%;order:5;font-size:11.5px}
-    .tc-h{flex:1 1 100%;order:6;font-size:11.5px}
+    .tc-p{flex:1 1 100%;order:5;font-size:12px}
+    .tc-h{flex:1 1 100%;order:6;font-size:12px}
     .tc-act{flex:1 1 100%;order:7;margin-left:0;margin-top:4px}
   }
   @media(max-width:560px){ .log .lcopy{flex-direction:column;gap:3px} .log .cpbtn{font-size:10px;padding:3px 6px} }
@@ -310,18 +283,18 @@
   .app{max-width:1000px;margin:0 auto;background:linear-gradient(180deg,#2A394C 0%,#1E2937 46%,#182231 100%);border:1px solid #42535F;border-radius:22px;box-shadow:var(--sh2),inset 0 1px 0 rgba(255,255,255,.10),inset 0 0 0 1px rgba(255,255,255,.02);overflow:hidden;position:relative}
   .app-head{padding:12px 14px 11px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,0))}
   .head-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
-  .head-top .brand{font-family:var(--disp);font-weight:800;font-size:16.5px;letter-spacing:-.01em;color:#F2F6FB;white-space:nowrap;text-shadow:0 1px 0 rgba(0,0,0,.4)}
+  .head-top .brand{font-family:var(--disp);font-weight:800;font-size:17px;letter-spacing:-.01em;color:#F2F6FB;white-space:nowrap;text-shadow:0 1px 0 rgba(0,0,0,.4)}
   .head-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
   .head-actions .saved{opacity:0;transition:.3s;font-family:var(--body);font-size:10px;color:var(--sell);white-space:nowrap}
   .head-rates{display:flex;align-items:baseline;gap:6px 18px;flex-wrap:wrap;margin-top:11px}
-  .head-rates #rSum{font-family:var(--mono);font-size:12.5px;color:#E7EEF6;line-height:1.6;letter-spacing:.01em}
+  .head-rates #rSum{font-family:var(--mono);font-size:13px;color:#E7EEF6;line-height:1.6;letter-spacing:.01em}
   .head-rates #rSum b{color:#9DACBC;font-weight:600}
   .sumhint{display:none;margin-top:5px;font-family:var(--mono);font-size:12px;color:var(--sell);font-weight:700}
   .usdtx{margin-top:9px;padding-top:9px;border-top:1px solid var(--line)}
   .usdtx .uxh{font-family:var(--disp);font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
   .usdtx .uxgrid{display:grid;grid-template-columns:auto 1fr 1fr;gap:8px 12px;align-items:start}
-  .usdtx .uxch{font-family:var(--disp);font-size:9.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--faint);text-align:right}
-  .usdtx .uxcur{font-family:var(--mono);font-size:13.5px;color:#9DACBC;font-weight:600;padding-top:1px}
+  .usdtx .uxch{font-family:var(--disp);font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--faint);text-align:right}
+  .usdtx .uxcur{font-family:var(--mono);font-size:14px;color:#9DACBC;font-weight:600;padding-top:1px}
   .usdtx .uxin,.usdtx .uxout{display:flex;flex-direction:column;align-items:flex-end;line-height:1.15}
   .usdtx .uxv{font-family:var(--mono);font-size:14px;font-variant-numeric:tabular-nums;font-weight:700}
   .usdtx .uxin .uxv{color:var(--sell)}
@@ -339,7 +312,7 @@
   @media(max-width:680px){.set-grid{grid-template-columns:1fr;gap:14px}}
   .setlab{font-family:var(--disp);font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#AEB8C4;margin-bottom:10px}
   .setsub{font-family:var(--body);font-size:10px;font-weight:400;letter-spacing:0;text-transform:none;color:var(--faint)}
-  .setnote{font-family:var(--mono);font-size:10.5px;color:var(--muted);margin-top:9px;line-height:1.5}
+  .setnote{font-family:var(--mono);font-size:10.5px;color:var(--muted);margin-top:8px;line-height:1.5}
   .costwrap{display:flex;align-items:center;gap:8px;max-width:220px;background:#121A24;border:1px solid #26323F;border-radius:8px;padding:0 12px 0 0;box-shadow:var(--inset)}
   .costwrap input{flex:1;min-width:0;font-family:var(--mono);font-size:15px;font-weight:600;color:var(--ink);background:transparent;border:none;outline:none;padding:10px 12px;text-align:right}
   .costu{font-family:var(--mono);font-size:13px;color:var(--muted)}
@@ -369,20 +342,20 @@
   .howto summary::before{content:'▸ ';color:var(--faint)}
   .howto[open] summary::before{content:'▾ '}
   .howto>.fsym{margin-top:2px}
-  .howto>div{margin-bottom:11px}
+  .howto>div{margin-bottom:12px}
   .mc-note{font-family:var(--body);font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.5}
   .loghead{font-family:var(--disp);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#AEB8C4;margin-bottom:6px;display:flex;align-items:center}
   .loghead .tog{margin-left:auto;font-size:10px;color:var(--faint);font-family:var(--body);letter-spacing:0;text-transform:none;cursor:pointer}
-  .resnote{font-family:var(--mono);font-size:11.5px;color:var(--buy);margin-top:8px;line-height:1.4;word-break:break-word}
+  .resnote{font-family:var(--mono);font-size:12px;color:var(--buy);margin-top:8px;line-height:1.4;word-break:break-word}
   .resnote:empty{display:none}
   #spreadWarn{font-family:var(--mono);font-size:10.5px;color:#F87171;font-weight:600;white-space:nowrap;margin:0}
   .calcbox{margin-top:14px;padding:15px 16px;border-radius:14px;background:linear-gradient(180deg,#141F2B 0%,#0D161F 100%);border:1px solid #2A3846;
     box-shadow:inset 0 3px 8px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.04),inset 0 -1px 0 rgba(0,0,0,.3),0 1px 0 rgba(255,255,255,.03)}
   .fnum{color:#EAF1F8}
   .calclab{font-family:var(--disp);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#8695A5;margin-bottom:8px}
-  .calcbox .fnum{margin-top:0;font-size:15.5px;font-weight:600;color:#EEF4FB;letter-spacing:.01em;text-shadow:0 1px 0 rgba(0,0,0,.65),0 2px 3px rgba(0,0,0,.4),0 -1px 0 rgba(255,255,255,.05)}
+  .calcbox .fnum{margin-top:0;font-size:16px;font-weight:600;color:#EEF4FB;letter-spacing:.01em;text-shadow:0 1px 0 rgba(0,0,0,.65),0 2px 3px rgba(0,0,0,.4),0 -1px 0 rgba(255,255,255,.05)}
   .vres{background:linear-gradient(165deg,#34475C 0%,#283646 52%,#202C3A 100%);border:1px solid #48596C;border-radius:16px;padding:17px;margin-top:14px;box-shadow:0 2px 4px rgba(0,0,0,.4),0 16px 36px -16px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.11)}
-  .vres .vverdict{font-family:var(--disp);font-weight:700;font-size:16.5px;line-height:1.35;margin-bottom:4px}
+  .vres .vverdict{font-family:var(--disp);font-weight:700;font-size:17px;line-height:1.35;margin-bottom:4px}
   .vres .vamt{font-family:var(--disp);font-weight:800;font-size:30px;color:var(--green);margin:12px 0 14px;font-variant-numeric:tabular-nums;word-break:break-all}
   .vres .vamt.vbad{color:#F87171}
   .vres .vamt .u{font-size:14px;color:var(--muted);margin-left:6px;font-weight:600}
@@ -391,7 +364,7 @@
   .vres .vrow span{flex:1;min-width:0;color:var(--ink)}
   .vok{color:var(--sell)} .vwarn{color:var(--buy)} .vbad{color:#F87171}
   .vres .vrow.vbad span,.vres .vrow.vbad b{color:#F87171}
-  .vin{width:100%;box-sizing:border-box;font-family:var(--mono);font-size:12.5px;color:var(--ink);background:#101821;border:1px solid #26323F;border-radius:9px;padding:10px 12px;outline:none;box-shadow:var(--inset)}
+  .vin{width:100%;box-sizing:border-box;font-family:var(--mono);font-size:13px;color:var(--ink);background:#101821;border:1px solid #26323F;border-radius:9px;padding:10px 12px;outline:none;box-shadow:var(--inset)}
   .vin:focus{border-color:var(--accent)}
   textarea.vin{resize:vertical;line-height:1.5;word-break:break-all}
   .calcbox .fround:empty{display:none}
@@ -399,14 +372,13 @@
   /* ===== адаптация: iPhone (≈440px) ===== */
   @media(max-width:520px){
     body{padding-left:max(8px,env(safe-area-inset-left));padding-right:max(8px,env(safe-area-inset-right));padding-bottom:max(14px,env(safe-area-inset-bottom))}
-    h1{font-size:19px} .sub{font-size:11.5px;margin-bottom:14px}
     .pane{padding:12px 8px}
     .onecard{padding:12px 10px;border-radius:14px}
     /* iOS зумит страницу при фокусе поля со шрифтом <16px — держим 16 */
     input[type=text],input[type=number],textarea,select{font-size:16px!important}
     .amount-wrap input{font-size:24px!important}
     /* тач-зоны ≥44px */
-    .seg button{min-height:44px;padding:10px 4px;font-size:12.5px}
+    .seg button{min-height:44px;padding:10px 4px;font-size:13px}
     .tabs button{min-height:42px}
     .badd{min-height:44px}
     .copy{min-height:48px;font-size:15px}
@@ -426,8 +398,6 @@
   }
   /* ===== ноутбук 13" (1280×800): экономим вертикаль ===== */
   @media(min-width:900px){
-    h1{font-size:20px;margin-bottom:2px}
-    .sub{margin-bottom:12px}
     .pane{padding-top:11px}
     .onecard{padding:14px 16px}
   }
@@ -435,7 +405,7 @@
   #toastWrap{position:fixed;top:14px;right:14px;z-index:9999;display:flex;flex-direction:column;gap:9px;
     max-width:340px;pointer-events:none}
   .toast{pointer-events:auto;cursor:pointer;background:linear-gradient(180deg,#25445F 0%,#1C3346 100%);
-    border:1px solid #3C6488;border-radius:13px;padding:12px 14px;box-shadow:0 8px 26px rgba(0,0,0,.5);
+    border:1px solid #3C6488;border-radius:14px;padding:12px 14px;box-shadow:0 8px 26px rgba(0,0,0,.5);
     color:var(--ink);font-family:var(--body);animation:toastIn .28s cubic-bezier(.2,.9,.3,1.2);
     transition:opacity .25s,transform .25s}
   .toast.out{opacity:0;transform:translateX(24px)}
@@ -448,10 +418,33 @@
   .toast .tamt{font-family:var(--disp);font-weight:800;font-size:24px;color:var(--sell);
     font-variant-numeric:tabular-nums;word-break:break-all;margin:1px 0 2px}
   .toast.out-dir .tamt{color:var(--buy)}
-  .toast .tsub{font-size:11.5px;color:var(--muted);word-break:break-all}
+  .toast .tsub{font-size:12px;color:var(--muted);word-break:break-all}
   .toast .thint{font-size:10.5px;color:var(--faint);margin-top:5px}
   @keyframes toastIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
   @media(max-width:520px){ #toastWrap{left:10px;right:10px;max-width:none} }
+
+  /* ── точность: табличные цифры везде, где деньги ── */
+  .rgrid input,.cgrid input,.amount-wrap input,.brow .bamt,.rchk input,.costwrap input,
+  .res .deal,.res .rate,.fnum,.frate,.fsym,.formula,.fround,.fcomm,.profit,
+  .btot b,.brow .bres,.brow .bunit,#rSum,.hrow .ht,.uans pre,.setnote{font-variant-numeric:tabular-nums}
+  /* ── видимый фокус с клавиатуры ── */
+  button:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px}
+  .seg button:focus-visible,.tabs button:focus-visible{outline-offset:-2px}
+  /* ── селекты в общем стиле, со стрелкой ── */
+  select.bcur{appearance:none;-webkit-appearance:none;padding-right:26px;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23A7B5C4' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 9px center}
+  select.bcur:focus{outline:none;border-color:var(--accent)}
+  ::selection{background:rgba(91,155,255,.32)}
+  /* ── тонкие скроллбары в тёмном стиле ── */
+  *{scrollbar-width:thin;scrollbar-color:#33424F transparent}
+  *::-webkit-scrollbar{width:8px;height:8px}
+  *::-webkit-scrollbar-thumb{background:#33424F;border-radius:8px}
+  *::-webkit-scrollbar-thumb:hover{background:#42535F}
+  *::-webkit-scrollbar-track{background:transparent}
+  /* ── режимы 2×2 на узких экранах ── */
+  @media(max-width:600px){ #modeSeg{grid-template-columns:1fr 1fr} }
+
 </style>
 </head>
 <body>
@@ -513,21 +506,21 @@
           <input id="cost" type="text" inputmode="decimal" value="44.50">
           <span class="costu">грн</span>
         </div>
-        <div class="hint" style="margin-top:7px">сколько грн стоит тебе 1 USDT (реальная закупка). Выгода = что взял с клиента − закупка.</div>
+        <div class="hint" style="margin-top:8px">сколько грн стоит тебе 1 USDT (реальная закупка). Выгода = что взял с клиента − закупка.</div>
         <div class="rsep"></div>
         <div class="setlab">Курс на карту <span class="setsub">— грн за 1 USDT для переказу на картку</span></div>
         <div class="costwrap">
           <input id="cardRate" type="text" inputmode="decimal" value="43.0">
           <span class="costu">грн</span>
         </div>
-        <div class="hint" style="margin-top:7px">используется в блоке «На карту»: USDT = сума грн ÷ этот курс. Без комиссии.</div>
+        <div class="hint" style="margin-top:8px">используется в блоке «На карту»: USDT = сума грн ÷ этот курс. Без комиссии.</div>
         <div class="rsep"></div>
         <div class="setlab">Округление результата</div>
         <div class="seg two mseg" id="rSeg">
           <button data-round="fav" class="on">в пользу</button>
           <button data-round="exact">точно</button>
         </div>
-        <div class="seg two mseg" id="rStep" style="margin-top:6px">
+        <div class="seg two mseg" id="rStep" style="margin-top:8px">
           <button data-step="cent" class="on">до копейки</button>
           <button data-step="whole">до целого</button>
         </div>
@@ -538,7 +531,7 @@
           <button data-cust="cent">До копійки</button>
           <button data-cust="off">Як у розрахунку</button>
         </div>
-        <div class="hint" style="margin-top:7px">итог в копии клиенту: «Ціле» — округляем в свою пользу (клиент отдаёт вверх, получает вниз). Ты у себя везде видишь точное с копейками.</div>
+        <div class="hint" style="margin-top:8px">итог в копии клиенту: «Ціле» — округляем в свою пользу (клиент отдаёт вверх, получает вниз). Ты у себя везде видишь точное с копейками.</div>
         <div class="rsep"></div>
         <div class="setlab">Удержание комиссии</div>
         <div class="seg two mseg" id="mSeg">
@@ -593,7 +586,7 @@
   </div>
   <div class="msec on" id="secEx">
     <details class="howto"><summary>Как пользоваться этим блоком</summary>
-      <div class="fsym" style="margin-bottom:11px">Основной расчёт обмена USDT ↔ грн/$/€.<br><b>1.</b> Сверху задай курсы и комиссии (кнопка «изменить»). <b>2.</b> Выбери <b>направление</b>: клиент продаёт USDT или покупает. <b>3.</b> Выбери <b>валюту</b> расчёта и что известно — количество USDT или сумму денег. <b>4.</b> Впиши число. Справа появится результат, курс и строка «как считается». <b>5.</b> «Скопировать ответ для клиента» — готовый текст на украинском (наценка клиенту не видна).<br><span style="color:var(--muted)">«Сверка: сколько клиент прислал» — впиши полученную сумму, покажет недостачу или перебор.</span><br><span style="color:var(--muted)">Быстрый путь: вставь фразу клиента в поле сверху — под «Понял» сразу появится готовый ответ (кнопка «Скопіювати» или Ctrl+Enter). Последние расчёты — в «Последние расчёты» под полем.</span></div>
+      <div class="fsym" style="margin-bottom:12px">Основной расчёт обмена USDT ↔ грн/$/€.<br><b>1.</b> Сверху задай курсы и комиссии (кнопка «изменить»). <b>2.</b> Выбери <b>направление</b>: клиент продаёт USDT или покупает. <b>3.</b> Выбери <b>валюту</b> расчёта и что известно — количество USDT или сумму денег. <b>4.</b> Впиши число. Справа появится результат, курс и строка «как считается». <b>5.</b> «Скопировать ответ для клиента» — готовый текст на украинском (наценка клиенту не видна).<br><span style="color:var(--muted)">«Сверка: сколько клиент прислал» — впиши полученную сумму, покажет недостачу или перебор.</span><br><span style="color:var(--muted)">Быстрый путь: вставь фразу клиента в поле сверху — под «Понял» сразу появится готовый ответ (кнопка «Скопіювати» или Ctrl+Enter). Последние расчёты — в «Последние расчёты» под полем.</span></div>
     </details>
     <div class="ex-grid">
       <div class="ex-in">
@@ -648,13 +641,13 @@
 
   <div class="msec" id="secMc">
     <details class="howto"><summary>Как пользоваться этим блоком</summary>
-      <div class="fsym" style="margin-bottom:11px">Когда в одной сделке несколько валют сразу.<br><b>Приём</b> — клиент приносит наличные/USDT тебе; <b>Выдача</b> — ты выдаёшь клиенту.<br><b>Суммы → USDT</b>: вписал суммы в разных валютах, получил общий USDT. <b>USDT → суммы</b>: наоборот. <b>Остаток</b>: задал общий USDT и часть фиксированными суммами — остаток посчитается в выбранной валюте.<br>Строка «$ → грн» / «€ → грн» — клиент вносит в валюте, а выплата в гривне по наличному курсу. «+ добавить» — новая строка.</div>
+      <div class="fsym" style="margin-bottom:12px">Когда в одной сделке несколько валют сразу.<br><b>Приём</b> — клиент приносит наличные/USDT тебе; <b>Выдача</b> — ты выдаёшь клиенту.<br><b>Суммы → USDT</b>: вписал суммы в разных валютах, получил общий USDT. <b>USDT → суммы</b>: наоборот. <b>Остаток</b>: задал общий USDT и часть фиксированными суммами — остаток посчитается в выбранной валюте.<br>Строка «$ → грн» / «€ → грн» — клиент вносит в валюте, а выплата в гривне по наличному курсу. «+ добавить» — новая строка.</div>
     </details>
     <div class="mc-note">клиент рассчитывается сразу в нескольких валютах в одной сделке</div>
     <div class="ex-grid">
       <div class="ex-in">
         <div class="ql" style="margin-top:0" id="mcDirLab">Тип операции</div>
-        <div class="seg two" id="mcDir" style="margin-bottom:10px">
+        <div class="seg two" id="mcDir" style="margin-bottom:12px">
           <button data-mcdir="recv" class="on" type="button">Приём</button>
           <button data-mcdir="give" type="button">Выдача</button>
         </div>
@@ -679,7 +672,7 @@
             <select class="bcur" id="mcRestCur"><option value="UAH">грн</option><option value="EUR">€</option><option value="USD" selected>$</option></select>
             <b class="bres" id="mcRestRes" style="flex:1;text-align:right;font-size:17px;font-family:var(--disp);font-weight:700;color:var(--sell)">—</b>
           </div>
-          <div class="hint" id="mcRestNote" style="margin-top:6px"></div>
+          <div class="hint" id="mcRestNote" style="margin-top:8px"></div>
         </div>
         <div class="btot" id="mcTotBox" style="margin-top:0;border-top:none;padding-top:0"><span id="mcTotLab">Клиент получит:</span> <b id="mcTot">—</b></div>
         <div class="resnote" id="mcNote"></div>
@@ -692,7 +685,7 @@
 
   <div class="msec" id="secEu">
     <details class="howto"><summary>Как пользоваться этим блоком</summary>
-      <div class="fsym" style="margin-bottom:11px">Обмен наличных без USDT: доллар/евро/гривна между собой.<br>Выбери пару ($/грн, €/грн, €/$), направление и впиши сумму — получишь результат по наличному курсу. Здесь EUR/UAH — это наличный курс евро-гривна (в USDT-обмене евро считается через EUR/USD, это разные курсы).</div>
+      <div class="fsym" style="margin-bottom:12px">Обмен наличных без USDT: доллар/евро/гривна между собой.<br>Выбери пару ($/грн, €/грн, €/$), направление и впиши сумму — получишь результат по наличному курсу. Здесь EUR/UAH — это наличный курс евро-гривна (в USDT-обмене евро считается через EUR/USD, это разные курсы).</div>
     </details>
     <div class="ex-grid">
       <div class="ex-in">
@@ -728,7 +721,7 @@
 
   <div class="msec" id="secCard">
     <details class="howto"><summary>Как пользоваться этим блоком</summary>
-      <div class="fsym" style="margin-bottom:11px">Переказ USDT на картку в гривні. Работает в две стороны — переключатель «Клиент назвал»:<br><b>• грн на карту</b> — клиент называет суму в грн, блок считает, сколько <b>USDT</b> он заводит: USDT = сума грн ÷ курс на карту.<br><b>• USDT</b> — клиент называет свои <b>USDT</b>, блок считает, сколько <b>грн</b> упадёт на карту: грн = USDT × курс на карту.<br>Курс задаётся полем «Курс на карту» в «Курсы и комиссии». Без комиссии. «Округляти» — вниз, в пользу обменника.</div>
+      <div class="fsym" style="margin-bottom:12px">Переказ USDT на картку в гривні. Работает в две стороны — переключатель «Клиент назвал»:<br><b>• грн на карту</b> — клиент называет суму в грн, блок считает, сколько <b>USDT</b> он заводит: USDT = сума грн ÷ курс на карту.<br><b>• USDT</b> — клиент называет свои <b>USDT</b>, блок считает, сколько <b>грн</b> упадёт на карту: грн = USDT × курс на карту.<br>Курс задаётся полем «Курс на карту» в «Курсы и комиссии». Без комиссии. «Округляти» — вниз, в пользу обменника.</div>
     </details>
     <div class="ex-grid">
       <div class="ex-in">
@@ -779,7 +772,7 @@
 
   <div class="pane" data-pane="verify">
     <details class="howto"><summary>Как пользоваться этой вкладкой</summary>
-      <div class="fsym" style="margin-bottom:11px">Проверка, что USDT реально пришёл, — по хешу транзакции из блокчейна. Всё считается в твоём браузере.<br><b>Сеть</b>: TRON (основная), ETH, BSC — определяется по виду хеша, можно выбрать вручную.<br><b>Хеш транзакции</b> — вставь хеш от клиента, нажми «Проверить». <b>Ожидаемая сумма</b> — если задать, сверит сумму прихода.<br><b>Вердикт по светофору:</b> зелёный «Всё чисто»; жёлтый — внимание (не твой кошелёк, не подтверждён, сумма не сошлась, старый хеш); красный — не официальный USDT или транзакция не прошла.<br><b>Мониторинг кошелька</b> — таблица переводов USDT: время, сумма, адрес, хеш, № блока. Переключатель <b>Входящие / Отправленные</b> — приходы на кошелёк или отправленные с него. Кошелёк берётся из «Мои кошельки-получатели» (первый) и подтягивается сам при открытии вкладки; чтобы посмотреть другой — впиши его в поле и нажми «Показать». Нажми строку — проверится; «⧉» — копировать хеш/адрес; «↗ Scan» — открыть на TronScan. Наблюдение включено постоянно (раз в минуту) и уведомляет о новых приходах звуком и плашкой; «Стоп» — пауза. Зелёная пометка новой транзакции снимается после ↗ Scan или копии хеша/адреса. «Фильтры и поиск» — по сумме и адресу. «Скопировать список» — выгрузить текстом.<br><span style="color:var(--muted)">Настройки внизу: свои кошельки (для сверки получателя), API-ключи, порог «старого» хеша. Всё хранится только у тебя.</span></div>
+      <div class="fsym" style="margin-bottom:12px">Проверка, что USDT реально пришёл, — по хешу транзакции из блокчейна. Всё считается в твоём браузере.<br><b>Сеть</b>: TRON (основная), ETH, BSC — определяется по виду хеша, можно выбрать вручную.<br><b>Хеш транзакции</b> — вставь хеш от клиента, нажми «Проверить». <b>Ожидаемая сумма</b> — если задать, сверит сумму прихода.<br><b>Вердикт по светофору:</b> зелёный «Всё чисто»; жёлтый — внимание (не твой кошелёк, не подтверждён, сумма не сошлась, старый хеш); красный — не официальный USDT или транзакция не прошла.<br><b>Мониторинг кошелька</b> — таблица переводов USDT: время, сумма, адрес, хеш, № блока. Переключатель <b>Входящие / Отправленные</b> — приходы на кошелёк или отправленные с него. Кошелёк берётся из «Мои кошельки-получатели» (первый) и подтягивается сам при открытии вкладки; чтобы посмотреть другой — впиши его в поле и нажми «Показать». Нажми строку — проверится; «⧉» — копировать хеш/адрес; «↗ Scan» — открыть на TronScan. Наблюдение включено постоянно (раз в минуту) и уведомляет о новых приходах звуком и плашкой; «Стоп» — пауза. Зелёная пометка новой транзакции снимается после ↗ Scan или копии хеша/адреса. «Фильтры и поиск» — по сумме и адресу. «Скопировать список» — выгрузить текстом.<br><span style="color:var(--muted)">Настройки внизу: свои кошельки (для сверки получателя), API-ключи, порог «старого» хеша. Всё хранится только у тебя.</span></div>
     </details>
     <div class="hint" style="margin:0 0 4px">по хешу транзакции проверяем, что USDT реально пришёл. Данные берём из блокчейн-эксплорера, всё считается в твоём браузере.</div>
 
@@ -793,7 +786,7 @@
       </div>
       <div class="ql">Хеш транзакции</div>
       <input id="vHash" class="vin" type="text" autocomplete="off" spellcheck="false" placeholder="напр.: a1b2… (TRON) или 0x… (ETH/BSC)">
-      <div class="hint" id="vHashHint" style="margin-top:6px"></div>
+      <div class="hint" id="vHashHint" style="margin-top:8px"></div>
       <div class="ql">Ожидаемая сумма (необязательно)</div>
       <div class="amount-wrap">
         <input id="vExpected" type="text" inputmode="decimal" placeholder="—">
@@ -806,7 +799,7 @@
     <div class="vcard">
       <div class="vcard-h">Мониторинг кошелька <span class="sub">TRON · USDT</span></div>
       <div class="hint" id="vWalletHead" style="margin:0 0 10px;display:none"></div>
-      <div class="seg two cur" id="vDir" style="margin-bottom:10px">
+      <div class="seg two cur" id="vDir" style="margin-bottom:12px">
         <button data-dir="in" class="on" type="button">Входящие</button>
         <button data-dir="out" type="button">Отправленные</button>
       </div>
@@ -817,7 +810,7 @@
         <button class="badd" id="vWatchBtn" type="button" style="flex:0 0 auto;margin:0">Ждать</button>
         <button class="badd" id="vTestBtn" type="button" style="flex:0 0 auto;margin:0" title="проверить звук и всплывающее уведомление">🔔 Тест</button>
       </div>
-      <div class="hint" style="margin-top:6px">Наблюдение включается само (кошелёк из настроек) и проверяет поступления раз в минуту: звук + плашка. «Стоп» — пауза. «🔔 Тест» — проверить звук и уведомление. Зелёная пометка новой транзакции держится, пока не откроешь её ↗ Scan или не скопируешь хеш/адрес.</div>
+      <div class="hint" style="margin-top:8px">Наблюдение включается само (кошелёк из настроек) и проверяет поступления раз в минуту: звук + плашка. «Стоп» — пауза. «🔔 Тест» — проверить звук и уведомление. Зелёная пометка новой транзакции держится, пока не откроешь её ↗ Scan или не скопируешь хеш/адрес.</div>
       <details class="vfilters">
         <summary>Фильтры и поиск</summary>
         <div class="frow">
@@ -852,7 +845,7 @@
         <input id="vTronKey" class="vin" type="text" autocomplete="off" spellcheck="false" placeholder="обычно не требуется">
         <div class="ql">API-ключ TronGrid (резервный источник)</div>
         <input id="vGridKey" class="vin" type="text" autocomplete="off" spellcheck="false" placeholder="если TronScan срежется — подхватит TronGrid">
-        <div class="hint" style="margin-top:6px">TronGrid работает из файла напрямую (CORS). Ключ повышает лимит; на бесплатном узле часто работает и без него.</div>
+        <div class="hint" style="margin-top:8px">TronGrid работает из файла напрямую (CORS). Ключ повышает лимит; на бесплатном узле часто работает и без него.</div>
         <div class="ql">Отмечать транзакции старше</div>
         <div class="rcrow" style="align-items:stretch">
           <input id="vStaleVal" class="vin" type="text" inputmode="decimal" placeholder="2 — предупреждать о старом хеше (0 — не отмечать)" style="flex:1">
@@ -2880,7 +2873,7 @@
     const q=(($('tplSearch')||{}).value||'').trim().toLowerCase();
     const a=tplGet();
     // переключатель языка
-    const langSeg='<div class="seg two tplLangSeg" id="tplLangSeg" style="margin-bottom:11px">'+
+    const langSeg='<div class="seg two tplLangSeg" id="tplLangSeg" style="margin-bottom:12px">'+
       '<button type="button" data-l="ua" class="'+(tplLang==='ua'?'on':'')+'">🇺🇦 Клієнту (укр)</button>'+
       '<button type="button" data-l="ru" class="'+(tplLang==='ru'?'on':'')+'">🇷🇺 Клиенту (рус)</button></div>';
     let html=langSeg;
