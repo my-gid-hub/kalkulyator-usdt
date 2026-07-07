@@ -1253,35 +1253,42 @@
     const mentioned=new Set(); for(const [c,re] of CURWORDS){ if(re.test(t)) mentioned.add(c); }
     if(!amtCur && mentioned.size) amtCur=[...mentioned][0];
     if(!amtCur) return {error:'не понял валюту — добавь грн / $ / € / usdt'};
-    const giveRe=/отда|отд[аеёу]|даёт|дает|\bдать|\bдал\b|\bдай|\bда[ю]|занос|принос|принес|плат|меня|прода|сда|зда|внос|внош|внес|скид|кин/g;
-    const getRe =/получ|отрим|забир|забер|хоч|нужн|купи|купл|покуп|купу|бер[её]|возьм|візьм|выда|вида|на\s+руки/g;
+    const giveRe=/отда|отд[аеёу]|даёт|дает|\bдать|\bдал\b|\bдай|\bда[ю]|занос|занес|принос|принес|плат|меня|прода|сда|зда|внос|внош|внес|скид|кин|відправ|отправ|надішл|переказ/g;
+    const getRe =/получ|отрим|забир|забер|хоч|нужн|треба|потрібн|купи|купл|покуп|купу|бер[её]|возьм|візьм|выда|вида|на\s+руки|вийш|вийд|выйд|сто[иї]т/g;
     const beforeNum=t.slice(0,m.index);
     const lastPos=(re,s)=>{let x,l=-1;re.lastIndex=0;while((x=re.exec(s)))l=x.index;return l;};
     const gi=lastPos(giveRe,beforeNum), ge=lastPos(getRe,beforeNum);
     let role;
     if(gi<0&&ge<0) role='give';
     else role = gi>=ge ? 'give' : 'get';
+    // «з 120 000 грн» / «из 5000$» — предлог-источник сильнее дальнего глагола: это отдаваемая сумма
+    if(/(?:^|[\s,(])(?:з|із|из|с)\s*$/i.test(beforeNum)) role='give';
     let dir,cur,known;
     if(amtCur==='USDT'){
       known='crypto'; dir=(role==='give')?'sell':'buy';
       cur=[...mentioned].find(c=>c!=='USDT');
-      // валюта выплаты не названа — не угадываем (раньше молча ставился $), а переспрашиваем
-      if(!cur) return {error:'вижу '+ffMc(num)+' USDT, но не понял валюту — допиши: в грн, в $ или в €'};
+      // валюта выплаты не названа → берём грн (самая частая) и ЯВНО помечаем это в «Понял»
+      var defCur=false; if(!cur){ cur='UAH'; defCur=true; }
     }
     else { known='money'; cur=amtCur;
       // сумма в деньгах и рядом упомянут USDT: направление по действию над USDT
       // «куплю/візьму/нужно usdt за N грн» → покупает USDT (buy); «продам usdt за N грн» → продаёт (sell)
       if(mentioned.has('USDT')){
-        // покупка USDT (клиент отдаёт деньги) vs продажа USDT (получает деньги).
-        // «отда/відда» НЕ включаем — «отдаёт грн» это покупка usdt, разрулит fallback по role.
-        const buyU=/купи|купл|купівл|купує|покупа|покупк|придб|візьм|возьм|бер[её]|нужн|надо|треба|хоч/.test(beforeNum) || /купи|купл|покупа|придб/.test(t);
-        const sellU=/прода|продаж|сда[єе]|сдам|здам|вивед|вывед|вывест|вивест/.test(t);
+        // направление — по глаголу ВОЗЛЕ слова usdt (а не возле числа денег):
+        // «купить/треба/хочу … usdt» → покупает; «продам usdt», «usdt отправить/закинути/з мене» → продаёт.
+        const uRe=(CURWORDS.find(x=>x[0]==='USDT')||[])[1];
+        let ub='',ua=''; if(uRe){ const rr=new RegExp(uRe.source,'gi'); const xm=rr.exec(t);
+          if(xm){ ub=t.slice(Math.max(0,xm.index-16),xm.index); ua=t.slice(rr.lastIndex,rr.lastIndex+16); } }
+        const ubEff=/(?:через|via)\s*$/i.test(ub)?'':ub;   // «хочу ЧЕРЕЗ usdt …» — глагол не про usdt
+        const buyU =/куп|придб|возьм|візьм|бер[еє]|треба|нужн|надо|хоч/.test(ubEff) || /купи|купл|покупа|придб/.test(t);
+        const sellU=/прода|сда|зда|вивед|вывед|віддат|отдат/.test(ub) || /прода|продаж|сда[єе]|сдам|здам|вивед|вывед|вывест|вивест/.test(t)
+                  || /відправ|отправ|закин|занес|скин|надішл|переказ|перекаж|з\s*мене|с\s*меня|віддат|отдат/.test(ua);
         dir = sellU ? 'sell' : (buyU ? 'buy' : ((role==='give')?'buy':'sell'));
       } else {
         dir=(role==='give')?'buy':'sell';
       }
     }
-    return {dir,cur,known,amount:num,amtCur,role,multi:mentioned.size>=3};
+    return {dir,cur,known,amount:num,amtCur,role,defCur:(typeof defCur!=='undefined'&&defCur),multi:mentioned.size>=3};
   }
   const CN={UAH:'грн',USD:'$',EUR:'€',USDT:'USDT'};
   const fcur=(s)=>{let best=null,bp=1e9;for(const [c,re] of CURWORDS){const mm=new RegExp(re.source).exec(s);if(mm&&mm.index<bp){bp=mm.index;best=c;}}return best;};
@@ -1524,7 +1531,8 @@
       // dir — фактическое направление расчёта: sell = клиент продаёт USDT, buy = покупает
       const act=r.dir==='sell'?'ПРОДАЁТ':'ПОКУПАЕТ';
       const tail=r.dir==='sell'?'Выплата клиенту — в ':'Оплата клиента — в ';
-      return P+'клиент <span class="udir">'+act+' '+ffMc(r.amount)+' USDT</span>.<div class="urow">'+tail+'<b>'+(uName[r.cur]||r.cur)+'</b>.</div>';
+      const defNote=r.defCur?' <span style="color:var(--muted)">(валюту не вказано — беру грн; допиши «в $» чи «в €», якщо інша)</span>':'';
+      return P+'клиент <span class="udir">'+act+' '+ffMc(r.amount)+' USDT</span>.<div class="urow">'+tail+'<b>'+(uName[r.cur]||r.cur)+'</b>'+defNote+'.</div>';
     }
     // сумма в валюте → USDT: buy = клиент покупает USDT, значит эти деньги ОТДАЁТ; sell = получает
     const act=r.dir==='buy'?'отдаёт':'получает';
@@ -1602,7 +1610,7 @@
   (function(){
     const box=$('pChips'); if(!box) return;
     const EX=['1000 usdt в грн','25000 грн на карту','2000 usdt на карту','5000 usdt: 2000$, решта грн','2000$ і 1500€ в usdt',
-              'є 1500+200 юсдт, нужно 100€, решта грн','поміняти 500$ на грн','хочу 300 usdt, скільки грн'];
+              'є 1500+200 юсдт, нужно 100€, решта грн','поміняти 500$ на грн','хочу 300 usdt, скільки грн','нужно 12500 грн, скільки usdt'];
     box.innerHTML=EX.map(x=>'<button type="button">'+esc(x)+'</button>').join('');
     box.addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return;
       $('phrase').value=b.textContent; runPhrase(true); try{$('phrase').focus();}catch(_){}
