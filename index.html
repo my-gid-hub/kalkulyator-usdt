@@ -908,22 +908,6 @@
   function withClientTotal(formula, val, unit){
     return formula.replace(/ = [^=]*$/, ' = '+ffMc(val)+' '+unit);
   }
-  // ПРЯМАЯ формула «відда­єте → отримуєте» для обратных запросов (клиент назвал результат).
-  // Читается от того, что клиент отдаёт, к тому, что получает. Комиссия — процентом.
-  function fwdClientFormula(dir, cur, usdt, money, cuSym){
-    const usdB=pn('usdB'),usdS=pn('usdS'),eurB=pn('eurB'),eurS=pn('eurS');
-    const c = dir==='sell'? pn('cB') : pn('cS');
-    const kMul=1+c/100, kDiv=1-c/100;
-    let rate;
-    if(dir==='sell') rate = cur==='USD'?[] : cur==='UAH'?[['×',usdB]] : [['÷',eurS]];   // USDT → гроші
-    else             rate = cur==='USD'?[] : cur==='UAH'?[['÷',usdS]] : [['×',eurB]];   // гроші → USDT
-    const comm = method==='mul'? ['×',kMul,'k'] : ['÷',kDiv,'k'];                       // прямой ход
-    const ops=[...rate,comm];
-    const sv=dir==='sell'?usdt:money, su=dir==='sell'?'USDT':cuSym;
-    const ev=dir==='sell'?money:usdt, eu=dir==='sell'?cuSym:'USDT';
-    return ffMc(sv)+' '+su + ops.map(o=> o[2]==='k'? commPctTok(o[0],o[1]) : ' '+o[0]+' '+ffO(o[1]) ).join('') + ' = ' + ffMc(ev)+' '+eu;
-  }
-
   function ratesSummary(){
     const g=id=>$(id).value;
     const fmt=x=>{const n=parseFloat(String(x).replace(',','.'));return (isFinite(n)&&n>0?'+':'')+x+'%';};
@@ -1649,12 +1633,9 @@
     const getV =sell?money:usdt, getU =sell?cuSym:'USDT';
     let txt='Віддаєте '+ffMc(giveV)+' '+giveU+' → отримуєте '+ffMc(getV)+' '+getU;
     if(copyRate){
-      // прямые сделки: формула уже читается «відда­єте → отримуєте» и сходится точно.
-      // обратные (клиент назвал результат): разворачиваем в прямую сторону — от отданного к полученному.
-      const line = last.isFwd
-        ? withClientTotal(last.formulaClient||last.formula, valC, last.outUnit)
-        : fwdClientFormula(last.dir, last.cur, usdt, money, cuSym);
-      txt+='\nРозрахунок: '+line;
+      // формула читается ОТ ЗАПРОСА клиента: от той суммы/валюты, что он назвал, к результату.
+      // «есть 1000 USDT» → від USDT; «хочу 1000 грн» → від грн. Итог — округлён в нашу пользу.
+      txt+='\nРозрахунок: '+withClientTotal(last.formulaClient||last.formula, valC, last.outUnit);
     }
     return txt;
   }
