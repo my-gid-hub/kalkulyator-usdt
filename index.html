@@ -886,15 +886,18 @@
   const ffMc=n=>isFinite(n)?(Number.isInteger(n)?n.toLocaleString('en-US').replace(/,/g,' '):ffM(n)):'—';
   const fBig=n=>f2(n).replace(/ /g,'\u2009');
   const ffR=n=>isFinite(n)?n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:4}).replace(/,/g,' '):'—';
-  // токен комиссии для КОПИИ КЛИЕНТУ: коэффициент → процент (в панели «как считается» остаётся коэффициент).
-  //  умножение (× k):  ' +0.7%' / ' −1.4%'  (знак = знак комиссии, символ × подразумевается)
-  //  деление  (÷ k):  ' ÷ 100.7%'           (обратные запросы; тоже точно, процент виден)
-  const fpc=x=>{ const r=Math.round(x*1000)/1000; return (Number.isInteger(r)?r.toString():r.toString()); };
-  function commPctTok(op,k){
-    const p=Math.round((k-1)*100*1000)/1000;              // процент из коэффициента, со знаком
-    if(op==='×') return (p>=0?' +':' −')+fpc(Math.abs(p))+'%';
-    return (p>=0?' −':' +')+fpc(Math.abs(p))+'%';          // деление — тот же процент, обратный знак
+  // процент для КОПИИ КЛИЕНТУ, который клиент реально перемножит и получит показанный итог.
+  //  прямой ход (× k): процент канала (k = 1 + p/100 → перемножение точное).
+  //  обратный ход (÷ k): показываем ЭКВИВАЛЕНТНЫЙ множитель (1/k − 1)·100 — тогда × этого процента
+  //  даёт ту же величину, что ÷k в ядре, и строка сходится в копейку.
+  const fpc=x=>{ const r=Math.round(x*100)/100; return r.toString(); };
+  function commPct(op,k,isFwd){                             // числовой %, согласованный со строкой
+    if(op==='×') return Math.round((k-1)*100*100)/100;      // прямой ход — процент канала (точно)
+    const p=(1/k-1)*100;                                    // обратный ход — эквивалентный множитель
+    // округляем 2-знач. В НАШУ ПОЛЬЗУ: isFwd (клиент отримує) → менше; інакше (клиент віддає) → більше
+    return isFwd ? Math.floor(p*100)/100 : Math.ceil(p*100)/100;
   }
+  function commPctTok(op,k,isFwd){ const p=commPct(op,k,isFwd); return (p>=0?' +':' −')+fpc(Math.abs(p))+'%'; }
   const curU=c=>c==='USD'?'$':c==='EUR'?'€':'грн';
 
   // ── ОКРУГЛЕНИЕ ДЛЯ КЛИЕНТА (только копия; ядро/панель/выгода — точные) ──
@@ -1051,7 +1054,12 @@
     const symbolic = start+ops.map(o=>' '+o[0]+' '+LAB[o[2]]).join('')+' = '+outUnit;
     const formula = ffO(A)+ops.map(o=>' '+o[0]+' '+ffO(o[1])).join('')+' = '+ffM(value)+' '+outUnit;
     // для копии клиенту: комиссия процентом вместо коэффициента (курсовые шаги — как есть)
-    const formulaClient = ffO(A)+ops.map(o=> o[2]==='k' ? commPctTok(o[0],o[1]) : ' '+o[0]+' '+ffO(o[1]) ).join('')+' = '+ffM(value)+' '+outUnit;
+    const formulaClient = ffO(A)+ops.map(o=> o[2]==="k" ? commPctTok(o[0],o[1],isFwd) : ' '+o[0]+' '+ffO(o[1]) ).join('')+' = '+ffM(value)+' '+outUnit;
+    // значение, СОГЛАСОВАННОЕ с показанной клиенту формулой: комиссия — тем же процентом (× (1+p/100)),
+    // курсы — как отображаются. Клиент перемножит строку и получит ровно это (до округления в нашу пользу).
+    const commClient = ['×', 1 + commPct(commStep[0],commStep[1],isFwd)/100, 'k'];
+    const clientOps = commFirst? [commClient,...rateSteps] : [...rateSteps, commClient];
+    let clientValue=A; clientOps.forEach(o=>{ clientValue = o[0]==='÷'? clientValue/o[1] : clientValue*o[1]; });
     let rstr;
     if(dir==='sell'){
       const oc = method==='mul'?'×':'÷', kc = method==='mul'?kMul:kDiv;
@@ -1063,7 +1071,7 @@
     const rateFormula = 'курс 1 USDT = '+rstr+' = '+ffM(rate)+' '+cu;
     const commLine = cAbs>1e-9 ? ('комиссия '+(dir==='sell'?'Купівля':'Продаж')+' '+cAbs+'%  ≈  '+ffM(commAmt)+' '+outUnit) : 'комиссия 0%';
     const profit = profitUAH(dir, usdtVal, moneyVal, cur);
-    return {value,rawValue,outUnit,rate,cu,gives,gets,formula,formulaClient,symbolic,rateFormula,roundNote,commLine,commAmt,cAbs,profit,dir,cur,known,isFwd};
+    return {value,rawValue,clientValue,outUnit,rate,cu,gives,gets,formula,formulaClient,symbolic,rateFormula,roundNote,commLine,commAmt,cAbs,profit,dir,cur,known,isFwd};
   }
 
   let last=null;
@@ -1625,7 +1633,7 @@
     const cuSym = last.cu;
     // вычисленная сторона = last.value (в last.outUnit); округляем её в нашу пользу
     const compSide = last.isFwd ? 'get' : 'give';
-    const valC = custR(last.value, compSide);
+    const valC = custR(last.clientValue, compSide);   // согласовано с показанной формулой
     let usdt  = sell? last.gives.v : last.gets.v;
     let money = sell? last.gets.v  : last.gives.v;
     if(last.outUnit==='USDT') usdt=valC; else money=valC;
@@ -1821,7 +1829,7 @@
     if(roundMode==='fav'){ const q=roundStep==='whole'?1:0.01; v=isFwd?Math.floor(raw/q+1e-9)*q:Math.ceil(raw/q-1e-9)*q; }
     else v=Math.round(raw*100)/100;
     const formula=fmtStr(ffO(A))+' '+inUnit+ops.map(o=>' '+o[0]+' '+ffO(o[1])).join('')+' = '+ffMc(v)+' '+outUnit;
-    const formulaClient=fmtStr(ffO(A))+' '+inUnit+ops.map(o=> o[2]==='k' ? commPctTok(o[0],o[1]) : ' '+o[0]+' '+ffO(o[1]) ).join('')+' = '+ffMc(v)+' '+outUnit;
+    const formulaClient=fmtStr(ffO(A))+' '+inUnit+ops.map(o=> o[2]==="k" ? commPctTok(o[0],o[1],isFwd) : ' '+o[0]+' '+ffO(o[1]) ).join('')+' = '+ffMc(v)+' '+outUnit;
     return {value:v,outUnit,inUnit,formula,formulaClient,payAmount:(quote?A:null),quote,quoteAmt};
   }
   function mcState(){ return {d: mc.dir==='recv'?'buy':'sell', known: mc.kmode}; }
