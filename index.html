@@ -734,7 +734,7 @@
 
   <div class="msec" id="secCard">
     <details class="howto"><summary>Как пользоваться этим блоком</summary>
-      <div class="fsym" style="margin-bottom:12px">Переказ USDT на картку в гривні. Работает в две стороны — переключатель «Клиент назвал»:<br><b>• грн на карту</b> — клиент называет суму в грн, блок считает, сколько <b>USDT</b> он заводит: USDT = сума грн ÷ курс на карту.<br><b>• USDT</b> — клиент называет свои <b>USDT</b>, блок считает, сколько <b>грн</b> упадёт на карту: грн = USDT × курс на карту.<br>Курс задаётся полем «Курс на карту» в «Курсы и комиссии». Без комиссии. «Округляти» — вниз, в пользу обменника.</div>
+      <div class="fsym" style="margin-bottom:12px">Переказ USDT на картку в гривні. Работает в две стороны — переключатель «Клиент назвал»:<br><b>• грн на карту</b> — клиент называет суму в грн, блок считает, сколько <b>USDT</b> он заводит: USDT = сума грн ÷ курс на карту.<br><b>• USDT</b> — клиент называет свои <b>USDT</b>, блок считает, сколько <b>грн</b> упадёт на карту: грн = USDT × курс на карту.<br>Курс задаётся полем «Курс на карту» в «Курсы и комиссии». Без комиссии. «Округляти» — до целого в пользу обменника: грн клиенту — вниз, USDT от клиента — вверх.</div>
     </details>
     <div class="ex-grid">
       <div class="ex-in">
@@ -753,7 +753,7 @@
           <button data-crn="floor" class="on">Округляти</button>
           <button data-crn="exact">Точно</button>
         </div>
-        <div class="hint">«Округляти» — вниз, в пользу обменника. «Точно» — до 2 знаков.</div>
+        <div class="hint">«Округляти» — до целого в пользу обменника (грн клиенту — вниз, USDT от клиента — вверх). «Точно» — до 2 знаков.</div>
       </div>
       <div class="ex-out">
         <div class="res" style="margin-top:0">
@@ -1194,6 +1194,11 @@
     ['USD', /\$|доллар|долар|долл|дол(?![а-яёa-zА-ЯЁ])|юсд(?![а-яёa-zА-ЯЁ])|бакс|у\.?е\.?(?![а-яёa-zА-ЯЁ])|usd(?!t)/],
     ['UAH', /грн|₴|грив|грв|grn|hrn|uah|гр(?![а-яёa-zА-ЯЁ])/]
   ];
+  // валюта ВПЛОТНУЮ к числу: «700$», «700 usdt» (после) и «$700», «єврів 700» (до).
+  // приоритет привязки: вплотную после > вплотную до > дальше после > дальше до —
+  // иначе «$700 в usdt» читался как «продаёт 700 USDT», а «єврів 700 в гривню» — как 700 грн.
+  const curAdjAfter=(s)=>{ s=String(s).replace(/^[\s\u00a0\u2009]+/,''); for(const [c,re] of CURWORDS){ const m=new RegExp(re.source).exec(s); if(m&&m.index===0) return c; } return null; };
+  const curAdjBefore=(s)=>{ let best=null,bp=-1; for(const [c,re] of CURWORDS){ const r=new RegExp(re.source,'g'); let m; while((m=r.exec(s))){ const end=m.index+m[0].length; if(/^[а-яёіїєґa-z]*[\s\u00a0\u2009]*$/i.test(s.slice(end)) && end>bp){ bp=end; best=c; } } } return best; };  // после основы допускаем хвост слова: «євр-ів», «доллар-ов»
   // единый разбор числа с множителем: к/тыс = ×1000, млн = ×1e6, млрд = ×1e9 (рус/укр/сленг)
   // число: группы тысяч строго по 3 цифры (иначе «2000, 1500» склеивались в 20001500);
   // «к/kk» = тысяча только ВПЛОТНУЮ к числу и не перед буквой/цифрой (иначе «к вечеру», «к 15:00» давали ×1000)
@@ -1249,12 +1254,12 @@
     const pos=m.index, aft=t.slice(pos+m[0].length,pos+m[0].length+16), bef=t.slice(Math.max(0,pos-10),pos);
     const firstCurIn=(s)=>{let best=null,bp=1e9;for(const [c,re] of CURWORDS){const mm=new RegExp(re.source).exec(s);if(mm&&mm.index<bp){bp=mm.index;best=c;}}return best;};
     const lastCurIn=(s)=>{let best=null,bp=-1;for(const [c,re] of CURWORDS){let mm,li=-1;const r=new RegExp(re.source,'g');while((mm=r.exec(s)))li=mm.index;if(li>bp){bp=li;best=c;}}return best;};
-    let amtCur=firstCurIn(aft)||lastCurIn(bef);
+    let amtCur=curAdjAfter(aft)||curAdjBefore(bef)||firstCurIn(aft)||lastCurIn(bef);
     const mentioned=new Set(); for(const [c,re] of CURWORDS){ if(re.test(t)) mentioned.add(c); }
     if(!amtCur && mentioned.size) amtCur=[...mentioned][0];
     if(!amtCur) return {error:'не понял валюту — добавь грн / $ / € / usdt'};
-    const giveRe=/отда|отд[аеёу]|даёт|дает|\bдать|\bдал\b|\bдай|\bда[ю]|занос|занес|принос|принес|плат|меня|прода|сда|зда|внос|внош|внес|скид|кин|відправ|отправ|надішл|переказ/g;
-    const getRe =/получ|отрим|забир|забер|хоч|нужн|треба|потрібн|купи|купл|покуп|купу|бер[её]|возьм|візьм|выда|вида|на\s+руки|вийш|вийд|выйд|сто[иї]т/g;
+    const giveRe=/отда|відда|отд[аеёу]|даёт|дает|\bдать|\bдал\b|\bдай|\bда[ю]|занос|занес|принос|принес|плат|меня|прода|сда|зда|внос|внош|внес|скид|кин|відправ|отправ|надішл|переказ/g;
+    const getRe =/получ|отрим|забир|забер|хоч|нужн|треба|потрібн|купи|купл|покуп|купу|бер[еёу]|возьм|візьм|выда|вида|на\s+руки|вийш|вийд|выйд|сто[иї]т/g;
     const beforeNum=t.slice(0,m.index);
     const lastPos=(re,s)=>{let x,l=-1;re.lastIndex=0;while((x=re.exec(s)))l=x.index;return l;};
     const gi=lastPos(giveRe,beforeNum), ge=lastPos(getRe,beforeNum);
@@ -1305,7 +1310,7 @@
       const aftEnd=Math.min(end+16, i+1<ms.length?ms[i+1].start:t.length);
       const befStart=Math.max(start-10, i>0?ms[i-1].end:0);
       const aft=t.slice(end,aftEnd), bef=t.slice(befStart,start);
-      pairs.push({num,cur:fcur(aft)||lcur(bef),pos:start,end});
+      pairs.push({num,cur:curAdjAfter(aft)||curAdjBefore(bef)||fcur(aft)||lcur(bef),pos:start,end});
     }
     // перечисление одной валюты: «2000, 1500 и 5500 грн» — валюта хвоста тянется влево,
     // но только через чистые разделители списка (запятая/и/та), не через двоеточие или слова
@@ -1349,7 +1354,7 @@
     if(!pairs.length) return {error:'не нашёл сумму — впиши число'};
     const mentioned=new Set(); for(const [c,re] of CURWORDS){ if(re.test(t)) mentioned.add(c); }
     // «остальное 1600 в гривне» — это явная сумма, а не остаток: после слова не должно идти число
-    const restHit=/(остал|остат|отсат|осат|остача|решт|отстав|оставш|залиш)[а-яёіїєґ]*/.exec(t);
+    const restHit=/(остал|остат|остан|отсат|осат|остача|решт|отстав|оставш|залиш)[а-яёіїєґ]*/.exec(t);
     const restWord=!!restHit && !/^\s*\d/.test(t.slice(restHit.index+restHit[0].length));
     const numFiat=pairs.filter(p=>p.cur&&p.cur!=='USDT');
     const numUsdt=pairs.filter(p=>p.cur==='USDT');
@@ -1382,10 +1387,28 @@
         return {type:'multi',mode:'crypto',dir:buyKw?'recv':'give',rows:cm.rows};
       }
     }
+    // ПОПОЛАМ: «продаю 1000 usdt, половину гривнею, половину долларами» → раскладка 50/50 по двум валютам
+    {
+      const halfSrc='полов[а-яіїєґё]*|навпіл|порівну|попол[а-яіїєґё]*|50\\s*(?:на|/)\\s*50';
+      if(numUsdt.length===1 && numFiat.length===0 && new RegExp(halfSrc).test(t)){
+        const hr=new RegExp(halfSrc,'g'); const cs=[]; let hm;
+        while((hm=hr.exec(t))){ const c=fcur(t.slice(hr.lastIndex, hr.lastIndex+16)); if(c&&c!=='USDT'&&!cs.includes(c)) cs.push(c); }
+        const fi=[...mentioned].filter(c=>c!=='USDT')
+          .map(c=>{const re=(CURWORDS.find(x=>x[0]===c)||[])[1];const m2=re?new RegExp(re.source).exec(t):null;return [c,m2?m2.index:1e9];})
+          .sort((a,b)=>a[1]-b[1]).map(x=>x[0]);   // в порядке появления во фразе
+        const two = cs.length===2? cs : (fi.length===2? fi : null);
+        if(two){
+          const total=numUsdt[0].num, h1=Math.round(total*50)/100, h2=Math.round((total-h1)*100)/100;
+          const pre=t.slice(0,numUsdt[0].pos);
+          const dirH=/(?:куп|придб|треба|нужн|надо|хоч)/.test(pre)?'recv':'give';
+          return {type:'multi',mode:'crypto',dir:dirH,rows:[{a:String(h1),c:two[0]},{a:String(h2),c:two[1]}]};
+        }
+      }
+    }
     // ОСТАТОК: общий USDT + слово-распределитель (остаток/раскидай/разбей…) + фикс. суммы
     if(restWord && numUsdt.length>=1 && numFiat.length>=1){
       const total=numUsdt[0].num;
-      let restCur=curAfterWord(t,/остал|остат|отсат|осат|остача|решт|отстав|оставш|залиш/) || [...mentioned].find(c=>c!=='USDT'&&!numFiat.some(f=>f.cur===c)) || 'UAH';
+      let restCur=curAfterWord(t,/остал|остат|остан|отсат|осат|остача|решт|отстав|оставш|залиш/) || [...mentioned].find(c=>c!=='USDT'&&!numFiat.some(f=>f.cur===c)) || 'UAH';
       if(restCur==='USDT') restCur='UAH';
       // направление — трёхступенчато:
       // 1) глагол непосредственно ПЕРЕД общей суммой USDT решает всё:
@@ -1433,6 +1456,9 @@
       if(fiatCurs.length===2){
         const cp=cashPair(mentioned);
         if(cp){
+          // «куплю 500$ (за грн)»: сумма стоит на ПОЛУЧАЕМОЙ валюте — что даёт клиент, неизвестно; не выдумываем
+          if(/(?:куп|придб)[а-яіїєґё]*\s+$/.test(t.slice(0,numFiat[0].pos)))
+            return {error:'«куплю '+ffMc(numFiat[0].num)+' '+(CN[numFiat[0].cur]||'')+'» — сумма на получаемой стороне, не понял, что даёт клиент. Напиши отдаваемую сумму («міняю 20 000 грн на $») или посчитай в блоке «Наличные»'};
           const amtCur=numFiat[0].cur;
           const target=fiatCurs.find(c=>c!==amtCur);
           const dir=amtCur===cp.base?'b2q':'q2b';
@@ -1442,7 +1468,14 @@
     }
     // НЕСКОЛЬКО ВАЛЮТ: 2+ фиатных сумм → суммы↔USDT
     if(numFiat.length>=2){
-      const give=/хочу|хочет|нужн|получ|выда|вида|видай|вивед|вивест|на\s+руки|забир/.test(t);
+      // «хочу/куплю/треба … usdt» или «… в usdt»: цель — ПОЛУЧИТЬ USDT → клиент ВНОСИТ валюты (приём);
+      // «хочу» тут про usdt, а не про наличные на руки — иначе «хочу купити usdt: 15000 грн + 1000$» переворачивался
+      let buyUsdt=false;
+      { const uRe=(CURWORDS.find(x=>x[0]==='USDT')||[])[1];
+        if(uRe){ const rr=new RegExp(uRe.source,'g'); let xm;
+          while((xm=rr.exec(t))){ const ub=t.slice(Math.max(0,xm.index-16),xm.index);
+            if(/(?:куп|придб|треба|нужн|надо|хоч|бер[еє]|візьм|возьм)[а-яіїєґё]*\s+$/.test(ub) || /(?:^|[\s,:;])(?:в|у|на)\s*$/.test(ub)){ buyUsdt=true; break; } } } }
+      const give=!buyUsdt && /хочу|хочет|нужн|получ|выда|вида|видай|вивед|вивест|на\s+руки|забир/.test(t);
       const res={type:'multi',mode:'money',dir:give?'give':'recv',rows:numFiat.map(p=>({a:String(p.num),c:p.cur}))};
       if(numUsdt.length>=1) res.droppedUsdt=numUsdt.reduce((a,b)=>a+b.num,0);
       return res;
@@ -1513,16 +1546,18 @@
     if(r.type==='multi'){
       const give=(r.dir==='give');
       const hasFiat=(r.rows||[]).some(x=>x.c==='USD'||x.c==='EUR'||x.c==='UAH');
-      const rowLines=(r.rows||[]).map(x=>{ const lb=uLabel(x.c); return '<div class="urow">• '+uAmt(x.a,x.c)+(lb?' <span class="ucur">— '+lb+'</span>':'')+'</div>'; }).join('');
+      const rowLines=(r.rows||[]).map(x=>{
+        if(r.mode==='crypto') return '<div class="urow">• <b>'+ffMc(+x.a)+' USDT</b> → '+(uName[x.c]||x.c)+'</div>';
+        const lb=uLabel(x.c); return '<div class="urow">• '+uAmt(x.a,x.c)+(lb?' <span class="ucur">— '+lb+'</span>':'')+'</div>'; }).join('');
       let head;
       if(r.mode==='crypto') head=P+'клиент <span class="udir">'+(give?'ПРОДАЁТ USDT':'ПОКУПАЕТ USDT')+'</span>, '+(give?'выдача частями:':'внесение частями:');
       else if(r.mode==='rest') head=P+'клиент <span class="udir">'+(give?'ПРОДАЁТ':'ПОКУПАЕТ')+' '+ffMc(r.total)+' USDT</span>, '+(give?'выдача частями:':'оплата частями:');
-      else head=P+'клиент <span class="udir">'+(give?'отдаёт':'получает')+' несколько валют</span>:';
+      else head=P+'клиент <span class="udir">'+(give?'получает':'отдаёт')+' несколько валют</span>:';  // give = выдача: клиент ЗАБИРАЕТ валюты
       let body=rowLines;
       if(r.mode==='rest') body+='<div class="urow">• остаток — в <b>'+(uName[r.restCur]||r.restCur)+'</b></div>';
       if(r.mode!=='crypto'&&r.mode!=='rest') body+='<div class="urow">Считаю всё вместе в <b>USDT</b>.</div>';
       let warn='';
-      if(hasFiat&&(r.mode==='crypto'||r.mode==='rest'))
+      if(hasFiat&&r.mode==='rest')
         warn='<div class="uwarn">⚠ Суммы в строках — <b>номинал в валюте</b>, не USDT. Если клиент имел в виду доллары/евро <b>в переводе на грн</b> — переключи ту строку на «$ → грн».</div>';
       return head+body+warn;
     }
@@ -2004,8 +2039,8 @@
   function doCopyMc(){ clip(buildCopyMc(),'mcCopyBtn'); }
   $('mcCopyBtn').addEventListener('click',doCopyMc);
 
-  // --- На карту: USDT = сума грн ÷ курс на карту, без комиссии, floor в пользу обменника ---
-  // cardDir='uah': клиент назвал грн на карту → считаем USDT (USDT = грн ÷ курс), округление USDT.
+  // --- На карту: USDT = сума грн ÷ курс на карту, без комиссии, округление в пользу обменника ---
+  // cardDir='uah': клиент назвал грн на карту → считаем USDT (USDT = грн ÷ курс), округление USDT ВВЕРХ (клиент вносит).
   // cardDir='usdt': клиент назвал свои USDT → считаем грн на карту (грн = USDT × курс), округление грн.
   function cardCompute(){
     const rate=pn('cardRate');
@@ -2020,7 +2055,7 @@
     }
     if(!(A>0)) return {err:'введіть суму грн'};
     let v=A/rate;
-    if(cardRnd==='floor') v=Math.floor(v+1e-9);
+    if(cardRnd==='floor') v=Math.ceil(v-1e-9);   // клиент ВНОСИТ USDT → вверх, в пользу обменника
     else v=Math.round(v*100+1e-9)/100;
     return {usdt:v, uah:A, rate, out:'usdt'};
   }
@@ -2040,7 +2075,7 @@
     $('cardRateLine').textContent='курс на карту: 1 USDT = '+f2(e.rate)+' грн';
     $('cardCalc').textContent = usdtKnown
       ? ffO(e.usdt)+' × '+ffO(e.rate)+' = '+ffMc(e.uah)+' грн'+(cardRnd==='floor'?' (округлено вниз)':'')
-      : ffO(e.uah)+' ÷ '+ffO(e.rate)+' = '+ffMc(e.usdt)+' USDT'+(cardRnd==='floor'?' (округлено вниз)':'');
+      : ffO(e.uah)+' ÷ '+ffO(e.rate)+' = '+ffMc(e.usdt)+' USDT'+(cardRnd==='floor'?' (округлено вверх)':'');
     const shown=(e.out==='uah'? e.uah : e.usdt);
     $('cardNote').textContent = (shown===0)?'сума замала — округляється в 0'
       : (Math.abs(A_big(e))>1e15)?'дуже велике число — перевірте ввід':'';
