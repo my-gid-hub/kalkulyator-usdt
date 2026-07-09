@@ -455,6 +455,34 @@
   /* ── режимы 2×2 на узких экранах ── */
   @media(max-width:600px){ #modeSeg{grid-template-columns:1fr 1fr} }
 
+
+  /* ── журнал непоняток ── */
+  .issrow{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-top:10px;font-family:var(--body);position:relative}
+  .issrow .it{font-size:11px;color:var(--faint);padding-right:26px}
+  .issrow .ip{margin-top:6px;font-size:13.5px}
+  .issrow .iu{margin-top:4px;font-size:12px;color:var(--muted)}
+  .issrow pre.ia{margin:6px 0 0;white-space:pre-wrap;font-size:12px;color:var(--muted)}
+  .issrow .inote{margin-top:8px;font-size:12.5px}
+  .issrow .irm{position:absolute;top:6px;right:8px;background:none;border:none;color:var(--faint);cursor:pointer;font-size:15px;padding:2px 6px}
+  .issrow .irm:hover{color:var(--buy)}
+  .isshead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:20px;flex-wrap:wrap}
+  .isshead .badd,.isshead button{margin-top:0}
+  .issempty{color:var(--faint);font-size:12.5px;padding:10px 2px}
+  #issueRow{margin-top:8px}
+  #issueRow .badd{margin-top:0;width:auto;display:inline-block;padding:7px 14px}
+  .uans.ask{border-color:var(--buy)} .uans.ask .uansh{color:var(--buy)}
+  .icld{margin-left:8px;font-size:11px;color:var(--faint);background:none;border:none;padding:0}
+  .icld.ok{color:var(--sell)}
+  button.icld.re{cursor:pointer;color:var(--muted);text-decoration:underline dotted;font-family:inherit}
+  button.icld.re:hover{color:var(--ink)}
+  .kadd{background:none;border:1px solid var(--line);border-radius:8px;color:var(--muted);cursor:pointer;font-size:12px;padding:6px 10px;margin-top:8px;margin-left:8px;font-family:var(--body)}
+  .kadd:hover{color:var(--ink);border-color:var(--muted)}
+  .drow{display:flex;gap:8px;align-items:baseline;padding:5px 0;border-bottom:1px dashed var(--line);font-size:12.5px;font-family:var(--body)}
+  .drow .dt{color:var(--faint);font-size:11px;white-space:nowrap}
+  .drow .dtx{flex:1}
+  .drow .dp{white-space:nowrap;color:var(--sell)} .drow .dp.neg{color:var(--buy)}
+  .drow .drm{background:none;border:none;color:var(--faint);cursor:pointer;padding:0 4px}
+  .drow .drm:hover{color:var(--buy)}
 </style>
 </head>
 <body>
@@ -478,7 +506,7 @@
 
   <div class="rates collapsed" id="ratesCard">
     <div class="setlab">Вставить курсы текстом <span class="setsub">— скопируй сообщение с курсами, поля заполнятся сами</span></div>
-    <textarea id="ratePaste" class="vin" rows="2" spellcheck="false" placeholder="USDT Купівля: +0.7% · Продаж: -1.4% · USD/UAH: 44,55 / 44,85 · EUR/UAH: 51,10 / 51,40 · EUR/USD: 1,142 / 1,153"></textarea>
+    <textarea id="ratePaste" class="vin" rows="2" spellcheck="false" placeholder="USDT Купівля: +0.7% · Продаж: -1.4% · USD/UAH: 44,55 / 44,85 · EUR/UAH: 51,10 / 51,40 · EUR/USD: 1,142 / 1,153 · Закупка 44,3 · Карта 43,5"></textarea>
     <div class="phrase-info" id="ratePasteInfo"></div>
     <div class="rsep"></div>
     <div class="set-grid">
@@ -525,14 +553,22 @@
         </div>
         <div class="hint" style="margin-top:8px">используется в блоке «На карту»: USDT = сума грн ÷ этот курс. Без комиссии.</div>
         <div class="rsep"></div>
+        <div class="setlab">Курс дійсний, хв <span class="setsub">— строка в ответе клиенту; 0 или пусто = выкл</span></div>
+        <div class="costwrap">
+          <input id="fixMin" type="text" inputmode="numeric" value="">
+          <span class="costu">хв</span>
+        </div>
+        <div class="hint" style="margin-top:8px">если задано — к каждому ответу клиенту добавится «Курс дійсний до HH:MM (N хв)».</div>
+        <div class="rsep"></div>
         <div class="setlab">Округление результата</div>
         <div class="seg two mseg" id="rSeg">
           <button data-round="fav" class="on">в пользу</button>
           <button data-round="exact">точно</button>
         </div>
-        <div class="seg two mseg" id="rStep" style="margin-top:8px">
+        <div class="seg three mseg" id="rStep" style="margin-top:8px">
           <button data-step="cent" class="on">до копейки</button>
           <button data-step="whole">до целого</button>
+          <button data-step="ten">до 10</button>
         </div>
         <div class="rsep"></div>
         <div class="setlab">Округлення для клієнта <span class="setsub">— підсумок у копії, у нашу користь</span></div>
@@ -554,9 +590,21 @@
           <button data-cr="on" class="on">с просчётом</button>
           <button data-cr="off">без</button>
         </div>
+        <div class="setlab" style="margin-top:12px">Мова відповіді клієнту</div>
+        <div class="seg two mseg" id="langSeg">
+          <button data-lang="ua" class="on">Українська</button>
+          <button data-lang="ru">Русский</button>
+        </div>
         <div class="setnote">строка «Розрахунок: … = …» в ответе клиенту. Базовый курс и коэффициент наценки клиенту не показываются никогда.</div>
       </div>
     </div>
+    <div class="rsep"></div>
+    <div class="setlab">Резервная копия всего <span class="setsub">— курсы, шаблоны, журнал, касса, кошельки — один файл</span></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="badd" id="bkSave" type="button" style="margin-top:0">💾 Сохранить всё в файл</button>
+      <label class="badd" style="margin-top:0;cursor:pointer">Восстановить из файла<input type="file" id="bkLoad" accept=".json,application/json" style="display:none"></label>
+    </div>
+    <div class="phrase-info" id="bkInfo"></div>
   </div>
 
   <div class="pbar">
@@ -573,10 +621,32 @@
       <pre id="phraseAnsTxt"></pre>
       <button class="copy uansbtn" id="phraseAnsBtn" type="button">Скопіювати відповідь</button>
     </div>
+    <div class="uans ask" id="phraseAsk" style="display:none">
+      <div class="uansh">Питання клієнту — щоб точно зрозуміти одне одного</div>
+      <pre id="phraseAskTxt"></pre>
+      <button class="copy uansbtn" id="phraseAskBtn" type="button">Скопіювати запитання</button>
+    </div>
+    <div id="issueRow" style="display:none">
+      <button class="badd" id="issueBtn" type="button" title="сохранить фразу, разбор и ответ в журнал — разобрать позже">⚑ В непонятки — разобрать позже</button>
+    </div>
     <details class="hist" id="histBox">
       <summary>Последние расчёты <span id="histCnt"></span></summary>
       <div id="histList"></div>
       <button id="histClear" type="button">очистить историю</button>
+    </details>
+    <details class="hist" id="dayBox">
+      <summary>Касса за день <span id="dayCnt"></span></summary>
+      <div id="dayList"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+        <button id="dayCopy" type="button">⧉ отчёт дня</button>
+        <button id="daySend" type="button">☁ отчёт в таблицу</button>
+        <button id="dayClear" type="button">очистить сегодня</button>
+      </div>
+    </details>
+    <details class="hist" id="reqBox">
+      <summary>Проверка реквизитов клиента</summary>
+      <input id="reqIn" class="vin" spellcheck="false" placeholder="вставь номер карты / TRON-адрес (T…) / ETH-адрес (0x…)" style="margin-top:8px">
+      <div class="phrase-info" id="reqOut"></div>
     </details>
   </div>
 
@@ -584,6 +654,7 @@
     <button data-tab="calc" class="on" type="button">Калькулятор</button>
     <button data-tab="verify" type="button">Проверка транзакций</button>
     <button data-tab="faq" type="button">Ответы клиентам</button>
+    <button data-tab="issues" type="button">Непонятки <span id="issTabCnt"></span></button>
   </div>
 
   <div class="pane on" data-pane="calc">
@@ -639,7 +710,7 @@
             <div class="rcv" id="rcV"></div>
           </div>
           <div class="uans" id="exPrev" style="display:none"><div class="uansh">Ответ клиенту</div><pre id="exPrevTxt"></pre></div>
-          <button class="copy" id="copyBtn">Скопировать ответ для клиента</button>
+          <button class="copy" id="copyBtn">Скопировать ответ для клиента</button><button class="kadd" data-k="ex" type="button" title="учесть сделку в кассе дня">+ касса</button>
         </div>
         <div class="calcbox">
           <div class="calclab">как считается</div>
@@ -690,7 +761,7 @@
         <div class="calcbox"><div class="calclab">как считается</div><div class="fnum" id="mcCalc">—</div></div>
         <div class="profit" id="mcProfit" style="margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);display:none"></div>
         <div class="uans" id="mcPrev" style="display:none"><div class="uansh">Ответ клиенту</div><pre id="mcPrevTxt"></pre></div>
-          <button class="copy" id="mcCopyBtn" type="button">Скопировать ответ для клиента</button>
+          <button class="copy" id="mcCopyBtn" type="button">Скопировать ответ для клиента</button><button class="kadd" data-k="mc" type="button" title="учесть сделку в кассе дня">+ касса</button>
       </div>
     </div>
   </div>
@@ -726,7 +797,7 @@
           <div class="calcbox"><div class="calclab">как считается</div><div class="fnum" id="euCalc">—</div></div>
           <div class="resnote" id="euNote"></div>
           <div class="uans" id="euPrev" style="display:none"><div class="uansh">Ответ клиенту</div><pre id="euPrevTxt"></pre></div>
-          <button class="copy" id="euCopyBtn">Скопировать ответ для клиента</button>
+          <button class="copy" id="euCopyBtn">Скопировать ответ для клиента</button><button class="kadd" data-k="eu" type="button" title="учесть сделку в кассе дня">+ касса</button>
         </div>
       </div>
     </div>
@@ -760,16 +831,44 @@
           <div class="rl" id="cardRl">Клиент заводит USDT</div>
           <div class="big" id="cardBig" title="нажми — скопируется ответ клиенту"><span id="cardV">—</span><span class="u" id="cardVU">USDT</span></div>
           <div class="rate" id="cardRateLine"></div>
+          <div class="profit" id="cardProfit"></div>
           <div class="calcbox"><div class="calclab">как считается</div><div class="fnum" id="cardCalc">—</div></div>
           <div class="resnote" id="cardNote"></div>
           <div class="uans" id="cardPrev" style="display:none"><div class="uansh">Ответ клиенту</div><pre id="cardPrevTxt"></pre></div>
-          <button class="copy" id="cardCopyBtn">Скопировать ответ для клиента</button>
+          <button class="copy" id="cardCopyBtn">Скопировать ответ для клиента</button><button class="kadd" data-k="card" type="button" title="учесть сделку в кассе дня">+ касса</button>
         </div>
       </div>
     </div>
   </div>
   </div><!-- /onecard -->
   </div><!-- /pane calc -->
+
+  <div class="pane" data-pane="issues">
+  <div class="onecard">
+    <details class="howto"><summary>Как пользоваться журналом</summary>
+      <div class="fsym" style="margin-bottom:12px">Сюда складывай ситуации за день: калькулятор понял не так, посчитал странно, клиент спорил, чего-то не хватает.<br><b>1.</b> Разобрал фразу — жми <b>«⚑ В непонятки»</b> под ответом: фраза, разбор «Понял», ответ и курсы на момент сохранятся сами.<br><b>2.</b> Или опиши ситуацию словами ниже и нажми «Добавить».<br><b>3.</b> К каждой записи можно дописать комментарий — что ожидал, что не так.<br><b>4.</b> Если подключена Google Таблица (настройка ниже) — каждая запись сама улетает на твой Диск. Иначе в конце дня — <b>«Скопировать всё для разбора»</b> или «💾 в файл» и передай ассистенту: он прогонит через тесты и подготовит правки.<br><span style="color:var(--muted)">Журнал живёт в этом браузере (переживает перезагрузку страницы, но сотрётся при очистке данных сайтов или в другом браузере). Для вечного хранения — «💾 Сохранить в файл».</span></div>
+    </details>
+    <details class="howto" id="issSyncBox"><summary>Запись в Google Таблицу — настройка (один раз)</summary>
+      <div class="fsym" style="margin-bottom:10px"><b>1.</b> forms.google.com → новая форма «Непонятки», один вопрос типа <b>«Развёрнутый ответ»</b> с названием «Запись».<br><b>2.</b> Настройки → Ответы: выключить «Собирать адреса эл. почты» и ограничение по входу (форма должна принимать без входа в аккаунт).<br><b>3.</b> Вкладка «Ответы» → зелёный значок таблицы → «Связать с таблицей» — записи будут падать в Google Sheet на твоём Диске (с датой и временем).<br><b>4.</b> В форме: ⋮ → <b>«Получить ссылку с предзаполненным ответом»</b> → впиши в поле слово ТЕСТ → «Получить ссылку» → вставь её сюда:</div>
+      <input id="issSyncUrl" class="vin" spellcheck="false" placeholder="https://docs.google.com/forms/d/e/…/viewform?usp=pp_url&entry.…=ТЕСТ">
+      <div class="phrase-info" id="issSyncInfo"></div>
+      <button class="badd" id="issSyncTest" type="button">Отправить тестовую запись</button>
+      <div class="hint" style="margin-top:8px">после подключения каждая новая запись сама улетает в таблицу — очистка браузера ей не страшна. Локальная копия в журнале остаётся.</div>
+    </details>
+    <div class="setlab">Записать ситуацию вручную</div>
+    <textarea id="issNew" class="vin" rows="2" spellcheck="false" placeholder="что произошло: фраза клиента, что ожидал, что показал калькулятор…"></textarea>
+    <button class="badd" id="issAdd" type="button">Добавить запись</button>
+    <div class="isshead">
+      <div class="setlab" style="margin:0">Журнал <span id="issCnt" class="setsub"></span></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="badd" id="issExport" type="button">⧉ Скопировать всё для разбора</button>
+        <button class="badd" id="issSave" type="button">💾 Сохранить в файл</button>
+        <button class="badd" id="issClear" type="button">очистить журнал</button>
+      </div>
+    </div>
+    <div id="issList"></div>
+  </div>
+  </div>
 
   <div class="pane" data-pane="faq">
     <div class="vcard">
@@ -879,7 +978,7 @@
 (function(){
   const $=id=>document.getElementById(id);
   const RKEYS=['usdB','usdS','eurB','eurS','euruahB','euruahS','cB','cS'];
-  let dir='sell', cur='UAH', known='crypto', method='mul', roundMode='fav', roundStep='cent', euDir='b2q', euPair='USDUAH', copyRate=true, cardRnd='floor', cardDir='uah', custRound='whole';
+  let dir='sell', cur='UAH', known='crypto', method='mul', roundMode='fav', roundStep='cent', euDir='b2q', euPair='USDUAH', copyRate=true, cardRnd='floor', cardDir='uah', custRound='whole', ansLang='ua';
   let ratesTime=null;
   function esc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
   const DEF={usdB:'44.40',usdS:'44.75',euruahB:'51.05',euruahS:'51.50',eurB:'1.144',eurS:'1.156',cB:'0.7',cS:'-1.4',cost:'44.50',cardRate:'43.0'};
@@ -914,6 +1013,22 @@
   function withClientTotal(formula, val, unit){
     return formula.replace(/ = [^=]*$/, ' = '+ffMc(val)+' '+unit);
   }
+  // «Курс дійсний до …» — добавляется к ответам клиенту, если задано поле fixMin (минуты); пусто/0 = выкл
+  function fixLine(){
+    const el=$('fixMin'); if(!el) return '';
+    const m=parseFloat(String(el.value||'').replace(',','.'));
+    if(!(m>0)) return '';
+    const d=new Date(Date.now()+m*60000), p=x=>String(x).padStart(2,'0');
+    return '\nКурс дійсний до '+p(d.getHours())+':'+p(d.getMinutes())+' ('+ffMc(m)+' хв)';
+  }
+  // мова відповіді клієнту: ua (за замовчуванням) / ru — переводим только слова, числа не трогаем
+  function locTxt(t){
+    if(ansLang!=='ru'||!t) return t;
+    return t.replace(/Віддаєте /g,'Отдаёте ').replace(/ отримуєте /g,' получаете ')
+      .replace(/Розрахунок:/g,'Расчёт:').replace(/зараховуємо /g,'зачисляем ')
+      .replace(/ на картку/g,' на карту').replace(/Залишок: /g,'Остаток: ')
+      .replace(/Курс дійсний до /g,'Курс действителен до ').replace(/ хв\)/g,' мин)');
+  }
   function ratesSummary(){
     const g=id=>$(id).value;
     const fmt=x=>{const n=parseFloat(String(x).replace(',','.'));return (isFinite(n)&&n>0?'+':'')+x+'%';};
@@ -922,14 +1037,15 @@
   }
   // --- сохранение курсов (работает в скачанном файле; в превью просто не сохраняет) ---
   function saveRates(){ try{ const o={}; RKEYS.forEach(k=>o[k]=$(k).value); o.method=method; o.roundMode=roundMode; o.roundStep=roundStep; o.copyRate=copyRate; o.cost=$('cost').value;
-    o.cardRate=$('cardRate').value; o.cardRnd=cardRnd; o.cardDir=cardDir; o.custRound=custRound;
-    o.collapsed=$('ratesCard').classList.contains('collapsed'); o.ratesTime=ratesTime;
+    o.cardRate=$('cardRate').value; o.fixMin=($('fixMin')||{}).value||''; o.cardRnd=cardRnd; o.cardDir=cardDir; o.custRound=custRound;
+    o.ansLang=ansLang; o.collapsed=$('ratesCard').classList.contains('collapsed'); o.ratesTime=ratesTime;
     localStorage.setItem('usdtCalcRates',JSON.stringify(o));
     const s=$('saved'); s.style.opacity=1; clearTimeout(window._st); window._st=setTimeout(()=>s.style.opacity=0,1200);
   }catch(e){} }
   function loadRates(){ try{ const s=localStorage.getItem('usdtCalcRates');
     if(s){ const o=JSON.parse(s); RKEYS.forEach(k=>{ if(o[k]!=null) $(k).value=o[k]; }); if(o.cost!=null) $('cost').value=o.cost;
       if(o.cardRate!=null) $('cardRate').value=o.cardRate;
+      if(o.fixMin!=null&&$('fixMin')) $('fixMin').value=o.fixMin;
       if(o.cardRnd==='floor'||o.cardRnd==='exact'){ cardRnd=o.cardRnd;
         [...$('cardRnd').children].forEach(b=>b.classList.toggle('on',b.dataset.crn===cardRnd)); }
       if(o.cardDir==='uah'||o.cardDir==='usdt') cardDir=o.cardDir;
@@ -938,10 +1054,12 @@
         [...$('mSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.method===method)); }
       if(o.roundMode==='fav'||o.roundMode==='exact'){ roundMode=o.roundMode;
         [...$('rSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.round===roundMode)); }
-      if(o.roundStep==='cent'||o.roundStep==='whole'){ roundStep=o.roundStep;
+      if(o.roundStep==='cent'||o.roundStep==='whole'||o.roundStep==='ten'){ roundStep=o.roundStep;
         [...$('rStep').children].forEach(b=>b.classList.toggle('on',b.dataset.step===roundStep)); }
       if(o.copyRate===false){ copyRate=false;
         [...$('cpSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.cr==='off')); }
+      if(o.ansLang==='ru'||o.ansLang==='ua'){ ansLang=o.ansLang;
+        [...$('langSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.lang===ansLang)); }
       if(o.custRound==='whole'||o.custRound==='cent'||o.custRound==='off'){ custRound=o.custRound;
         [...$('custSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.cust===custRound)); }
       if(o.collapsed===false){ $('ratesCard').classList.remove('collapsed'); $('tog').textContent='свернуть'; } }
@@ -1039,12 +1157,12 @@
     const commAmt=Math.abs(rawValue-valNoComm), cAbs=Math.round(Math.abs(c)*1000)/1000;
     let roundNote='';
     if(roundMode==='fav'){
-      const q = roundStep==='whole'?1:0.01;
+      const q = roundStep==='ten'?10:roundStep==='whole'?1:0.01;
       const n = rawValue/q;
       const rr = isFwd? Math.floor(n+1e-9) : Math.ceil(n-1e-9);
       value = rr*q;
       if(Math.abs(value-rawValue)>1e-9){
-        const dw=isFwd?'вниз':'вверх', sw=roundStep==='whole'?('до целого '+outUnit):'до 0,01';
+        const dw=isFwd?'вниз':'вверх', sw=roundStep==='ten'?('до 10 '+outUnit):roundStep==='whole'?('до целого '+outUnit):'до 0,01';
         roundNote='округлено '+dw+' '+sw+': '+ffM(rawValue)+' → '+ffM(value);
       }
     }
@@ -1248,16 +1366,16 @@
   function parseDeal(raw){
     const t=preNum(' '+raw.toLowerCase().replace(/[\u00a0\u2009]/g,' ')+' ');
     const m=new RegExp(NUMRE).exec(t);
-    if(!m) return {error:'не нашёл сумму — впиши число'};
+    if(!m) return {error:'не нашёл сумму — впиши число', ask:'Вітаю! Напишіть, будь ласка, суму та валюту одним повідомленням — наприклад: «1000 USDT в грн» або «15 000 грн в USDT».'};
     let num=parseNum(m[1])*numMult(m[2]||m[3]);
-    if(!(num>0)) return {error:'сумму не понял'};
+    if(!(num>0)) return {error:'сумму не понял', ask:'Вітаю! Напишіть, будь ласка, суму та валюту одним повідомленням — наприклад: «1000 USDT в грн» або «15 000 грн в USDT».'};
     const pos=m.index, aft=t.slice(pos+m[0].length,pos+m[0].length+16), bef=t.slice(Math.max(0,pos-10),pos);
     const firstCurIn=(s)=>{let best=null,bp=1e9;for(const [c,re] of CURWORDS){const mm=new RegExp(re.source).exec(s);if(mm&&mm.index<bp){bp=mm.index;best=c;}}return best;};
     const lastCurIn=(s)=>{let best=null,bp=-1;for(const [c,re] of CURWORDS){let mm,li=-1;const r=new RegExp(re.source,'g');while((mm=r.exec(s)))li=mm.index;if(li>bp){bp=li;best=c;}}return best;};
     let amtCur=curAdjAfter(aft)||curAdjBefore(bef)||firstCurIn(aft)||lastCurIn(bef);
     const mentioned=new Set(); for(const [c,re] of CURWORDS){ if(re.test(t)) mentioned.add(c); }
     if(!amtCur && mentioned.size) amtCur=[...mentioned][0];
-    if(!amtCur) return {error:'не понял валюту — добавь грн / $ / € / usdt'};
+    if(!amtCur) return {error:'не понял валюту — добавь грн / $ / € / usdt', ask:'Уточніть, будь ласка, валюту: гривня, долар, євро чи USDT?'};
     const giveRe=/отда|відда|отд[аеёу]|даёт|дает|\bдать|\bдал\b|\bдай|\bда[ю]|занос|занес|принос|принес|плат|меня|прода|сда|зда|внос|внош|внес|скид|кин|відправ|отправ|надішл|переказ/g;
     const getRe =/получ|отрим|забир|забер|хоч|нужн|треба|потрібн|купи|купл|покуп|купу|бер[еёу]|возьм|візьм|выда|вида|на\s+руки|вийш|вийд|выйд|сто[иї]т/g;
     const beforeNum=t.slice(0,m.index);
@@ -1349,9 +1467,9 @@
   function parseRequest(raw){
     const t=preNum(' '+raw.toLowerCase().replace(/[\u00a0\u2009]/g,' ')+' ');
     if(/двест|двісті|трист|чотирист|четырест|п[’'ʼ]?ятсот|пятьсот|шестьсот|шістсот|семьсот|сімсот|восемьсот|вісімсот|девятьсот|дев[’'ʼ]?ятсот/.test(t))
-      return {error:'сумму пиши цифрами («600», «1500») — числа словами не разбираю'};
+      return {error:'сумму пиши цифрами («600», «1500») — числа словами не разбираю', ask:'Напишіть, будь ласка, суму цифрами — наприклад «600$» чи «12 500 грн».'};
     const pairs=extractPairs(t);
-    if(!pairs.length) return {error:'не нашёл сумму — впиши число'};
+    if(!pairs.length) return {error:'не нашёл сумму — впиши число', ask:'Вітаю! Напишіть, будь ласка, суму та валюту одним повідомленням — наприклад: «1000 USDT в грн» або «15 000 грн в USDT».'};
     const mentioned=new Set(); for(const [c,re] of CURWORDS){ if(re.test(t)) mentioned.add(c); }
     // «остальное 1600 в гривне» — это явная сумма, а не остаток: после слова не должно идти число
     const restHit=/(остал|остат|остан|отсат|осат|остача|решт|отстав|оставш|залиш)[а-яёіїєґ]*/.exec(t);
@@ -1437,7 +1555,7 @@
     {
       const orphan=pairs.filter(p=>!p.cur);
       if(orphan.length>=1 && numFiat.length>=2 && numUsdt.length===0)
-        return {error:'для суммы '+ffMc(orphan[0].num)+' не понял валюту — если это общий USDT, допиши «usdt»'};
+        return {error:'для суммы '+ffMc(orphan[0].num)+' не понял валюту — если это общий USDT, допиши «usdt»', ask:'Уточніть, будь ласка: '+ffMc(orphan[0].num)+' — це сума в якій валюті (грн, $, € чи USDT)?'};
     }
     // РАСПРЕДЕЛЕНИЕ: общий USDT + части по валютам, части сходятся с общим («вывести 13100: из них 10500 в долларе, 2600 в гривне»)
     if(numUsdt.length>=1 && numFiat.length>=1){
@@ -1448,7 +1566,7 @@
         return {type:'multi',mode:'crypto',dir:buySplit?'recv':'give',rows:numFiat.map(p=>({a:String(p.num),c:p.cur}))};
       }
       // части есть, но не сходятся и нет слова «остальное» — не выдумываем
-      return {error:'вижу '+ffMc(total)+' USDT и части на '+ffMc(partSum)+' — не сходится. Если это остаток, добавь «остальное в …»; если распределение — части должны давать общую сумму'};
+      return {error:'вижу '+ffMc(total)+' USDT и части на '+ffMc(partSum)+' — не сходится. Если это остаток, добавь «остальное в …»; если распределение — части должны давать общую сумму', ask:'Уточніть, будь ласка: у вас '+ffMc(total)+' USDT загалом? Напишіть, скільки в якій валюті потрібно і що робити із залишком — наприклад: «5000 USDT: 2000$, решта грн».'};
     }
     // НАЛИЧНЫЙ ОБМЕН (без USDT): 1 сумма + 2 фиат-валюты → блок «Обмін готівки»
     if(!mentioned.has('USDT') && numFiat.length===1){
@@ -1458,7 +1576,7 @@
         if(cp){
           // «куплю 500$ (за грн)»: сумма стоит на ПОЛУЧАЕМОЙ валюте — что даёт клиент, неизвестно; не выдумываем
           if(/(?:куп|придб)[а-яіїєґё]*\s+$/.test(t.slice(0,numFiat[0].pos)))
-            return {error:'«куплю '+ffMc(numFiat[0].num)+' '+(CN[numFiat[0].cur]||'')+'» — сумма на получаемой стороне, не понял, что даёт клиент. Напиши отдаваемую сумму («міняю 20 000 грн на $») или посчитай в блоке «Наличные»'};
+            return {error:'«куплю '+ffMc(numFiat[0].num)+' '+(CN[numFiat[0].cur]||'')+'» — сумма на получаемой стороне, не понял, что даёт клиент. Напиши отдаваемую сумму («міняю 20 000 грн на $») или посчитай в блоке «Наличные»', ask:'Уточніть, будь ласка: ви хочете отримати '+ffMc(numFiat[0].num)+' '+(CN[numFiat[0].cur]||'')+'? Напишіть, скільки і в якій валюті віддаєте — наприклад: «міняю 20 000 грн на долари».'};
           const amtCur=numFiat[0].cur;
           const target=fiatCurs.find(c=>c!==amtCur);
           const dir=amtCur===cp.base?'b2q':'q2b';
@@ -1578,6 +1696,14 @@
     if(!html){ u.style.display='none'; u.innerHTML=''; u.className='understood'; return; }
     u.className='understood'+(isErr?' err':''); u.innerHTML=html; u.style.display='block';
   }
+  // готовый ВОПРОС клиенту при непонятной/неоднозначной фразе
+  let phraseAskVal=null;
+  function setPhraseAsk(txt){
+    phraseAskVal=txt||null;
+    const box=$('phraseAsk'); if(!box) return;
+    if(!txt){ box.style.display='none'; return; }
+    $('phraseAskTxt').textContent=txt; box.style.display='block';
+  }
   // готовый ответ клиенту для распознанной фразы (тот же текст, что дают кнопки копий)
   let phraseAnsTxt=null;
   function setPhraseAns(txt){
@@ -1590,9 +1716,10 @@
     const v=$('phrase').value.trim(); const info=$('phraseInfo');
     if(info){ info.textContent=''; info.className='phrase-info'; }
     if($('pClear')) $('pClear').style.display=v?'block':'none';
-    if(!v){ setUnderstood(''); setPhraseAns(null); return; }
+    if(!v){ setUnderstood(''); setPhraseAns(null); setPhraseAsk(null); return; }
     const r=parseRequest(v);
-    if(r.error){ setUnderstood('⚠ '+r.error, true); setPhraseAns(null); return; }
+    if(r.error){ setUnderstood('⚠ '+r.error, true); setPhraseAns(null);
+      setPhraseAsk(r.ask||'Уточніть, будь ласка: яку суму і валюту віддаєте, і що бажаєте отримати?'); return; }
     let ans=null;
     if(r.type==='card'){ applyCard(r); if(apply) switchMode('secCard'); ans=buildCopyCard(); }
     else if(r.type==='cash'){ applyCash(r); if(apply) switchMode('secEu'); ans=buildCopyEu(); }
@@ -1602,6 +1729,11 @@
     if(r.droppedUsdt) html+='<div class="uwarn">⚠ '+ffMc(r.droppedUsdt)+' USDT не учтены — если это остаток, добавь «остаток».</div>';
     setUnderstood(html);
     setPhraseAns(ans);
+    // неоднозначности при успешном разборе → мягкий вопрос клиенту рядом с ответом
+    let ask=null;
+    if(r.type==='single' && r.defCur) ask='Виплату бажаєте отримати у гривні, доларах чи євро?';
+    if(r.droppedUsdt) ask='Уточніть, будь ласка, щодо '+ffMc(r.droppedUsdt)+' USDT: це загальна сума обміну? Якщо так — напишіть, що робити із залишком (наприклад «решта в грн»).';
+    setPhraseAsk(ask);
     if(ans) histAdd(v, ans);
   }
   // ── история последних расчётов (только фразовый поток; хранится локально) ──
@@ -1612,7 +1744,7 @@
       let h=histGet();
       if(h.length && h[0].p===phrase && h[0].a===ans) { h[0].t=Date.now(); }
       else h.unshift({t:Date.now(), p:phrase, a:ans});
-      h=h.slice(0,8);
+      h=h.slice(0,25);
       localStorage.setItem(HISTK, JSON.stringify(h));
     }catch(e){}
     histRender();
@@ -1645,7 +1777,7 @@
   (function(){
     const box=$('pChips'); if(!box) return;
     const EX=['1000 usdt в грн','25000 грн на карту','2000 usdt на карту','5000 usdt: 2000$, решта грн','2000$ і 1500€ в usdt',
-              'є 1500+200 юсдт, нужно 100€, решта грн','поміняти 500$ на грн','хочу 300 usdt, скільки грн','нужно 12500 грн, скільки usdt'];
+              'є 1500+200 юсдт, нужно 100€, решта грн','поміняти 500$ на грн','хочу 300 usdt, скільки грн','нужно 12500 грн, скільки usdt','продам 1000 usdt навпіл: грн і $'];
     box.innerHTML=EX.map(x=>'<button type="button">'+esc(x)+'</button>').join('');
     box.addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return;
       $('phrase').value=b.textContent; runPhrase(true); try{$('phrase').focus();}catch(_){}
@@ -1656,12 +1788,14 @@
     const pc=$('pClear');
     if(pc) pc.addEventListener('click',()=>{ $('phrase').value=''; runPhrase(false); try{$('phrase').focus();}catch(_){} });
     const ab=$('phraseAnsBtn');
-    if(ab) ab.addEventListener('click',()=>clip(phraseAnsTxt,'phraseAnsBtn'));
+    if(ab) ab.addEventListener('click',()=>{ if(phraseAnsTxt) window.__lastDealTxt=phraseAnsTxt; clip(phraseAnsTxt,'phraseAnsBtn'); });
+    const ak=$('phraseAskBtn');
+    if(ak) ak.addEventListener('click',()=>clip(phraseAskVal,'phraseAskBtn'));
     try{
       document.addEventListener('keydown',e=>{
         const tag=(e.target&&e.target.tagName)||'';
         const typing=tag==='INPUT'||tag==='TEXTAREA';
-        if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){ if(phraseAnsTxt){ clip(phraseAnsTxt,'phraseAnsBtn'); e.preventDefault(); } return; }
+        if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){ if(phraseAnsTxt){ window.__lastDealTxt=phraseAnsTxt; clip(phraseAnsTxt,'phraseAnsBtn'); e.preventDefault(); } return; }
         if(e.key==='Escape'&&e.target&&e.target.id==='phrase'){ $('phrase').value=''; runPhrase(false); return; }
         if(e.key==='/'&&!typing){ e.preventDefault(); try{$('phrase').focus();}catch(_){} }
       });
@@ -1697,7 +1831,7 @@
       // «есть 1000 USDT» → від USDT; «хочу 1000 грн» → від грн. Итог — округлён в нашу пользу.
       txt+='\nРозрахунок: '+withClientTotal(last.formulaClient||last.formula, valC, last.outUnit);
     }
-    return txt;
+    return locTxt(txt+fixLine());
   }
   // единая копия в буфер с фолбэком и галочкой на кнопке
   function clip(txt,btnId){
@@ -1710,6 +1844,7 @@
   }
   function doCopy(){
     const txt=buildCopySingle(); if(!txt) return;
+    window.__lastDealTxt=txt;
     try{ if(last.gives&&last.gives.u==='USDT'&&window.vSuggestExpected) window.vSuggestExpected(last.gives.v); }catch(e){}
     clip(txt,'copyBtn');
   }
@@ -1731,7 +1866,8 @@
     custRound=b.dataset.cust;[...$('custSeg').children].forEach(x=>x.classList.toggle('on',x===b));render();euRender();mcCalc();cardRender();saveRates();});
   function reset(){
     for(const k in DEF) $(k).value=DEF[k];
-    method='mul'; roundMode='fav'; roundStep='cent'; copyRate=true; cardRnd='floor'; cardDir='uah'; custRound='whole';
+    method='mul'; roundMode='fav'; roundStep='cent'; copyRate=true; cardRnd='floor'; cardDir='uah'; custRound='whole'; ansLang='ua';
+    [...$('langSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.lang==='ua'));
     [...$('cpSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.cr==='on'));
     [...$('mSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.method==='mul'));
     [...$('rSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.round==='fav'));
@@ -1758,6 +1894,10 @@
     }
     const mc=/(?:куп[іи]вл|купл|покупк)[а-яіїєґё]*\s*[:=]?\s*([+\-−]?\s*\d+(?:[.,]\d+)?)\s*%?/i.exec(t);
     if(mc){ const v=val(mc[1]); if(isFinite(v)&&Math.abs(v)<100&&(/%/.test(mc[0])||Math.abs(v)<=15)){ out.cB=str(mc[1]).replace('+',''); got.push('Купівля '+(v>0?'+':'')+str(mc[1]).replace('+','')+'%'); } }
+    const mz=/закуп[а-яіїєґё]*\s*[:=]?\s*(\d+(?:[.,]\d+)?)/i.exec(t);
+    if(mz){ const v=val(mz[1]); if(v>0){ out.cost=str(mz[1]); got.push('Закупка '+str(mz[1])); } }
+    const mk=/карт[а-яіїєґёу]*\s*[:=]?\s*(\d+(?:[.,]\d+)?)/i.exec(t);
+    if(mk){ const v=val(mk[1]); if(v>0&&v<1000){ out.cardRate=str(mk[1]); got.push('Карта '+str(mk[1])); } }
     const ms=/продаж[а-яіїєґё]*\s*[:=]?\s*([+\-−]?\s*\d+(?:[.,]\d+)?)\s*%?/i.exec(t);
     if(ms){ const v=val(ms[1]); if(isFinite(v)&&Math.abs(v)<100&&(/%/.test(ms[0])||Math.abs(v)<=15)){ out.cS=str(ms[1]).replace('+',''); got.push('Продаж '+(v>0?'+':'')+str(ms[1]).replace('+','')+'%'); } }
     return {out,got};
@@ -1770,7 +1910,7 @@
     if(!r.got.length){ info.className='phrase-info err';
       info.textContent='⚠ не распознал — нужен вид «USD/UAH: 44,55 / 44,85» или «Купівля: +0.7%»'; return; }
     for(const k in r.out) $(k).value=String(r.out[k]);
-    touchRates(); render(); euRender(); mcCalc(); ratesSummary(); updateRatesAge(); checkSpread(); saveRates();
+    touchRates(); render(); euRender(); mcCalc(); cardRender(); ratesSummary(); updateRatesAge(); checkSpread(); saveRates();
     info.className='phrase-info ok';
     info.textContent='✓ Обновлено: '+r.got.join(' · ');
     renderUsdtRates();
@@ -1793,7 +1933,7 @@
     let v,outU,rtxt;
     if(euDir==='b2q'){ v=A*bR; outU=P.quote; rtxt='1 '+P.base+' = '+f2(bR)+' '+P.quote; }
     else { v=A/sR; outU=P.base; rtxt='1 '+P.base+' = '+f2(sR)+' '+P.quote; }
-    if(roundMode==='fav'){ const q=roundStep==='whole'?1:0.01; v=Math.floor(v/q+1e-9)*q; }
+    if(roundMode==='fav'){ const q=roundStep==='ten'?10:roundStep==='whole'?1:0.01; v=Math.floor(v/q+1e-9)*q; }
     return {v,outU,rtxt};
   }
   let euLast=null;
@@ -1819,9 +1959,9 @@
     let txt='Віддаєте '+ffMc(euLast.ga)+' '+euLast.gu+' → отримуєте '+ffMc(v)+' '+euLast.outU;
     if(copyRate){ const mul=euLast.gu===euLast.base;
       txt+='\nРозрахунок: '+ffMc(euLast.ga)+(mul?' × ':' ÷ ')+ffR(euLast.rate)+' = '+ffMc(v)+' '+euLast.outU; }
-    return txt;
+    return locTxt(txt+fixLine());
   }
-  function doCopyEu(){ clip(buildCopyEu(),'euCopyBtn'); }
+  function doCopyEu(){ const t=buildCopyEu(); if(t) window.__lastDealTxt=t; clip(t,'euCopyBtn'); }
   $('euCopyBtn').addEventListener('click',doCopyEu);
   $('euBig').addEventListener('click',doCopyEu);
   $('euPair').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
@@ -1879,7 +2019,7 @@
     const ops=commFirst?[commStep,...rateSteps]:[...rateSteps,commStep];
     let v=A; ops.forEach(o=>{ v=o[0]==='÷'?v/o[1]:v*o[1]; });
     const raw=v;
-    if(roundMode==='fav'){ const q=roundStep==='whole'?1:0.01; v=isFwd?Math.floor(raw/q+1e-9)*q:Math.ceil(raw/q-1e-9)*q; }
+    if(roundMode==='fav'){ const q=roundStep==='ten'?10:roundStep==='whole'?1:0.01; v=isFwd?Math.floor(raw/q+1e-9)*q:Math.ceil(raw/q-1e-9)*q; }
     else v=Math.round(raw*100)/100;
     const formula=fmtStr(ffO(A))+' '+inUnit+ops.map(o=>' '+o[0]+' '+ffO(o[1])).join('')+' = '+ffMc(v)+' '+outUnit;
     const formulaClient=fmtStr(ffO(A))+' '+inUnit+ops.map(o=> o[2]==="k" ? commPctTok(o[0],o[1]) : ' '+o[0]+' '+ffO(o[1]) ).join('')+' = '+ffMc(v)+' '+outUnit;
@@ -2034,9 +2174,9 @@
       txt='Віддаєте '+gives+' → отримуєте '+gets+'\nРозрахунок:\n'+lines.join('\n');
       try{ if(d==='sell'&&mcTotVal>0&&window.vSuggestExpected) window.vSuggestExpected(mcTotVal); }catch(e){}
     }
-    return txt;
+    return locTxt(txt+fixLine());
   }
-  function doCopyMc(){ clip(buildCopyMc(),'mcCopyBtn'); }
+  function doCopyMc(){ const t=buildCopyMc(); if(t) window.__lastDealTxt=t; clip(t,'mcCopyBtn'); }
   $('mcCopyBtn').addEventListener('click',doCopyMc);
 
   // --- На карту: USDT = сума грн ÷ курс на карту, без комиссии, округление в пользу обменника ---
@@ -2079,6 +2219,13 @@
     const shown=(e.out==='uah'? e.uah : e.usdt);
     $('cardNote').textContent = (shown===0)?'сума замала — округляється в 0'
       : (Math.abs(A_big(e))>1e15)?'дуже велике число — перевірте ввід':'';
+    // выгода: обменник получает USDT (по своей закупке), зачисляет грн на карту; клиенту не видно
+    { const cost=pn('cost'), el=$('cardProfit');
+      if(el){ if(cost>0&&e.usdt>0){ const pr=e.usdt*cost-e.uah, pos=pr>=0;
+          if(Math.abs(pr)>=0.005){ el.style.display=''; el.className='profit'+(pos?'':' neg');
+            el.innerHTML='ваша выгода ≈ <b>'+(pos?'+':'−')+ffM(Math.abs(pr))+' грн</b>'; }
+          else { el.style.display='none'; el.textContent=''; } }
+        else { el.style.display='none'; el.textContent=''; } } }
     cardLast={usdt:e.usdt, uah:e.uah, rate:e.rate, dir:cardDir};
     updPrev('card', buildCopyCard());
   }
@@ -2093,9 +2240,9 @@
         ? '\nРозрахунок: '+ffMc(usdt)+' × '+ffR(cardLast.rate)+' = '+ffMc(uah)+' грн'
         : '\nРозрахунок: '+ffMc(uah)+' ÷ '+ffR(cardLast.rate)+' = '+ffMc(usdt)+' USDT';
     }
-    return txt;
+    return locTxt(txt+fixLine());
   }
-  function doCopyCard(){ clip(buildCopyCard(),'cardCopyBtn'); }
+  function doCopyCard(){ const t=buildCopyCard(); if(t) window.__lastDealTxt=t; clip(t,'cardCopyBtn'); }
   $('cardCopyBtn').addEventListener('click',doCopyCard);
   $('cardBig').addEventListener('click',doCopyCard);
   $('cardWho').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
@@ -2106,6 +2253,10 @@
     cardRnd=b.dataset.crn;[...$('cardRnd').children].forEach(x=>x.classList.toggle('on',x===b));cardRender();saveRates();});
   $('cardRate').addEventListener('input',e=>{fmtNum(e.target);touchRates();cardRender();saveRates();});
   $('cardRate').addEventListener('focus',e=>{try{e.target.select();}catch(_){}});
+  $('fixMin').addEventListener('input',()=>{render();mcCalc();euRender();cardRender();saveRates();});
+  $('langSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+    ansLang=b.dataset.lang;[...$('langSeg').children].forEach(x=>x.classList.toggle('on',x===b));
+    render();mcCalc();euRender();cardRender();saveRates();});
 
   // --- сверка присланной суммы (ожидаем то, что клиент ОТДАЁТ) ---
   function checkRecv(){
@@ -2890,6 +3041,27 @@
     {t:'Привітання / Приветствие',
      ua:'Вітаю! Підкажіть, будь ласка, напрямок обміну та суму — одразу порахую і надішлю умови.',
      ru:'Здравствуйте! Подскажите, пожалуйста, направление обмена и сумму — сразу посчитаю и пришлю условия.'},
+    {t:'Як правильно написати запит · пам’ятка клієнту',
+     ua:'Щоб порахувати швидко і точно, напишіть одним повідомленням: що віддаєте (сума + валюта) і що бажаєте отримати. Приклади: «1000 USDT в грн» · «15 000 грн + 1000$ в USDT» · «5000 USDT: 2000$, решта грн» · «25 000 грн на картку».',
+     ru:'Чтобы посчитать быстро и точно, напишите одним сообщением: что отдаёте (сумма + валюта) и что хотите получить. Примеры: «1000 USDT в грн» · «15 000 грн + 1000$ в USDT» · «5000 USDT: 2000$, остальное грн» · «25 000 грн на карту».'},
+    {t:'Уточнення · напрямок обміну',
+     ua:'Підкажіть, будь ласка: ви віддаєте USDT і отримуєте готівку, чи навпаки — вносите кошти та отримуєте USDT?',
+     ru:'Подскажите, пожалуйста: вы отдаёте USDT и получаете наличные, или наоборот — вносите средства и получаете USDT?'},
+    {t:'Уточнення · сума і валюта',
+     ua:'Напишіть, будь ласка, суму та валюту одним повідомленням — наприклад: «1000 USDT в грн» або «15 000 грн в USDT».',
+     ru:'Напишите, пожалуйста, сумму и валюту одним сообщением — например: «1000 USDT в грн» или «15 000 грн в USDT».'},
+    {t:'Уточнення · валюта виплати',
+     ua:'У якій валюті бажаєте отримати виплату: гривня, долар чи євро? І чи потрібно розбити на кілька валют — напишіть, скільки в якій.',
+     ru:'В какой валюте хотите получить выплату: гривна, доллар или евро? Если нужно разбить на несколько валют — напишите, сколько в какой.'},
+    {t:'Уточнення · готівка чи картка',
+     ua:'Виплату зручніше отримати готівкою чи переказом на картку?',
+     ru:'Выплату удобнее получить наличными или переводом на карту?'},
+    {t:'Уточнення · мережа USDT',
+     ua:'Уточніть, будь ласка, мережу для USDT: TRC-20 (Tron)? За замовчуванням працюємо саме з нею.',
+     ru:'Уточните, пожалуйста, сеть для USDT: TRC-20 (Tron)? По умолчанию работаем именно с ней.'},
+    {t:'Підтвердження перед фіксацією',
+     ua:'Перевірте, будь ласка, чи все вірно: {віддаєте} → {отримуєте}. Якщо так — підтвердіть, і я фіксую курс.',
+     ru:'Проверьте, пожалуйста, всё ли верно: {отдаёте} → {получаете}. Если да — подтвердите, и я фиксирую курс.'},
     {t:'Запит реквізитів · картка (грн)',
      ua:'Надішліть, будь ласка, номер картки для зарахування гривні. Перевірте цифри перед відправкою.',
      ru:'Пришлите, пожалуйста, номер карты для зачисления гривны. Проверьте цифры перед отправкой.'},
@@ -3006,7 +3178,16 @@
       if(btn.classList.contains('tcancel')){ tplEdit=null; tplRender(); return; }
       const i=+row.dataset.i; const a=tplGet(); const it=a[i]; if(!it) return;
       if(btn.classList.contains('tcopy')){
-        const txt=tplText(it);
+        let txt=tplText(it);
+        try{ // {що віддаєте} → {що отримуєте} заполняем последней скопированной сделкой
+          const src=String(window.__lastDealTxt||'').split('\n')[0];
+          const m=/^(?:Віддаєте|Отдаёте) (.+?) → (?:отримуєте|получаете|зараховуємо|зачисляем) (.+)$/.exec(src);
+          if(m && txt.indexOf('{')>=0){
+            const give=m[1], get=m[2].replace(/ на карт(?:ку|у)$/,'');
+            txt=txt.replace(/\{(?:що віддаєте|что отдаёте|віддаєте|отдаёте)\}/g,give)
+                   .replace(/\{(?:що отримуєте|что получаете|отримуєте|получаете)\}/g,get);
+          }
+        }catch(e){}
         const done=()=>{ btn.textContent='✓ Скопійовано'; setTimeout(()=>{btn.textContent='⧉ Скопіювати';},1300); };
         try{ navigator.clipboard.writeText(txt).then(done,()=>vCopyFb(txt,done)); }catch(_){ vCopyFb(txt,done); }
         return;
@@ -3025,5 +3206,301 @@
 })();
 </script>
 <div id="toastWrap" aria-live="polite"></div>
+<script>
+/* ===== Журнал непоняток — автономный блок: своё хранилище, ядро расчётов не трогает ===== */
+(function(){
+  const $=id=>document.getElementById(id);
+  const K='usdtIssuesV1';
+  const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const get=()=>{ try{ const a=JSON.parse(localStorage.getItem(K)||'[]'); return Array.isArray(a)?a:[]; }catch(e){ return []; } };
+  const save=a=>{ try{ localStorage.setItem(K, JSON.stringify(a.slice(0,300))); }catch(e){} };
+  const grab=id=>{ const n=$(id); if(!n) return ''; return (n.innerText!=null?n.innerText:n.textContent||'').replace(/\s+/g,' ').trim(); };
+  const fmtT=t=>{ const d=new Date(t), p=x=>String(x).padStart(2,'0'); return p(d.getDate())+'.'+p(d.getMonth()+1)+' '+p(d.getHours())+':'+p(d.getMinutes()); };
+  function fb(t,done){ const x=document.createElement('textarea'); x.value=t; document.body.appendChild(x); x.select(); try{ document.execCommand('copy'); done(); }catch(e){} document.body.removeChild(x); }
+  function flash(b,msg){ if(!b) return; const o=b.dataset.lbl||b.textContent; b.dataset.lbl=o; b.textContent=msg; setTimeout(()=>{ b.textContent=b.dataset.lbl; },1400); }
+  function cnt(){ const n=get().length;
+    const tb=$('issTabCnt'); if(tb) tb.textContent=n?('· '+n):'';
+    const c=$('issCnt'); if(c) c.textContent=n?('— записей: '+n):'— пусто'; }
+  function renderList(){
+    const box=$('issList'); if(!box) return;
+    const a=get();
+    box.innerHTML = a.length? a.map((x,i)=>
+      '<div class="issrow" data-i="'+i+'">'+
+      '<div class="it">'+fmtT(x.t)+(syncCfg()? (x.sent==='ok'
+        ? ' <span class="icld ok" title="отправлено в Google Таблицу">☁ ✓</span>'
+        : ' <button class="icld re" type="button" title="отправить в Google Таблицу">☁ отправить</button>') : '')+'</div>'+
+      (x.phrase?'<div class="ip">«'+esc(x.phrase)+'»</div>':'')+
+      (x.und?'<div class="iu">'+esc(x.und)+'</div>':'')+
+      (x.ans?'<pre class="ia">'+esc(x.ans)+'</pre>':'')+
+      '<textarea class="vin inote" rows="1" spellcheck="false" placeholder="комментарий: что ожидал / что не так…">'+esc(x.note||'')+'</textarea>'+
+      '<button class="irm" type="button" title="удалить запись">×</button></div>').join('')
+      : '<div class="issempty">пока пусто — «⚑ В непонятки» под разбором фразы или запись вручную выше</div>';
+    box.querySelectorAll('.inote').forEach(el=>{
+      el.addEventListener('input',e=>{
+        const i=+e.target.closest('.issrow').dataset.i; const a2=get();
+        if(a2[i]){ a2[i].note=e.target.value; if(a2[i].sent==='ok') a2[i].sent='edited'; save(a2); } });
+      el.addEventListener('change',()=>renderList());   // после правки комментария снова показать «☁ отправить»
+    });
+    box.querySelectorAll('.icld.re').forEach(el=>el.addEventListener('click',e=>{
+      const i=+e.target.closest('.issrow').dataset.i; const a2=get(), x=a2[i]; if(!x) return;
+      e.target.textContent='☁ …';
+      syncSend(entryText(x), ok=>{ const a3=get(), j=a3.findIndex(z=>(x.id&&z.id===x.id)||z.t===x.t);
+        if(j>=0){ a3[j].sent= ok?'ok':'fail'; save(a3); } renderList(); });
+    }));
+    box.querySelectorAll('.irm').forEach(el=>el.addEventListener('click',e=>{
+      const i=+e.target.closest('.issrow').dataset.i; const a2=get(); a2.splice(i,1); save(a2); cnt(); renderList(); }));
+  }
+  // ── запись напрямую в Google Таблицу через Google Форму (принимает без входа в аккаунт) ──
+  const SK='usdtIssuesSyncV1';
+  function syncCfg(){ try{ return JSON.parse(localStorage.getItem(SK)||'null'); }catch(e){ return null; } }
+  function parseSyncUrl(u){
+    const m=/forms\/d\/e\/([A-Za-z0-9_-]+)\/viewform/.exec(u||'');
+    const e2=/[?&](entry\.\d+)=/.exec(u||'');
+    return (m&&e2)? {form:m[1], entry:e2[1]} : null;
+  }
+  function entryText(x){
+    const L=[fmtT(x.t)];
+    if(x.phrase) L.push('Фраза: '+x.phrase);
+    if(x.und)    L.push('Понял: '+x.und);
+    if(x.ans)    L.push('Ответ: '+x.ans.replace(/\n/g,' | '));
+    if(x.rates)  L.push('Курсы: '+x.rates);
+    if(x.note)   L.push('Комментарий: '+x.note);
+    return L.join('\n');
+  }
+  function syncSend(text, cb){
+    const c=syncCfg(); if(!c){ if(cb) cb(null); return; }
+    try{
+      const body=new URLSearchParams(); body.append(c.entry, text);
+      fetch('https://docs.google.com/forms/d/e/'+c.form+'/formResponse',
+        {method:'POST', mode:'no-cors', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:body.toString()})
+        .then(()=>{ if(cb) cb(true); }, ()=>{ if(cb) cb(false); });
+    }catch(e){ if(cb) cb(false); }
+  }
+  function add(entry){
+    entry.id=entry.t+'-'+Math.random().toString(36).slice(2,7);
+    const a=get(); a.unshift(entry); save(a); cnt(); renderList();
+    syncSend(entryText(entry), ok=>{ if(ok==null) return;
+      const a2=get(), j=a2.findIndex(z=>z.id===entry.id);
+      if(j>=0){ a2[j].sent = ok?'ok':'fail'; save(a2); renderList(); } });
+  }
+  // «⚑» у разбора фразы: фраза + «Понял» + ответ + курсы на момент
+  function flag(){
+    const ph=($('phrase')&&$('phrase').value.trim())||''; if(!ph) return;
+    const ansBox=$('phraseAns');
+    const ans=(ansBox&&ansBox.style.display!=='none')? ($('phraseAnsTxt').textContent||'') : '';
+    add({t:Date.now(), phrase:ph, und:grab('understood'), ans, rates:grab('rSum'), note:''});
+    flash($('issueBtn'),'✓ Записано');
+  }
+  function buildText(){
+    const a=get(); if(!a.length) return '';
+    const L=['ЖУРНАЛ НЕПОНЯТОК КАЛЬКУЛЯТОРА — записей: '+a.length+' · выгружено '+fmtT(Date.now()),
+             'Курсы сейчас: '+grab('rSum')];
+    a.slice().reverse().forEach((x,i)=>{
+      L.push('','#'+(i+1)+' · '+fmtT(x.t));
+      if(x.phrase) L.push('Фраза: '+x.phrase);
+      if(x.und)    L.push('Калькулятор понял: '+x.und);
+      if(x.ans)    L.push('Ответ клиенту: '+x.ans.replace(/\n/g,' | '));
+      if(x.rates)  L.push('Курсы на момент: '+x.rates);
+      if(x.note)   L.push('Комментарий оператора: '+x.note);
+    });
+    L.push('','Задача: по каждой записи проверить, правильно ли калькулятор понял фразу и посчитал; где нет — предложить правку, добавить случай в тестовую батарею и прогнать мега-тест.');
+    return L.join('\n');
+  }
+  $('issueBtn').addEventListener('click',flag);
+  // кнопка видна, когда в поле есть фраза
+  (function(){ const row=$('issueRow'), pf=$('phrase');
+    const vis=()=>{ row.style.display = pf.value.trim()? '' : 'none'; };
+    pf.addEventListener('input',vis); vis(); })();
+  $('issAdd').addEventListener('click',()=>{
+    const el=$('issNew'), v=el.value.trim(); if(!v) return;
+    add({t:Date.now(), phrase:'', und:'', ans:'', rates:grab('rSum'), note:v});
+    el.value=''; flash($('issAdd'),'✓ Добавлено');
+  });
+  $('issExport').addEventListener('click',()=>{
+    const t=buildText(); if(!t) return;
+    const done=()=>flash($('issExport'),'✓ Скопировано — вставь в чат ассистенту');
+    try{ navigator.clipboard.writeText(t).then(done,()=>fb(t,done)); }catch(e){ fb(t,done); }
+  });
+  // скачать журнал файлом .txt — не зависит от браузера и очистки данных
+  $('issSave').addEventListener('click',()=>{
+    const t=buildText(); if(!t) return;
+    const d=new Date(), p=x=>String(x).padStart(2,'0');
+    const name='neponyatki-'+d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'_'+p(d.getHours())+'-'+p(d.getMinutes())+'.txt';
+    const a=document.createElement('a');
+    try{ a.href=URL.createObjectURL(new Blob([t],{type:'text/plain;charset=utf-8'})); }
+    catch(e){ a.href='data:text/plain;charset=utf-8,'+encodeURIComponent(t); }
+    a.download=name; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    flash($('issSave'),'✓ Скачано: '+name);
+  });
+  $('issClear').addEventListener('click',e=>{
+    const b=e.currentTarget;
+    if(b.dataset.arm){ delete b.dataset.arm; b.textContent='очистить журнал'; save([]); cnt(); renderList(); return; }
+    b.dataset.arm='1'; b.textContent='точно очистить всё?';
+    setTimeout(()=>{ if(b.dataset.arm){ delete b.dataset.arm; b.textContent='очистить журнал'; } },2600);
+  });
+  // настройка ссылки на форму
+  (function(){
+    const inp=$('issSyncUrl'), info=$('issSyncInfo'); if(!inp) return;
+    const c=syncCfg(); if(c&&c.url) inp.value=c.url;
+    function apply(){
+      const v=inp.value.trim();
+      if(!v){ try{ localStorage.removeItem(SK); }catch(e){} info.textContent=''; info.className='phrase-info'; renderList(); return; }
+      const p=parseSyncUrl(v);
+      if(!p){ info.className='phrase-info err';
+        info.textContent='⚠ нужна ссылка «предзаполненного ответа»: docs.google.com/forms/d/e/…/viewform?…entry.…=ТЕСТ'; return; }
+      try{ localStorage.setItem(SK, JSON.stringify({form:p.form, entry:p.entry, url:v})); }catch(e){}
+      info.className='phrase-info ok';
+      info.textContent='✓ подключено — новые записи будут улетать в таблицу автоматически';
+      renderList();
+    }
+    inp.addEventListener('input',apply); apply();
+    $('issSyncTest').addEventListener('click',()=>{
+      if(!syncCfg()){ flash($('issSyncTest'),'сначала вставь ссылку'); return; }
+      syncSend('ТЕСТ из калькулятора · '+fmtT(Date.now()),
+        ok=>flash($('issSyncTest'), ok?'✓ улетело — проверь строку в таблице':'✗ не ушло — проверь интернет'));
+    });
+  })();
+  cnt(); renderList();
+})();
+</script>
+<script>
+/* ===== Касса за день + резервная копия + проверка реквизитов — автономно, ядро не трогает ===== */
+(function(){
+  const $=id=>document.getElementById(id);
+  const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  function fb(t,done){const x=document.createElement('textarea');x.value=t;document.body.appendChild(x);x.select();try{document.execCommand('copy');done();}catch(e){}document.body.removeChild(x);}
+  const grab=id=>{const n=$(id);return n?(n.innerText!=null?n.innerText:n.textContent||'').replace(/\s+/g,' ').trim():'';};
+
+  /* ── КАССА ЗА ДЕНЬ: явный учёт сделок кнопкой «+ касса» ── */
+  const DK='usdtDayV1';
+  const today=()=>{const d=new Date(),p=x=>String(x).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());};
+  const dget=()=>{try{const a=JSON.parse(localStorage.getItem(DK)||'[]');return Array.isArray(a)?a:[];}catch(e){return[];}};
+  const dsave=a=>{try{localStorage.setItem(DK,JSON.stringify(a.slice(-500)));}catch(e){}};
+  const tstr=t=>{const d=new Date(t),p=x=>String(x).padStart(2,'0');return p(d.getHours())+':'+p(d.getMinutes());};
+  function profitOf(id){
+    const m=/([+−-])\s*([\d\s\u2009.,]+)\s*грн/.exec(grab(id)||''); if(!m) return null;
+    const v=parseFloat(m[2].replace(/[\s\u2009]/g,'').replace(',','.'));
+    return isFinite(v)?(m[1]==='+'?v:-v):null;
+  }
+  function snap(k){
+    if(k==='ex'){ if(!grab('resV')||grab('resV')==='—') return null;
+      return {txt:grab('resDeal')||('→ '+grab('resV')+' '+grab('resU')), p:profitOf('resProfit'), lb:'обмен'}; }
+    if(k==='mc'){ const box=$('mcTotBox');
+      const vis=box&&box.style.display!=='none';
+      const t=vis?(grab('mcTotLab')+' '+grab('mcTot')):('остаток: '+grab('mcRestRes')+' · '+grab('mcRestNote'));
+      if(!/[0-9]/.test(t)) return null;
+      return {txt:t, p:profitOf('mcProfit'), lb:'несколько валют'}; }
+    if(k==='eu'){ if(grab('euV')==='—'||!grab('euV')) return null;
+      return {txt:($('euAmt').value+' '+grab('euAmtU')+' → '+grab('euV')+' '+grab('euU')), p:null, lb:'наличные'}; }
+    if(k==='card'){ if(grab('cardV')==='—'||!grab('cardV')) return null;
+      return {txt:($('cardAmt').value+' '+grab('cardAmtU')+' → '+grab('cardV')+' '+grab('cardVU')), p:null, lb:'на карту'}; }
+    return null;
+  }
+  const todayItems=()=>dget().filter(x=>x.d===today());
+  function renderDay(){
+    const list=$('dayList'); if(!list) return;
+    const a=todayItems();
+    let sum=0,has=false; a.forEach(x=>{if(x.p!=null){sum+=x.p;has=true;}});
+    $('dayCnt').textContent=a.length?('· '+a.length+' сдел.'+(has?(' · выгода '+(sum>=0?'+':'−')+Math.abs(Math.round(sum*100)/100).toLocaleString('ru-RU')+' грн'):'')):'';
+    list.innerHTML=a.length? a.map(x=>'<div class="drow" data-id="'+x.id+'">'+
+        '<span class="dt">'+tstr(x.t)+'</span>'+
+        '<span class="dtx">'+esc(x.txt)+' <span style="color:var(--faint)">['+x.lb+']</span></span>'+
+        (x.p!=null?('<span class="dp'+(x.p<0?' neg':'')+'">'+(x.p>=0?'+':'−')+Math.abs(x.p).toFixed(2)+'</span>'):'')+
+        '<button class="drm" type="button" title="убрать">×</button></div>').join('')
+      : '<div class="issempty" style="padding:8px 0">пока пусто — «+ касса» рядом с копией ответа, когда сделка проведена</div>';
+    list.querySelectorAll('.drm').forEach(el=>el.addEventListener('click',e=>{
+      const id=e.target.closest('.drow').dataset.id;
+      dsave(dget().filter(x=>String(x.id)!==String(id))); renderDay(); }));
+  }
+  document.querySelectorAll('.kadd').forEach(b=>b.addEventListener('click',()=>{
+    const sn=snap(b.dataset.k);
+    const o=b.textContent;
+    if(!sn){ b.textContent='нет расчёта'; setTimeout(()=>b.textContent=o,1200); return; }
+    const a=dget(); a.push({id:Date.now()+''+Math.floor(Math.random()*1e4), t:Date.now(), d:today(), txt:sn.txt, p:sn.p, lb:sn.lb});
+    dsave(a); renderDay(); try{$('dayBox').open=true;}catch(e){}
+    b.textContent='✓ учтено'; setTimeout(()=>b.textContent=o,1200);
+  }));
+  function dayReport(){
+    const a=todayItems(); if(!a.length) return '';
+    let sum=0,cnt=0; const L=['КАССА ЗА '+today()];
+    a.forEach((x,i)=>{L.push((i+1)+'. '+tstr(x.t)+' · '+x.txt+' ['+x.lb+']'+(x.p!=null?(' · выгода '+(x.p>=0?'+':'−')+Math.abs(x.p).toFixed(2)+' грн'):''));if(x.p!=null){sum+=x.p;cnt++;}});
+    L.push('Итого: '+a.length+' сдел.'+(cnt?(' · выгода '+(sum>=0?'+':'−')+Math.abs(Math.round(sum*100)/100)+' грн (учтена в '+cnt+' сдел.)'):''));
+    return L.join('\n');
+  }
+  $('daySend').addEventListener('click',()=>{
+    const b=$('daySend'); let c=null;
+    try{ c=JSON.parse(localStorage.getItem('usdtIssuesSyncV1')||'null'); }catch(e){}
+    const t=dayReport(); if(!t) return;
+    if(!c){ const o=b.textContent; b.textContent='нет связи — настрой в «Непонятки»'; setTimeout(()=>b.textContent=o,2200); return; }
+    try{
+      const body=new URLSearchParams(); body.append(c.entry, t);
+      fetch('https://docs.google.com/forms/d/e/'+c.form+'/formResponse',
+        {method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:body.toString()})
+        .then(()=>{const o=b.textContent;b.textContent='✓ улетело';setTimeout(()=>b.textContent=o,1400);},
+              ()=>{const o=b.textContent;b.textContent='✗ нет сети';setTimeout(()=>b.textContent=o,1400);});
+    }catch(e){}
+  });
+  $('dayCopy').addEventListener('click',()=>{
+    const t=dayReport(); if(!t) return; const b=$('dayCopy');
+    const done=()=>{const o=b.textContent;b.textContent='✓ скопировано';setTimeout(()=>b.textContent=o,1300);};
+    try{ navigator.clipboard.writeText(t).then(done,()=>fb(t,done)); }catch(e){ fb(t,done); }
+  });
+  $('dayClear').addEventListener('click',e=>{const b=e.currentTarget;
+    if(b.dataset.arm){delete b.dataset.arm;b.textContent='очистить сегодня';dsave(dget().filter(x=>x.d!==today()));renderDay();return;}
+    b.dataset.arm='1';b.textContent='точно очистить кассу дня?';
+    setTimeout(()=>{if(b.dataset.arm){delete b.dataset.arm;b.textContent='очистить сегодня';}},2400);});
+  renderDay();
+
+  /* ── РЕЗЕРВНАЯ КОПИЯ ВСЕГО: один json-файл, восстановление на любом компьютере ── */
+  const BKEYS=['usdtCalcRates','usdtTplV2','usdtTplLang','usdtHistV1','usdtIssuesV1','usdtIssuesSyncV1','usdtDayV1','usdtVerifyCfg','usdtVerifyCounted','usdtRecentSeen','usdtUnack'];
+  $('bkSave').addEventListener('click',()=>{
+    const o={__app:'usdt-calc-backup',__t:new Date().toISOString()};
+    BKEYS.forEach(k=>{const v=localStorage.getItem(k); if(v!=null) o[k]=v;});
+    const d=new Date(),p=x=>String(x).padStart(2,'0');
+    const name='calc-backup-'+d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'.json';
+    const a=document.createElement('a');
+    try{a.href=URL.createObjectURL(new Blob([JSON.stringify(o,null,1)],{type:'application/json'}));}
+    catch(e){a.href='data:application/json;charset=utf-8,'+encodeURIComponent(JSON.stringify(o));}
+    a.download=name; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    $('bkInfo').className='phrase-info ok'; $('bkInfo').textContent='✓ скачано: '+name+' — храни на флешке или Диске';
+  });
+  $('bkLoad').addEventListener('change',e=>{
+    const f=e.target.files&&e.target.files[0]; if(!f) return;
+    const r=new FileReader();
+    r.onload=()=>{try{
+      const o=JSON.parse(r.result);
+      if(!o||o.__app!=='usdt-calc-backup') throw 0;
+      let n=0; BKEYS.forEach(k=>{ if(typeof o[k]==='string'){ try{localStorage.setItem(k,o[k]);n++;}catch(err){} } });
+      $('bkInfo').className='phrase-info ok'; $('bkInfo').textContent='✓ восстановлено разделов: '+n+' — перезагружаю…';
+      setTimeout(()=>{try{location.reload();}catch(err){}},800);
+    }catch(err){ $('bkInfo').className='phrase-info err'; $('bkInfo').textContent='⚠ это не файл резервной копии калькулятора'; }};
+    r.readAsText(f);
+  });
+
+  /* ── ПРОВЕРКА РЕКВИЗИТОВ: карта (Luhn) / TRON / ETH-BSC ── */
+  (function(){
+    const inp=$('reqIn'), out=$('reqOut'); if(!inp) return;
+    function luhn(d){let s=0,alt=false;for(let i=d.length-1;i>=0;i--){let n=+d[i];if(alt){n*=2;if(n>9)n-=9;}s+=n;alt=!alt;}return s%10===0;}
+    function check(){
+      const v=inp.value.trim();
+      if(!v){out.textContent='';out.className='phrase-info';return;}
+      const digits=v.replace(/[\s-]/g,'');
+      if(/^\d+$/.test(digits)){
+        if(digits.length<16||digits.length>19){out.className='phrase-info err';out.textContent='✗ карта: '+digits.length+' цифр, нужно 16–19 — проверь, всё ли прислал клиент';return;}
+        const grp=digits.replace(/(.{4})/g,'$1 ').trim();
+        if(luhn(digits)){out.className='phrase-info ok';out.textContent='✓ номер карты корректный: '+grp;}
+        else{out.className='phrase-info err';out.textContent='✗ НОМЕР НЕ ПРОХОДИТ ПРОВЕРКУ — в цифрах опечатка, запроси реквизиты ещё раз: '+grp;}
+        return;
+      }
+      if(/^T[1-9A-HJ-NP-Za-km-z]{25,40}$/.test(v)){out.className='phrase-info ok';out.textContent='✓ формат TRON-адреса верный: '+v.slice(0,6)+'…'+v.slice(-4)+' — сверь первые/последние символы с клиентом';return;}
+      if(/^0x[0-9a-fA-F]{40}$/.test(v)){out.className='phrase-info ok';out.textContent='✓ формат ETH/BSC-адреса верный: '+v.slice(0,8)+'…'+v.slice(-4);return;}
+      if(/^t/i.test(v)){out.className='phrase-info err';out.textContent='✗ не похоже на TRON-адрес: T + 25–40 символов, без 0 O I l';return;}
+      if(/^0x/i.test(v)){out.className='phrase-info err';out.textContent='✗ не похоже на ETH/BSC-адрес: 0x + ровно 40 hex-символов';return;}
+      out.className='phrase-info err';out.textContent='не понял формат — вставь номер карты (16–19 цифр), TRON (T…) или ETH/BSC (0x…)';
+    }
+    inp.addEventListener('input',check);
+  })();
+})();
+</script>
 </body>
 </html>
