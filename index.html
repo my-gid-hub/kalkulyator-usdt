@@ -92,13 +92,49 @@
   .understood .ucur{color:var(--muted)}
   .understood .uwarn{margin-top:6px;padding-top:6px;border-top:1px solid rgba(150,182,214,.20);font-size:12px;color:#E0A05F;line-height:1.45}
   .understood b{font-weight:600}
+  /* #1 — кнопки правки разбора в один тап */
+  .understood .ufix{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:9px;padding-top:9px;border-top:1px solid rgba(150,182,214,.20)}
+  .understood .ufl{font-size:11px;color:var(--faint);margin-left:4px}
+  .understood .ufb{font-family:var(--body);font-size:11.5px;color:var(--muted);background:rgba(150,182,214,.08);
+    border:1px solid rgba(150,182,214,.28);border-radius:999px;padding:5px 11px;cursor:pointer;transition:color .13s,border-color .13s,background .13s;white-space:nowrap}
+  .understood .ufb:hover{color:var(--ink);border-color:var(--accent);background:rgba(150,182,214,.16)}
+  .understood .ufb.on{color:var(--ink);border-color:var(--accent);background:var(--accent2);box-shadow:inset 0 0 0 1px rgba(157,190,221,.25)}
+  @media(max-width:520px){ .understood .ufb{min-height:36px;padding:7px 12px} }
+  /* ── швидкі відповіді клієнту ── */
+  .qbar{margin-top:11px}
+  .qbar .qbl{font-family:var(--body);font-size:11px;color:var(--faint);margin-bottom:6px;letter-spacing:.01em}
+  .qbar-row{display:flex;flex-wrap:wrap;gap:7px}
+  .qrb{font-family:var(--body);font-size:12px;color:#CBD8E6;background:linear-gradient(180deg,#212C39,#19232F);
+    border:1px solid #31404E;border-radius:999px;padding:7px 13px;cursor:pointer;white-space:nowrap;
+    transition:color .13s,border-color .13s,background .13s}
+  .qrb:hover{color:var(--ink);border-color:var(--accent);background:var(--accent2)}
+  .qrb:active{transform:scale(.98)}
+  .qrb.qdone{border-color:var(--sell);color:var(--sell)}
+  .qedit{margin-top:9px}
+  .qedit summary{font-family:var(--body);font-size:11.5px;color:var(--muted);cursor:pointer;list-style:none;user-select:none}
+  .qedit summary::-webkit-details-marker{display:none}
+  .qedit summary::before{content:'▸ ';color:var(--faint)}
+  .qedit[open] summary::before{content:'▾ '}
+  .qedit .qel{display:block;font-family:var(--disp);font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--faint);margin:8px 0 4px}
+  .qedit .qet{width:100%;box-sizing:border-box;font-family:var(--body);font-size:13px;line-height:1.45;color:var(--ink);
+    background:#0C1219;border:1px solid #232F3B;border-radius:9px;padding:8px 10px;resize:vertical}
+  .qedit .qet:focus{outline:none;border-color:var(--accent)}
+  .qedit .qehint{font-family:var(--body);font-size:11px;color:var(--faint);margin-top:8px;line-height:1.4}
+  @media(max-width:520px){
+    .qbar-row{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-left:-8px;margin-right:-8px;padding:2px 8px}
+    .qbar-row::-webkit-scrollbar{display:none}
+    .qrb{flex:0 0 auto;min-height:38px}
+  }
   /* поле фразы: крестик, клавиши, чипы */
   .pwrap{position:relative}
   .pwrap #phrase{padding-right:38px;width:100%;box-sizing:border-box}
   #pClear{position:absolute;right:8px;top:50%;transform:translateY(-50%);border:none;background:none;
     color:var(--faint);font-size:19px;line-height:1;cursor:pointer;padding:4px 7px;display:none}
   #pClear:hover{color:var(--ink)}
-  .pkeys{margin-top:5px;font-family:var(--body);font-size:10.5px;color:var(--faint)}
+  .pkeys{margin-top:7px;font-family:var(--body);font-size:10.5px;color:var(--faint);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  #reverseBtn{font-family:var(--body);font-size:12px;color:#CBD8E6;background:linear-gradient(180deg,#212C39,#19232F);border:1px solid #31404E;border-radius:999px;padding:6px 13px;cursor:pointer;white-space:nowrap;transition:color .13s,border-color .13s,background .13s;flex:0 0 auto}
+  #reverseBtn:hover{color:var(--ink);border-color:var(--accent);background:var(--accent2)}
+  #reverseBtn:active{transform:scale(.98)}
   .pkeys b{color:var(--muted);font-weight:600}
   .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
   .chips button{font-family:var(--body);font-size:11px;color:var(--muted);background:rgba(150,182,214,.08);
@@ -155,7 +191,8 @@
   }
   /* ===== мобильная адаптация новых элементов (поле фразы, чипы, превью, история) ===== */
   @media(max-width:520px){
-    .pkeys{display:none}                                   /* хоткеи не нужны на телефоне */
+    .pkeys>span{display:none}                              /* хоткеи не нужны на телефоне, кнопка ⇄ остаётся */
+    #reverseBtn{min-height:38px}
     .pwrap #phrase{padding-right:48px}
     #pClear{font-size:24px;padding:10px 14px;right:2px}    /* тач-зона ×: ~44px */
     .chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;
@@ -711,7 +748,7 @@
       <input id="phrase" type="text" autocomplete="off" placeholder="опиши сделку словами: 1000 usdt в грн · 100 долларов в гривне · 2000$ и 1500€ в usdt">
       <button id="pClear" type="button" title="очистить (Esc)">×</button>
     </div>
-    <div class="pkeys">⏎ разобрать · <b>Ctrl+⏎</b> скопировать ответ · <b>Esc</b> очистить · <b>/</b> в поле</div>
+    <div class="pkeys"><span>⏎ разобрать · <b>Ctrl+⏎</b> скопировать ответ · <b>Esc</b> очистить · <b>/</b> в поле</span><button id="reverseBtn" type="button" title="перевернуть направление сделки и пересчитать — если калькулятор понял наоборот" style="display:none">⇄ порахувати навпаки</button></div>
     <div class="chips" id="pChips"></div>
     <div class="phrase-info" id="phraseInfo"></div>
     <div class="understood" id="understood"></div>
@@ -728,6 +765,7 @@
     <div id="issueRow" style="display:none">
       <button class="badd" id="issueBtn" type="button" title="сохранить фразу, разбор и ответ в журнал — разобрать позже">⚑ В непонятки — разобрать позже</button>
     </div>
+    <div class="qbar" id="quickBar"></div>
     <div class="utilbar" id="utilBar">
       <button type="button" class="ub" data-util="hist">Розрахунки <span class="ubc" id="histCnt"></span></button>
       <button type="button" class="ub" data-util="day">Каса <span class="ubc" id="dayCnt"></span></button>
@@ -977,6 +1015,7 @@
   <div class="pane" data-pane="faq">
     <div class="vcard">
       <div class="vcard-h">Готові відповіді клієнтам <span class="sub">копія в один клік · шаблони можна редагувати</span></div>
+      <div class="qbar" id="quickBarFaq"></div>
       <input id="tplSearch" class="vin" type="text" autocomplete="off" placeholder="пошук: реквізити, курс, затримка, хеш…">
       <div id="tplList"></div>
       <div class="tplctl">
@@ -989,32 +1028,13 @@
 
   <div class="pane" data-pane="verify">
     <details class="howto"><summary>Как пользоваться этой вкладкой</summary>
-      <div class="fsym" style="margin-bottom:12px">Проверка, что USDT реально пришёл, — по хешу транзакции из блокчейна. Всё считается в твоём браузере.<br><b>Сеть</b>: TRON (основная), ETH, BSC — определяется по виду хеша, можно выбрать вручную.<br><b>Хеш транзакции</b> — вставь хеш от клиента, нажми «Проверить». <b>Ожидаемая сумма</b> — если задать, сверит сумму прихода.<br><b>Вердикт по светофору:</b> зелёный «Всё чисто»; жёлтый — внимание (не твой кошелёк, не подтверждён, сумма не сошлась, старый хеш); красный — не официальный USDT или транзакция не прошла.<br><b>Мониторинг кошелька</b> — таблица переводов USDT: время, сумма, адрес, хеш, № блока. Переключатель <b>Входящие / Отправленные</b> — приходы на кошелёк или отправленные с него. Кошелёк берётся из «Мои кошельки-получатели» (первый) и подтягивается сам при открытии вкладки; чтобы посмотреть другой — впиши его в поле и нажми «Показать». Нажми строку — проверится; «⧉» — копировать хеш/адрес; «↗ Scan» — открыть на TronScan. Наблюдение включено постоянно (раз в минуту) и уведомляет о новых приходах звуком и плашкой; «Стоп» — пауза. Зелёная пометка новой транзакции снимается после ↗ Scan или копии хеша/адреса. «Фильтры и поиск» — по сумме и адресу. «Скопировать список» — выгрузить текстом.<br><span style="color:var(--muted)">Настройки внизу: свои кошельки (для сверки получателя), API-ключи, порог «старого» хеша. Всё хранится только у тебя.</span></div>
+      <div class="fsym" style="margin-bottom:12px">Всё считается в твоём браузере, данные берём из блокчейн-эксплорера.<br><b>1. Кошелёк</b> (вверху) — впиши свой TRON-кошелёк (или возьму из настроек). Он <b>запоминается</b>, наблюдение продолжается после перезагрузки, а история поступлень <b>не пропадает</b> и обновляется автоматически. Переключатель <b>Входящие / Отправленные</b>. «Ждать» — следить постоянно (звук + плашка о новом приходе); «Стоп» — пауза; «🔔 Тест» — проверить звук и уведомление.<br><b>2. Проверить по хешу</b> — вставь хеш транзакции от клиента, нажми «Проверить». <b>Светофор:</b> зелёный «Всё чисто»; жёлтый — внимание (не твой кошелёк, не подтверждён, старый хеш, хеш уже засчитывался); красный — не официальный USDT или транзакция не прошла.<br><b>3. История поступлень</b> (внизу) — таблица переводов USDT: время, сумма, адрес, хеш, № блока. Нажми строку — проверится; «⧉» — копировать хеш/адрес; «↗ Scan» — открыть на TronScan. Зелёная пометка новой транзакции снимается после ↗ Scan или копии хеша/адреса. «Фильтры и поиск» — по сумме и адресу. «Скопировать список» — выгрузить текстом.<br><span style="color:var(--muted)">Настройки внизу: свои кошельки (для сверки получателя), API-ключи, порог «старого» хеша. Всё хранится только у тебя.</span></div>
     </details>
-    <div class="hint" style="margin:0 0 4px">по хешу транзакции проверяем, что USDT реально пришёл. Данные берём из блокчейн-эксплорера, всё считается в твоём браузере.</div>
+    <div class="hint" style="margin:0 0 4px">проверяем поступления и отдельные транзакции по блокчейну. Всё считается в твоём браузере.</div>
 
+    <!-- 1) КОШЕЛЁК — вверху -->
     <div class="vcard">
-      <div class="vcard-h">Проверить по хешу <span class="sub">разовая проверка транзакции</span></div>
-      <div class="ql" style="margin-top:0">Сеть</div>
-      <div class="seg three cur" id="vNet">
-        <button data-net="tron" class="on" type="button">TRON</button>
-        <button data-net="eth" type="button">ETH</button>
-        <button data-net="bsc" type="button">BSC</button>
-      </div>
-      <div class="ql">Хеш транзакции</div>
-      <input id="vHash" class="vin" type="text" autocomplete="off" spellcheck="false" placeholder="напр.: a1b2… (TRON) или 0x… (ETH/BSC)">
-      <div class="hint" id="vHashHint" style="margin-top:8px"></div>
-      <div class="ql">Ожидаемая сумма (необязательно)</div>
-      <div class="amount-wrap">
-        <input id="vExpected" type="text" inputmode="decimal" placeholder="—">
-        <span class="u">USDT</span>
-      </div>
-      <button class="copy" id="vCheck" type="button" style="margin-top:14px">Проверить транзакцию</button>
-      <div id="vResult" class="vres" style="display:none"></div>
-    </div>
-
-    <div class="vcard">
-      <div class="vcard-h">Мониторинг кошелька <span class="sub">TRON · USDT</span></div>
+      <div class="vcard-h">Кошелёк <span class="sub">TRON · USDT</span></div>
       <div class="hint" id="vWalletHead" style="margin:0 0 10px;display:none"></div>
       <div class="seg two cur" id="vDir" style="margin-bottom:12px">
         <button data-dir="in" class="on" type="button">Входящие</button>
@@ -1027,7 +1047,29 @@
         <button class="badd" id="vWatchBtn" type="button" style="flex:0 0 auto;margin:0">Ждать</button>
         <button class="badd" id="vTestBtn" type="button" style="flex:0 0 auto;margin:0" title="проверить звук и всплывающее уведомление">🔔 Тест</button>
       </div>
-      <div class="hint" style="margin-top:8px">Впиши кошелёк (или возьму из настроек) — он <b>запоминается</b>, и наблюдение <b>продолжается после перезагрузки</b> страницы само. Проверяет поступления раз в минуту: звук + плашка. «Стоп» — пауза (после неё сам не включится, пока не нажмёшь «Ждать»). «🔔 Тест» — проверить звук и уведомление. Зелёная пометка новой транзакции держится, пока не откроешь её ↗ Scan или не скопируешь хеш/адрес.</div>
+      <div class="hint" style="margin-top:8px">Впиши кошелёк (или возьму из настроек) — он <b>запоминается</b>, наблюдение <b>продолжается после перезагрузки</b>, история <b>не пропадает</b>. Проверяет поступления раз в минуту: звук + плашка. «Стоп» — пауза (после неё сам не включится, пока не нажмёшь «Ждать»). «🔔 Тест» — проверить звук и уведомление. Зелёная пометка новой транзакции держится, пока не откроешь её ↗ Scan или не скопируешь хеш/адрес.</div>
+      <div class="hint" id="vWatchInfo" style="margin-top:8px;display:none"></div>
+    </div>
+
+    <!-- 2) ПРОВЕРКА ПО ХЕШУ — в середине -->
+    <div class="vcard">
+      <div class="vcard-h">Проверить по хешу <span class="sub">разовая проверка транзакции</span></div>
+      <div class="ql" style="margin-top:0">Сеть</div>
+      <div class="seg three cur" id="vNet">
+        <button data-net="tron" class="on" type="button">TRON</button>
+        <button data-net="eth" type="button">ETH</button>
+        <button data-net="bsc" type="button">BSC</button>
+      </div>
+      <div class="ql">Хеш транзакции</div>
+      <input id="vHash" class="vin" type="text" autocomplete="off" spellcheck="false" placeholder="напр.: a1b2… (TRON) или 0x… (ETH/BSC)">
+      <div class="hint" id="vHashHint" style="margin-top:8px"></div>
+      <button class="copy" id="vCheck" type="button" style="margin-top:14px">Проверить транзакцию</button>
+      <div id="vResult" class="vres" style="display:none"></div>
+    </div>
+
+    <!-- 3) ИСТОРИЯ ПОСТУПЛЕНЬ — внизу -->
+    <div class="vcard">
+      <div class="vcard-h">История поступлений <span class="sub">TRON · USDT · TronScan</span></div>
       <details class="vfilters">
         <summary>Фильтры и поиск</summary>
         <div class="frow">
@@ -1042,7 +1084,6 @@
           </div>
         </div>
       </details>
-      <div class="hint" id="vWatchInfo" style="margin-top:8px;display:none"></div>
       <div id="vRecent" class="log" style="display:none;margin-top:10px"></div>
       <div class="hint" id="vRecentSum" style="display:none;margin-top:8px"></div>
       <div class="rcrow" style="display:flex;gap:8px;margin-top:8px">
@@ -1093,17 +1134,13 @@
   const ffMc=n=>isFinite(n)?(Number.isInteger(n)?n.toLocaleString('en-US').replace(/,/g,' '):ffM(n)):'—';
   const fBig=n=>f2(n).replace(/ /g,'\u2009');
   const ffR=n=>isFinite(n)?n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:4}).replace(/,/g,' '):'—';
-  // процент для КОПИИ КЛИЕНТУ, который клиент реально перемножит и получит показанный итог.
-  //  прямой ход (× k): процент канала (k = 1 + p/100 → перемножение точное).
-  //  обратный ход (÷ k): показываем ЭКВИВАЛЕНТНЫЙ множитель (1/k − 1)·100 — тогда × этого процента
-  //  даёт ту же величину, что ÷k в ядре, и строка сходится в копейку.
+  // процент для КОПИИ КЛИЕНТУ = РОВНО тот, что задан в «Курсах и комиссиях».
+  //  прямой ход (× k):  p = (k−1)·100      (напр. +0.7%)
+  //  обратный ход (÷ k): p = −(k−1)·100     (та же ставка, знак под направление, напр. +1.4%)
+  // клиентская сумма считается ЭТИМ ЖЕ процентом (× (1+p/100)) — строка «− 1.2%» реально перемножается.
   const fpc=x=>{ const r=Math.round(x*1000)/1000; return r.toString(); };
-  // процент для КОПИИ КЛИЕНТУ — всегда РОВНО тот, что введён в настройках (как в канале):
-  //  × k → p = (k−1)·100   (прямой ход:  ставка как есть, напр. +0.5%)
-  //  ÷ k → p = −(k−1)·100  (обратный ход: та же ставка, знак наоборот — «щоб отримати X, треба +1.4%»)
-  // сумма клиенту считается ЭТОЙ ЖЕ формулой → перепроверка сходится (до округления «Ціле» в нашу пользу).
   function commPct(op,k){ const p=(k-1)*100; return Math.round((op==='×'?p:-p)*1000)/1000; }
-  function commPctTok(op,k){ const p=commPct(op,k); return (p>=0?' +':' −')+fpc(Math.abs(p))+'%'; }
+  function commPctTok(op,k){ const p=commPct(op,k); return (p>=0?' + ':' − ')+fpc(Math.abs(p))+'%'; }
   const curU=c=>c==='USD'?'$':c==='EUR'?'€':'грн';
 
   // ── ОКРУГЛЕНИЕ ДЛЯ КЛИЕНТА (только копия; ядро/панель/выгода — точные) ──
@@ -1114,8 +1151,15 @@
     return side==='give' ? Math.ceil(v/q - 1e-9)*q : Math.floor(v/q + 1e-9)*q;
   }
   // подменить итог в готовой строке-формуле на клиентский (округлённый) результат
-  function withClientTotal(formula, val, unit){
-    return formula.replace(/ = [^=]*$/, ' = '+ffMc(val)+' '+unit);
+  // хвіст «= результат» із прозорим округленням у нашу користь:
+  // показуємо «сире → округлене», коли вони відрізняються (щоб у клієнта все сходилось)
+  function eqTail(raw, rounded, unit){
+    return (isFinite(raw)&&isFinite(rounded)&&Math.abs(raw-rounded)>1e-9)
+      ? ' = '+ffMc(raw)+' → '+ffMc(rounded)+' '+unit
+      : ' = '+ffMc(rounded)+' '+unit;
+  }
+  function withClientTotal(formula, raw, rounded, unit){
+    return formula.replace(/ = [^=]*$/, eqTail(raw, rounded, unit));
   }
   // «Курс дійсний до …» — добавляется к ответам клиенту, если задано поле fixMin (минуты); пусто/0 = выкл
   function fixLine(){
@@ -1485,11 +1529,13 @@
     const beforeNum=t.slice(0,m.index);
     const lastPos=(re,s)=>{let x,l=-1;re.lastIndex=0;while((x=re.exec(s)))l=x.index;return l;};
     const gi=lastPos(giveRe,beforeNum), ge=lastPos(getRe,beforeNum);
-    let role;
+    let role, dirSignal=(gi>=0||ge>=0);   // #2: был ли явный сигнал направления (глагол отдать/получить)
     if(gi<0&&ge<0) role='give';
     else role = gi>=ge ? 'give' : 'get';
     // «з 120 000 грн» / «из 5000$» — предлог-источник сильнее дальнего глагола: это отдаваемая сумма
-    if(/(?:^|[\s,(])(?:з|із|из|с)\s*$/i.test(beforeNum)) role='give';
+    if(/(?:^|[\s,(])(?:з|із|из|с)\s*$/i.test(beforeNum)){ role='give'; dirSignal=true; }
+    // «… в грн / в usdt / на долари» — прийменник цілі задає напрямок структурно (A→B), це не здогадка
+    for(const cw of CURWORDS){ if(new RegExp('(?:^|[\\s,(])(?:в|у|на)\\s+(?:'+cw[1].source+')','i').test(t)){ dirSignal=true; break; } }
     let dir,cur,known;
     if(amtCur==='USDT'){
       known='crypto'; dir=(role==='give')?'sell':'buy';
@@ -1510,12 +1556,21 @@
         const buyU =/куп|придб|возьм|візьм|бер[еє]|треба|нужн|надо|хоч/.test(ubEff) || /купи|купл|покупа|придб/.test(t);
         const sellU=/прода|сда|зда|вивед|вывед|віддат|отдат/.test(ub) || /прода|продаж|сда[єе]|сдам|здам|вивед|вывед|вывест|вивест/.test(t)
                   || /відправ|отправ|закин|занес|скин|надішл|переказ|перекаж|з\s*мене|с\s*меня|віддат|отдат/.test(ua);
-        dir = sellU ? 'sell' : (buyU ? 'buy' : ((role==='give')?'buy':'sell'));
+        // ближайшее к USDT слово-глагол решает: «…долларов отдать ПОЛУЧИТЬ тезер» → получаем usdt → buy
+        const wBefore=(ub.match(/([а-яіїєґ]+)\s*$/)||[])[1]||'';
+        const wAfter =(ua.match(/^\s*([а-яіїєґ]+)/)||[])[1]||'';
+        const getAdj =/^(получ|отрим|забир|забер|куп|придб|возьм|візьм|бер|хоч|нужн|треб|надо)/;
+        const giveAdj=/^(прода|прод|сда|сдам|зда|здам|вивед|вывед|віддат|віддам|отдат|отдам|отправ|відправ|скин|занес|занос|внес|внос|надішл|переказ)/;
+        let adjDir=null;
+        if(getAdj.test(wBefore)||getAdj.test(wAfter)) adjDir='buy';
+        else if(giveAdj.test(wBefore)||giveAdj.test(wAfter)) adjDir='sell';
+        if(adjDir||sellU||buyU) dirSignal=true;
+        dir = adjDir ? adjDir : (sellU ? 'sell' : (buyU ? 'buy' : ((role==='give')?'buy':'sell')));
       } else {
         dir=(role==='give')?'buy':'sell';
       }
     }
-    return {dir,cur,known,amount:num,amtCur,role,defCur:(typeof defCur!=='undefined'&&defCur),multi:mentioned.size>=3};
+    return {dir,cur,known,amount:num,amtCur,role,defCur:(typeof defCur!=='undefined'&&defCur),dirGuessed:!dirSignal,multi:mentioned.size>=3};
   }
   const CN={UAH:'грн',USD:'$',EUR:'€',USDT:'USDT'};
   const fcur=(s)=>{let best=null,bp=1e9;for(const [c,re] of CURWORDS){const mm=new RegExp(re.source).exec(s);if(mm&&mm.index<bp){bp=mm.index;best=c;}}return best;};
@@ -1784,16 +1839,22 @@
       return head+body+warn;
     }
     const isUsdt=r.amtCur==='USDT';
+    let core;
     if(isUsdt){
       // dir — фактическое направление расчёта: sell = клиент продаёт USDT, buy = покупает
       const act=r.dir==='sell'?'ПРОДАЁТ':'ПОКУПАЕТ';
       const tail=r.dir==='sell'?'Выплата клиенту — в ':'Оплата клиента — в ';
-      const defNote=r.defCur?' <span style="color:var(--muted)">(валюту не вказано — беру грн; допиши «в $» чи «в €», якщо інша)</span>':'';
-      return P+'клиент <span class="udir">'+act+' '+ffMc(r.amount)+' USDT</span>.<div class="urow">'+tail+'<b>'+(uName[r.cur]||r.cur)+'</b>'+defNote+'.</div>';
+      core=P+'клиент <span class="udir">'+act+' '+ffMc(r.amount)+' USDT</span>.<div class="urow">'+tail+'<b>'+(uName[r.cur]||r.cur)+'</b>.</div>';
+    } else {
+      // сумма в валюте → USDT: buy = клиент покупает USDT, значит эти деньги ОТДАЁТ; sell = получает
+      const act=r.dir==='buy'?'отдаёт':'получает';
+      core=P+'клиент <span class="udir">'+act+' '+uAmt(r.amount,r.amtCur)+'</span>.<div class="urow">Считаю, сколько это в <b>USDT</b>.</div>';
     }
-    // сумма в валюте → USDT: buy = клиент покупает USDT, значит эти деньги ОТДАЁТ; sell = получает
-    const act=r.dir==='buy'?'отдаёт':'получает';
-    return P+'клиент <span class="udir">'+act+' '+uAmt(r.amount,r.amtCur)+'</span>.<div class="urow">Считаю, сколько это в <b>USDT</b>.</div>';
+    // #2 — метки «принял по умолчанию, перевір» (жовтим): напрямок і/або валюта угадані
+    let warn='';
+    if(r.dirGuessed) warn+='<div class="uwarn">⚠ напрямок у фразі не вказано — прийняв за замовчуванням. Перевір і, якщо треба, натисни ⇄ нижче.</div>';
+    if(isUsdt && r.defCur) warn+='<div class="uwarn">⚠ валюту виплати не вказано — взяв грн. Зміни нижче, якщо інша.</div>';
+    return core+warn;
   }
   function setUnderstood(html,isErr){
     const u=$('understood'); if(!u) return;
@@ -1816,20 +1877,42 @@
     if(!txt){ box.style.display='none'; return; }
     $('phraseAnsTxt').textContent=txt; box.style.display='block';
   }
-  function runPhrase(apply){
-    const v=$('phrase').value.trim(); const info=$('phraseInfo');
-    if(info){ info.textContent=''; info.className='phrase-info'; }
-    if($('pClear')) $('pClear').style.display=v?'block':'none';
-    if(!v){ setUnderstood(''); setPhraseAns(null); setPhraseAsk(null); return; }
-    const r=parseRequest(v);
-    if(r.error){ setUnderstood('⚠ '+r.error, true); setPhraseAns(null);
-      setPhraseAsk(r.ask||'Уточніть, будь ласка: яку суму і валюту віддаєте, і що бажаєте отримати?'); return; }
+  // #1 — правки разбора в один тап: кнопки в панели «Понял» (для одиночного обмена USDT↔валюта)
+  let lastR=null;
+  function fixControls(r){
+    if(!r || r.type!=='single') return '';
+    const isUsdt = r.amtCur==='USDT';
+    const dirLbl = isUsdt ? (r.dir==='sell'?'клиент продаёт':'клиент покупает')
+                          : (r.dir==='buy'?'клиент покупает':'клиент продаёт');
+    const curNow = isUsdt ? r.cur : r.amtCur;
+    let h='<div class="ufix"><button type="button" class="ufb" data-fix="dir" title="поменять направление сделки">⇄ '+dirLbl+'</button>';
+    h+='<span class="ufl">'+(isUsdt?'выплата:':'валюта:')+'</span>';
+    ['UAH','USD','EUR'].forEach(c=>{ h+='<button type="button" class="ufb ufc'+(c===curNow?' on':'')+'" data-fix="cur" data-c="'+c+'">'+(uName[c]||c)+'</button>'; });
+    return h+'</div>';
+  }
+  // ⇄ «порахувати навпаки» — перевернуть направление сделки любого типа и пересчитать тем же путём
+  function reverseDeal(r){
+    if(!r || r.error) return null;
+    const q=Object.assign({}, r);
+    if(r.type==='single') q.dir = (r.dir==='sell')?'buy':'sell';
+    else if(r.type==='multi') q.dir = (r.dir==='recv')?'give':'recv';
+    else if(r.type==='cash'){ q.dir=(r.dir==='b2q')?'q2b':'b2q'; q.amtCur=r.target; q.target=r.amtCur; }
+    else if(r.type==='card'){
+      if(r.cardDir==='usdt'){ q.cardDir='uah'; q.amount=r.usdt; delete q.usdt; }
+      else { q.cardDir='usdt'; q.usdt=(r.amount!=null?r.amount:r.usdt); delete q.amount; }
+    }
+    q.dirGuessed=false; q.defCur=false;
+    return q;
+  }
+  // общий путь «из разбора r → расчёт + ответ + Понял»; вызывается и при наборе, и при правке кнопками
+  function applyParsed(r, apply){
+    lastR=r;
     let ans=null;
     if(r.type==='card'){ applyCard(r); if(apply) switchMode('secCard'); ans=buildCopyCard(); }
     else if(r.type==='cash'){ applyCash(r); if(apply) switchMode('secEu'); ans=buildCopyEu(); }
     else if(r.type==='multi'){ applyMulti(r); if(apply) switchMode('secMc'); ans=buildCopyMc(); }
     else { applySingle(r); if(apply) switchMode('secEx'); ans=buildCopySingle(); }
-    let html=dealReadback(r);
+    let html=dealReadback(r)+fixControls(r);
     if(r.droppedUsdt) html+='<div class="uwarn">⚠ '+ffMc(r.droppedUsdt)+' USDT не учтены — если это остаток, добавь «остаток».</div>';
     setUnderstood(html);
     setPhraseAns(ans);
@@ -1838,8 +1921,34 @@
     if(r.type==='single' && r.defCur) ask='Виплату бажаєте отримати у гривні, доларах чи євро?';
     if(r.droppedUsdt) ask='Уточніть, будь ласка, щодо '+ffMc(r.droppedUsdt)+' USDT: це загальна сума обміну? Якщо так — напишіть, що робити із залишком (наприклад «решта в грн»).';
     setPhraseAsk(ask);
+    if($('reverseBtn')) $('reverseBtn').style.display='inline-block';
+    return ans;
+  }
+  function runPhrase(apply){
+    const v=$('phrase').value.trim(); const info=$('phraseInfo');
+    if(info){ info.textContent=''; info.className='phrase-info'; }
+    if($('pClear')) $('pClear').style.display=v?'block':'none';
+    if(!v){ lastR=null; setUnderstood(''); setPhraseAns(null); setPhraseAsk(null); if($('reverseBtn')) $('reverseBtn').style.display='none'; return; }
+    const r=parseRequest(v);
+    if(r.error){ lastR=null; setUnderstood('⚠ '+r.error, true); setPhraseAns(null);
+      setPhraseAsk(r.ask||'Уточніть, будь ласка: яку суму і валюту віддаєте, і що бажаєте отримати?'); if($('reverseBtn')) $('reverseBtn').style.display='none'; return; }
+    const ans=applyParsed(r, apply);
     if(ans) histAdd(v, ans);
   }
+  // клики по кнопкам правки в «Понял»: меняем разбор и пересобираем расчёт+ответ, не трогая фразу
+  (function(){ const u=$('understood'); if(!u) return;
+    u.addEventListener('click',e=>{
+      const b=e.target.closest('.ufb'); if(!b) return;
+      const r=lastR; if(!r || r.type!=='single') return;
+      if(b.dataset.fix==='dir'){ r.dir=(r.dir==='sell'?'buy':'sell'); r.dirGuessed=false; }
+      else if(b.dataset.fix==='cur'){ const c=b.dataset.c; r.cur=c; if(r.amtCur!=='USDT') r.amtCur=c; r.defCur=false; }
+      applyParsed(r, true);
+    });
+  })();
+  // ⇄ «порахувати навпаки» у строки ввода — переворот направления любого типа
+  (function(){ const rb=$('reverseBtn'); if(!rb) return;
+    rb.addEventListener('click',()=>{ if(!lastR||lastR.error) return; const q=reverseDeal(lastR); if(q) applyParsed(q, true); try{$('phrase').focus();}catch(_){} });
+  })();
   // ── история последних расчётов (только фразовый поток; хранится локально) ──
   const HISTK='usdtHistV1';
   function histGet(){ try{ return JSON.parse(localStorage.getItem(HISTK)||'[]'); }catch(e){ return []; } }
@@ -1957,7 +2066,7 @@
     if(copyRate){
       // формула читается ОТ ЗАПРОСА клиента: от той суммы/валюты, что он назвал, к результату.
       // «есть 1000 USDT» → від USDT; «хочу 1000 грн» → від грн. Итог — округлён в нашу пользу.
-      txt+='\nРозрахунок: '+withClientTotal(last.formulaClient||last.formula, valC, last.outUnit);
+      txt+='\nРозрахунок: '+withClientTotal(last.formulaClient||last.formula, last.clientValue, valC, last.outUnit);
     }
     return locTxt(txt+fixLine());
   }
@@ -2086,7 +2195,7 @@
     const v = custR(euLast.v, 'get');   // клиент получает → округляем вниз, в нашу пользу
     let txt='Віддаєте '+ffMc(euLast.ga)+' '+euLast.gu+' → отримуєте '+ffMc(v)+' '+euLast.outU;
     if(copyRate){ const mul=euLast.gu===euLast.base;
-      txt+='\nРозрахунок: '+ffMc(euLast.ga)+(mul?' × ':' ÷ ')+ffR(euLast.rate)+' = '+ffMc(v)+' '+euLast.outU; }
+      txt+='\nРозрахунок: '+ffMc(euLast.ga)+(mul?' × ':' ÷ ')+ffR(euLast.rate)+eqTail(euLast.v, v, euLast.outU); }
     return locTxt(txt+fixLine());
   }
   function doCopyEu(){ const t=buildCopyEu(); if(t) window.__lastDealTxt=t; clip(t,'euCopyBtn'); }
@@ -2145,13 +2254,15 @@
     for(const o of rateSteps){ if(!(o[1]>0)) return null; }
     const commFirst=(d==='buy'&&known==='crypto');
     const ops=commFirst?[commStep,...rateSteps]:[...rateSteps,commStep];
-    let v=A; ops.forEach(o=>{ v=o[0]==='÷'?v/o[1]:v*o[1]; });
-    const raw=v;
-    if(roundMode==='fav'){ const q=roundStep==='ten'?10:roundStep==='whole'?1:0.01; v=isFwd?Math.floor(raw/q+1e-9)*q:Math.ceil(raw/q-1e-9)*q; }
-    else v=Math.round(raw*100)/100;
+    const rnd=x=>{ if(roundMode==='fav'){ const q=roundStep==='ten'?10:roundStep==='whole'?1:0.01; return isFwd?Math.floor(x/q+1e-9)*q:Math.ceil(x/q-1e-9)*q; } return Math.round(x*100)/100; };
+    let v=A; ops.forEach(o=>{ v=o[0]==='÷'?v/o[1]:v*o[1]; }); v=rnd(v);   // ядро (точное) — панель/выгода
+    // КЛИЕНТСКОЕ значение строки: комиссия процентом, РОВНО как показано (× (1+p/100)) → строка перемножается
+    const commClient=['×', 1+commPct(commStep[0],commStep[1])/100];
+    const cOps=commFirst? [commClient,...rateSteps] : [...rateSteps, commClient];
+    let cv=A; cOps.forEach(o=>{ cv=o[0]==='÷'? cv/o[1] : cv*o[1]; }); cv=rnd(cv);
     const formula=fmtStr(ffO(A))+' '+inUnit+ops.map(o=>' '+o[0]+' '+ffO(o[1])).join('')+' = '+ffMc(v)+' '+outUnit;
-    const formulaClient=fmtStr(ffO(A))+' '+inUnit+ops.map(o=> o[2]==="k" ? commPctTok(o[0],o[1]) : ' '+o[0]+' '+ffO(o[1]) ).join('')+' = '+ffMc(v)+' '+outUnit;
-    return {value:v,outUnit,inUnit,formula,formulaClient,payAmount:(quote?A:null),quote,quoteAmt};
+    const formulaClient=fmtStr(ffO(A))+' '+inUnit+ops.map(o=> o[2]==="k" ? commPctTok(o[0],o[1]) : ' '+o[0]+' '+ffO(o[1]) ).join('')+' = '+ffMc(cv)+' '+outUnit;
+    return {value:v,clientValue:cv,outUnit,inUnit,formula,formulaClient,payAmount:(quote?A:null),quote,quoteAmt};
   }
   function mcState(){ return {d: mc.dir==='recv'?'buy':'sell', known: mc.kmode}; }
   function mcProfitShow(sum, ok){
@@ -2296,13 +2407,15 @@
       const d=t.d||(mc.dir==='recv'?'buy':'sell');
       const rows=mc.rows.filter(r=>pf(r.a)>0);
       const lines=rows.map(r=>{const o=mcOne(d,r.c,'money',pf(r.a)); return o?mcRowLine(o):'';}).filter(Boolean);
-      const fixedU=Math.round((t.total-t.rem)*100)/100;
-      // B1: остаток USDT (t.rem) — от ТОЧНЫХ чисел; наличные остатка округляем в нашу пользу
-      const restCashC = custR(t.restCash, d==='buy'?'give':'get');
+      // всё в копии — от КЛИЕНТСКИХ (процентных) значений строк, чтобы «Залишок» сходился со строками
+      const fixedU=rows.map(r=>{const o=mcOne(d,r.c,'money',pf(r.a)); return o?o.clientValue:0;}).reduce((a,b)=>a+b,0);
+      const rem=Math.round((t.total-fixedU)*100)/100;
+      const restF=mcOne(d,t.rc,'crypto',rem);
+      const restCashV=restF?restF.clientValue:0;
+      const restCashC = custR(restCashV, d==='buy'?'give':'get');
       const totalC = custR(t.total, d==='buy'?'get':'give');
       const cashSide=rows.map(fmtCash).concat([ffMc(restCashC)+' '+CUS[t.rc]]).join(' + ');
-      const restF=mcOne(d,t.rc,'crypto',t.rem);
-      lines.push('Залишок: '+ffMc(t.total)+' − '+ffMc(fixedU)+' = '+ffMc(t.rem)+' USDT'+
+      lines.push('Залишок: '+ffMc(t.total)+' − '+ffMc(fixedU)+' = '+ffMc(rem)+' USDT'+
         (restF? (d==='buy'? ' — доплата '+(restF.formulaClient||restF.formula) : ' → '+(restF.formulaClient||restF.formula)) : ''));
       txt = d==='buy'
         ? 'Віддаєте '+cashSide+' → отримуєте '+ffMc(totalC)+' USDT\nРозрахунок:\n'+lines.join('\n')
@@ -2311,11 +2424,22 @@
     } else {
       const {d,known}=mcState();
       const rows=mc.rows.filter(r=>pf(r.a)>0);
-      const lines=rows.map(r=>{const o=mcOne(d,r.c,known,pf(r.a)); const cu=r.c.indexOf('>')<0?CUS[r.c]:'грн'; return o?mcRowLine(o):'';}).filter(Boolean);
-      const usdtTotal=ffMc(custR(mcTotVal, d==='buy'?'get':'give'))+' USDT';  // USDT-итог: приём→вниз, выдача→вверх
+      const lines=rows.map(r=>{const o=mcOne(d,r.c,known,pf(r.a)); return o?mcRowLine(o):'';}).filter(Boolean);
+      // итог копии клиенту считаем от КЛИЕНТСКИХ (процентных) значений строк — чтобы всё сходилось в тексте
+      const side = d==='buy'?'get':'give';
+      let usdtTotalV;
+      if(known==='money'){
+        const comps=rows.map(r=>{const o=mcOne(d,r.c,known,pf(r.a)); return o?o.clientValue:null;}).filter(x=>x!=null);
+        const exact=comps.reduce((a,b)=>a+b,0);
+        usdtTotalV=custR(exact, side);
+        if(comps.length>=2) lines.push('Разом: '+comps.map(x=>ffMc(x)).join(' + ')+eqTail(exact, usdtTotalV, 'USDT'));
+      } else {
+        usdtTotalV=custR(mcTotVal, side);
+      }
+      const usdtTotal=ffMc(usdtTotalV)+' USDT';
       const cashList = known==='money'
         ? rows.map(r=>{const o=mcOne(d,r.c,known,pf(r.a)); return o&&o.quote? (ffMc(o.payAmount)+' грн') : (fmtStr(r.a)+' '+CUS[r.c]);}).join(' + ')
-        : rows.map(r=>{const o=mcOne(d,r.c,known,pf(r.a)); return o?ffMc(custR(o.value, d==='buy'?'give':'get'))+' '+CUS[r.c]:'';}).filter(Boolean).join(' + ');
+        : rows.map(r=>{const o=mcOne(d,r.c,known,pf(r.a)); return o?ffMc(custR(o.clientValue, d==='buy'?'give':'get'))+' '+CUS[r.c]:'';}).filter(Boolean).join(' + ');
       const gives = d==='buy'? cashList : usdtTotal;
       const gets  = d==='buy'? usdtTotal : cashList;
       txt='Віддаєте '+gives+' → отримуєте '+gets+'\nРозрахунок:\n'+lines.join('\n');
@@ -2384,8 +2508,8 @@
     let txt='Віддаєте '+ffMc(usdt)+' USDT → зараховуємо '+ffMc(uah)+' грн на картку';
     if(copyRate){
       txt+= cardLast.dir==='usdt'
-        ? '\nРозрахунок: '+ffMc(usdt)+' × '+ffR(cardLast.rate)+' = '+ffMc(uah)+' грн'
-        : '\nРозрахунок: '+ffMc(uah)+' ÷ '+ffR(cardLast.rate)+' = '+ffMc(usdt)+' USDT';
+        ? '\nРозрахунок: '+ffMc(usdt)+' × '+ffR(cardLast.rate)+eqTail(usdt*cardLast.rate, uah, 'грн')
+        : '\nРозрахунок: '+ffMc(uah)+' ÷ '+ffR(cardLast.rate)+eqTail(uah/cardLast.rate, usdt, 'USDT');
     }
     return locTxt(txt+fixLine());
   }
@@ -2444,6 +2568,74 @@
   loadRates(); labels(); render(); euLabels(); euRender(); cardRender(); ratesSummary(); renderUsdtRates(); updateSumHint(); stepVis();
   updateRatesAge(); setInterval(updateRatesAge,60000); checkSpread();
   fmtNum($('amount')); fmtNum($('euAmt')); fmtNum($('mcTotal'));
+
+  /* ── швидкі відповіді клієнту (короткі; «Уточнити» і «Курс» — динамічні) ── */
+  const QRK='usdtQuickV1';
+  const QR_DEF={ hi:'Вітаю! Що бажаєте обміняти?',
+    yes:'Так, усе зробимо. Надішліть, будь ласка, деталі.',
+    bye:'Дякуємо за співпрацю! Звертайтесь ще — завжди раді допомогти.' };
+  function qrGet(){ try{ const o=JSON.parse(localStorage.getItem(QRK)||'null'); return Object.assign({},QR_DEF,(o&&typeof o==='object')?o:{}); }catch(e){ return Object.assign({},QR_DEF); } }
+  function qrSave(o){ try{ localStorage.setItem(QRK, JSON.stringify(o)); }catch(e){} }
+  const QRCUR={UAH:'грн',USD:'долари',EUR:'євро',USDT:'USDT'};
+  // «Уточнити» — напрямок з розбору фрази (клієнтська версія «Понял»)
+  function qrClarify(){
+    const r=lastR; let a=null,b=null;
+    if(r && r.type==='single'){ if(r.amtCur==='USDT'){ a='USDT'; b=r.cur||'UAH'; } else { a=r.amtCur; b='USDT'; } }
+    else if(r && r.type==='cash'){ a=r.amtCur; b=r.target; }
+    if(!a||!b||a===b) return 'Уточніть, будь ласка: у якому напрямку міняємо? Наприклад USDT → грн чи грн → USDT?';
+    const A=QRCUR[a]||a, B=QRCUR[b]||b;
+    return 'Уточніть, будь ласка: '+A+' → '+B+' чи '+B+' → '+A+'?';
+  }
+  // «Курс» — з поточних клієнтських курсів, по ситуації із запиту
+  function qrRate(){
+    const raw=($('phrase')?$('phrase').value:'')||''; const t=' '+raw.toLowerCase()+' ';
+    const f=(v,d)=> (v==null||!isFinite(v))?'—':v.toLocaleString('uk-UA',{minimumFractionDigits:d,maximumFractionDigits:d});
+    const u=unitRates();   // клієнтський курс 1 USDT (з націнкою), тим самим ядром — без витоку закупки/вигоди
+    const wantSell=/куп(?:уєте|ляєте|ите)|берете|приймаєте|здат|здаю/.test(t);      // клієнт продає нам → ми купуємо
+    const wantBuy =/прода[єе]те|продаж|віддаєте/.test(t);                            // клієнт купує → ми продаємо
+    const hasU=/usdt|юсдт|тезер|монет/.test(t), hasUsd=/\$|долар|доллар|бакс/.test(t),
+          hasEur=/€|євр|евр|eur/.test(t), hasUah=/грн|грив|₴|uah/.test(t);
+    function line(cc,unit,d){
+      const s=u['sell_'+cc], b=u['buy_'+cc];              // sell_* = ми купуємо (прийом), buy_* = ми продаємо (видача)
+      const buyP=s?f(s.rate,d):'—', sellP=b?f(b.rate,d):'—';
+      if(wantSell&&!wantBuy) return 'USDT купуємо по '+buyP+' '+unit+'.';
+      if(wantBuy&&!wantSell) return 'USDT продаємо по '+sellP+' '+unit+'.';
+      return 'USDT: купуємо по '+buyP+', продаємо по '+sellP+' '+unit+'.';
+    }
+    if(!hasU){   // без usdt — готівкова пара
+      if(hasEur&&hasUsd) return 'Євро/долар: '+f(pn('eurB'),3)+' – '+f(pn('eurS'),3)+'.';
+      if(hasUsd) return 'Долар готівкою: купуємо по '+f(pn('usdB'),2)+', продаємо по '+f(pn('usdS'),2)+' грн.';
+      if(hasEur) return 'Євро готівкою: купуємо по '+f(pn('euruahB'),2)+', продаємо по '+f(pn('euruahS'),2)+' грн.';
+    }
+    if(hasUsd&&hasU) return line('USD','$ за 1 USDT',4);
+    if(hasEur&&hasU) return line('EUR','€ за 1 USDT',4);
+    return line('UAH','грн',2);   // usdt/грн — за замовчуванням
+  }
+  function qrText(id){ if(id==='clarify') return qrClarify(); if(id==='rate') return qrRate(); const q=qrGet(); return q[id]||''; }
+  function qrCopyFb(txt){ try{ const ta=document.createElement('textarea'); ta.value=txt; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.focus(); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);}catch(e){} }
+  function qrFlash(b){ const o=b.getAttribute('data-lbl')||b.textContent; b.classList.add('qdone'); b.textContent='✓ скопійовано'; setTimeout(()=>{ b.classList.remove('qdone'); b.textContent=o; },1200); }
+  function qrRenderBar(box, withEditor){
+    if(!box) return;
+    const items=[['hi','Привітання'],['yes','Так, зробимо'],['clarify','Уточнити'],['rate','Курс'],['bye','Прощання']];
+    let h='<div class="qbl">Швидкі відповіді клієнту</div><div class="qbar-row">'
+      + items.map(function(it){ return '<button type="button" class="qrb" data-qr="'+it[0]+'" data-lbl="'+it[1]+'">'+it[1]+'</button>'; }).join('') + '</div>';
+    if(withEditor){ const q=qrGet();
+      h+='<details class="qedit"><summary>Редагувати тексти</summary>'
+       +'<label class="qel">Привітання</label><textarea class="qet" data-q="hi" rows="2">'+esc(q.hi)+'</textarea>'
+       +'<label class="qel">Так, зробимо</label><textarea class="qet" data-q="yes" rows="2">'+esc(q.yes)+'</textarea>'
+       +'<label class="qel">Прощання</label><textarea class="qet" data-q="bye" rows="2">'+esc(q.bye)+'</textarea>'
+       +'<div class="qehint">«Уточнити» і «Курс» формуються автоматично — з розбору запиту та поточних курсів.</div></details>';
+    }
+    box.innerHTML=h;
+  }
+  document.addEventListener('click',function(e){ const b=e.target&&e.target.closest?e.target.closest('.qrb'):null; if(!b) return;
+    const txt=qrText(b.dataset.qr); if(!txt) return;
+    try{ navigator.clipboard.writeText(txt).then(function(){qrFlash(b);},function(){qrCopyFb(txt);qrFlash(b);}); }catch(_){ qrCopyFb(txt); qrFlash(b); }
+  });
+  document.addEventListener('input',function(e){ const t=e.target&&e.target.closest?e.target.closest('.qet'):null; if(!t) return;
+    const q=qrGet(); q[t.dataset.q]=t.value; qrSave(q); });
+  qrRenderBar($('quickBar'), false);
+  qrRenderBar($('quickBarFaq'), true);
 })();
 </script>
 <script>
@@ -2707,8 +2899,7 @@
     const cfg=NET[net], box=$('vResult');
     const wc=walletCheck(net, d.to, $('vWallets').value);
     const recipOk=wc.state;
-    const expRaw=$('vExpected').value.replace(/[\s\u2009\u00a0]/g,'').replace(',','.');
-    const expected = expRaw? parseFloat(expRaw) : null;
+    const expected = null; // поле «Ожидаемая сумма» убрано — сверку суммы прихода не делаем
     const human=toHuman(d.amount,d.dec);
     const amountMatch = (expected!=null&&isFinite(expected))? Math.abs(human-expected)<=0.01 : null;
     const counted=journal().has(jkey(net,hash));
@@ -2831,6 +3022,13 @@
     }catch(e){}
   }
   function syncDirUI(){ try{ [...$('vDir').children].forEach(x=>x.classList.toggle('on',(x.dataset.dir||'in')===RS.dir)); }catch(e){} }
+  // кэш строк истории поступлень — чтобы список НЕ пропадал после перезагрузки; чистится при смене кошелька
+  const ITEMSK='usdtRecentItems';
+  function itemsSave(){ try{ if(!isTronAddr2(RS.addr)) return;
+    localStorage.setItem(ITEMSK, JSON.stringify({addr:RS.addr, dir:RS.dir, items:RS.items.slice(0,60)})); }catch(e){} }
+  function itemsLoad(){ try{ const o=JSON.parse(localStorage.getItem(ITEMSK)||'null');
+    return (o&&typeof o==='object'&&Array.isArray(o.items))?o:null; }catch(e){ return null; } }
+  function itemsClear(){ try{ localStorage.removeItem(ITEMSK); }catch(e){} }
   const SEENK='usdtRecentSeen';
   function seenGet(a){ try{ return (JSON.parse(localStorage.getItem(SEENK)||'{}')[a])||0; }catch(e){ return 0; } }
   function seenSet(a,ts){ try{ const o=JSON.parse(localStorage.getItem(SEENK)||'{}'); o[a]=ts; localStorage.setItem(SEENK,JSON.stringify(o)); }catch(e){} }
@@ -3043,6 +3241,7 @@
     $('vExportBtn').style.display = RS.items.length?'':'none';
     renderWalletHead();
     if(maxTs>seenTs) seenSet(RS.addr,maxTs);
+    itemsSave();   // кэшируем текущую историю — не пропадёт после перезагрузки
   }
   function renderWalletHead(){
     const el=$('vWalletHead'); if(!el) return;
@@ -3074,14 +3273,21 @@
     const box=$('vRecent'); box.style.display='block';
     const addr=pickAddr(); fillAddrPick();
     if(!isTronAddr2(addr)){ box.innerHTML='<div class="lempty">впиши TRON-кошелёк (начинается с T) или добавь его в «Мои кошельки-получатели» в настройках</div>'; $('vRecentSum').style.display='none'; $('vMoreBtn').style.display='none'; return; }
-    box.innerHTML='<div class="lempty">'+(RS.dir==='out'?'запрашиваю отправленные…':'запрашиваю последние поступления…')+'</div>';
-    if(RS.addr!==addr){ RS.addr=addr; RS.seeded=false; }
+    const walletChanged = (RS.addr!==addr);
+    if(walletChanged){ RS.addr=addr; RS.seeded=false; itemsClear(); }   // сменили кошелёк — старую историю сбрасываем
     watchSave();   // запомнить кошелёк, чтобы не пропадал после перезагрузки
+    // «запрашиваю…» показываем только если список пуст; иначе оставляем текущую историю на экране
+    if(!RS.items.length) box.innerHTML='<div class="lempty">'+(RS.dir==='out'?'запрашиваю отправленные…':'запрашиваю последние поступления…')+'</div>';
+    let full=[];
+    try{ const r=await fetchPage(addr,0); RS.src=r.src; full=r.list.slice(0,25); }
+    catch(e){
+      if(RS.items.length){ renderRecent(); }   // сеть/CORS упали, но история уже есть — оставляем её на экране
+      else { box.innerHTML='<div class="lempty" style="color:var(--buy)">не удалось получить список (сеть/CORS/лимит). Попробуй ещё раз или задай ключ TronGrid в настройках.</div>'; $('vRecentSum').style.display='none'; $('vMoreBtn').style.display='none'; }
+      return;
+    }
     RS.items=[]; RS.hashSet=new Set(); RS.flash=new Set(); RS.page=0;
     RS.unack=unackLoad(addr);
-    let full=[];
-    try{ const r=await fetchPage(addr,0); RS.src=r.src; full=r.list.slice(0,25); mergeItems(full); }
-    catch(e){ box.innerHTML='<div class="lempty" style="color:var(--buy)">не удалось получить список (сеть/CORS/лимит). Попробуй ещё раз или задай ключ TronGrid в настройках.</div>'; $('vRecentSum').style.display='none'; $('vMoreBtn').style.display='none'; return; }
+    mergeItems(full);
     RS.items=RS.items.slice(0,10+RS.page*10);
     // память о виденном — ВСЕ загруженные хеши (а не только 10 показанных), иначе watch шлёт плашки по старым транзам
     RS.hashSet=new Set(full.map(t=>t.hash));
@@ -3129,9 +3335,10 @@
     const fresh=r.list.filter(t=>!RS.hashSet.has(t.hash));
     if(fresh.length){
       RS.lastNewAt=Date.now(); mergeItems(fresh);
-      unackAdd(fresh.map(t=>t.hash));   // пометка «новая» — до Scan/копии хеша/адреса
-      renderRecent(); notifyFresh(fresh);
+      if(RS.justRestored){ renderRecent(); }   // после перезагрузки: дозаполняем пропущенное тихо, без звука/плашки
+      else { unackAdd(fresh.map(t=>t.hash)); renderRecent(); notifyFresh(fresh); }
     }
+    RS.justRestored=false;
     updateWatchInfo();
   }
   function startWatch(){
@@ -3164,6 +3371,15 @@
       }
       const addr=pickAddr(); if(!isTronAddr2(addr)) return;
       RS.addr=addr; RS.seeded=false; RS.unack=unackLoad(addr);
+      // 1.5) восстановить сохранённые строки истории для этого кошелька — список НЕ пропадает после перезагрузки
+      try{ const ic=itemsLoad();
+        if(ic && ic.addr===addr && ic.items && ic.items.length){
+          if((ic.dir==='out'||ic.dir==='in') && ic.dir!==RS.dir){ RS.dir=ic.dir; syncDirUI(); }
+          RS.items=ic.items.slice(); RS.hashSet=new Set(RS.items.map(t=>t.hash));
+          RS.seeded=true; RS.justRestored=true;   // показываем сразу; первый опрос тихо дозаполнит пропущенное
+          renderRecent();
+        }
+      }catch(e){}
       // 2) если оператор ранее сам нажал «Стоп» именно для этого кошелька — не будим слежку,
       //    но поле уже заполнено; достаточно нажать «Ждать». Иначе — продолжаем следить.
       if(wv && wv.addr===addr && wv.paused===true){ updateWatchInfo(); return; }
@@ -3174,7 +3390,10 @@
   // звук требует жеста пользователя: разблокируем аудио первым же кликом/клавишей где угодно на странице
   try{ ['click','keydown','touchstart'].forEach(ev=>document.addEventListener(ev,beepPrime,{once:true,capture:true})); }catch(e){}
   $('vRecentBtn').addEventListener('click',showRecent);
-  window.__vAutoLoad=function(){ try{ const w=walletList('tron'); if(w.length){ showRecent(); return true; } }catch(e){} return false; };
+  window.__vAutoLoad=function(){ try{
+    if(RS.items.length){ renderRecent(); return true; }   // история уже восстановлена — просто показать (фон обновит сам)
+    const w=walletList('tron'); if(w.length){ showRecent(); return true; }
+  }catch(e){} return false; };
   $('vWatchBtn').addEventListener('click',toggleWatch);
   function notifyTest(){
     beepPrime();  // разблокировать звук по клику
