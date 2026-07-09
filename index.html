@@ -19,12 +19,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0D141D; --panel:#1B2635; --panel2:#243241; --ink:#F2F6FB; --muted:#A7B5C4; --faint:#71828F;
-    --line:#33424F; --hiline:rgba(255,255,255,.07); --accent:#5B9BFF; --accent2:#1E2C44;
-    --sell:#43E0AB; --sell2:#123328; --buy:#F7B04D; --buy2:#3A2C12; --green:#71E9BC;
-    --sh1:0 1px 1px rgba(0,0,0,.45),0 5px 12px -5px rgba(0,0,0,.55),0 18px 40px -18px rgba(0,0,0,.65);
-    --sh2:0 2px 4px rgba(0,0,0,.5),0 12px 30px -12px rgba(0,0,0,.62),0 40px 80px -34px rgba(0,0,0,.78);
-    --inset:inset 0 2px 6px rgba(0,0,0,.5),inset 0 1px 1px rgba(0,0,0,.42);
+    --bg:#0B1017; --panel:#151D28; --panel2:#1E2836; --ink:#EEF3F9; --muted:#93A2B4; --faint:#6A7887;
+    --line:#2B3745; --hiline:rgba(255,255,255,.06); --accent:#9DBEDD; --accent2:#22303F;
+    --sell:#3FD3A6; --sell2:#0F2E24; --buy:#E8A951; --buy2:#33290F; --green:#7FE9C4; --danger:#F0736F;
+    --sh1:0 1px 2px rgba(0,0,0,.35),0 12px 32px -14px rgba(0,0,0,.62);
+    --sh2:0 2px 6px rgba(0,0,0,.42),0 34px 74px -32px rgba(0,0,0,.74);
+    --inset:inset 0 2px 6px rgba(0,0,0,.42),inset 0 1px 1px rgba(0,0,0,.32);
     --mono:'IBM Plex Mono',ui-monospace,monospace;
     --disp:'Space Grotesk',system-ui,sans-serif;
     --body:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
@@ -33,9 +33,9 @@
   input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
   input[type=number]{-moz-appearance:textfield;appearance:textfield}
   body{background:
-      radial-gradient(1200px 640px at 50% -16%,rgba(91,155,255,.10) 0%,rgba(91,155,255,0) 58%),
-      radial-gradient(900px 620px at 88% 4%,rgba(67,224,171,.055) 0%,rgba(67,224,171,0) 52%),
-      radial-gradient(160% 130% at 50% -4%,#1B2735 0%,#111A26 52%,#0A111A 100%);
+      radial-gradient(1200px 640px at 50% -16%,rgba(157,190,221,.085) 0%,rgba(157,190,221,0) 58%),
+      radial-gradient(900px 620px at 88% 4%,rgba(63,211,166,.045) 0%,rgba(63,211,166,0) 52%),
+      radial-gradient(160% 130% at 50% -4%,#141D28 0%,#0D141D 52%,#080C12 100%);
     background-attachment:fixed;
     color:var(--ink);font-family:var(--body);padding:16px 12px 48px;-webkit-font-smoothing:antialiased;min-height:100vh}
   .wrap{max-width:1000px;margin:0 auto}
@@ -43,7 +43,7 @@
   .rgrid .rh{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);text-align:center;font-family:var(--disp);font-weight:600}
   .rgrid .rn{font-family:var(--mono);font-size:13px;color:var(--ink);white-space:nowrap}
   .rgrid input{width:100%;font-family:var(--mono);font-size:15px;font-weight:600;color:var(--ink);
-    background:#121A24;border:1px solid #26323F;border-radius:8px;padding:8px;text-align:right;box-shadow:var(--inset)}
+    background:#0F1721;border:1px solid #232F3B;border-radius:8px;padding:8px;text-align:right;box-shadow:var(--inset)}
   .rgrid input:focus{outline:none;border-color:var(--accent)}
   .rsep{height:1px;background:var(--line);margin:12px 0}
   .cgrid{display:grid;grid-template-columns:64px 1fr 1fr;gap:7px;row-gap:6px;align-items:center}
@@ -52,24 +52,24 @@
   .cgrid .ch em{font-style:normal;color:var(--faint);font-size:10px}
   .cgrid .cml{font-size:11px}
   .cgrid input{width:100%;font-family:var(--mono);font-size:15px;font-weight:600;color:var(--ink);
-    background:#121A24;border:1px solid #26323F;border-radius:8px;padding:8px;text-align:right;box-shadow:var(--inset)}
+    background:#0F1721;border:1px solid #232F3B;border-radius:8px;padding:8px;text-align:right;box-shadow:var(--inset)}
   .cgrid input:focus{outline:none;border-color:var(--accent)}
   .mseg button{font-size:13px}
   .mseg button.on{color:var(--sell)}
   .cinp{display:flex;gap:6px;align-items:stretch}
   .cinp .pm{flex:0 0 38px;font-family:var(--mono);font-size:17px;font-weight:600;color:var(--muted);
-    background:linear-gradient(180deg,#26313F,#1F2937);border:1px solid #384757;border-radius:8px;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.35),inset 0 1px 0 var(--hiline);transition:border-color .12s,color .12s}
+    background:linear-gradient(180deg,#212C39,#19232F);border:1px solid #31404E;border-radius:8px;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.35),inset 0 1px 0 var(--hiline);transition:border-color .12s,color .12s}
   .cinp .pm:hover{border-color:var(--accent);color:var(--accent)}
   .cinp .pm:active{transform:scale(.97)}
   .cinp input{flex:1}
-  .seg{display:grid;gap:4px;background:#131D28;padding:4px;border-radius:12px;border:1px solid #2C3947;box-shadow:inset 0 2px 6px rgba(0,0,0,.42),inset 0 1px 2px rgba(0,0,0,.5)}
+  .seg{display:grid;gap:4px;background:#131D28;padding:4px;border-radius:12px;border:1px solid #28343F;box-shadow:inset 0 2px 6px rgba(0,0,0,.42),inset 0 1px 2px rgba(0,0,0,.5)}
   .seg.two{grid-template-columns:1fr 1fr}
   .seg.three{grid-template-columns:1fr 1fr 1fr}
   .seg.four{grid-template-columns:1fr 1fr 1fr 1fr}
   .seg button{font-family:var(--disp);font-weight:600;font-size:14px;color:var(--muted);
     background:transparent;border:none;border-radius:9px;padding:10px 6px;cursor:pointer;transition:background .12s,color .12s,box-shadow .12s}
   .seg button:hover{color:#C6D1DC}
-  .seg button.on{color:var(--ink);background:linear-gradient(180deg,#42536A 0%,#33445A 100%);
+  .seg button.on{color:var(--ink);background:linear-gradient(180deg,#3B4B60 0%,#2E3D50 100%);
     box-shadow:0 2px 6px rgba(0,0,0,.42),0 1px 1px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.1)}
   .seg.dir button.on[data-dir="sell"]{color:var(--sell)}
   .seg.dir button.on[data-dir="buy"]{color:var(--buy)}
@@ -77,20 +77,20 @@
   .ql{font-family:var(--body);font-size:13px;font-weight:600;color:#C0CAD6;margin:14px 0 6px;letter-spacing:.01em}
   .cl{font-family:var(--body);font-size:13px;font-weight:600;color:#B9C2CD}
   .hint{font-family:var(--body);font-size:12px;color:var(--muted);margin-top:8px;line-height:1.5}
-  #phrase:focus{border-color:var(--accent)!important;box-shadow:0 0 0 3px rgba(59,130,246,.20)}
+  #phrase:focus{border-color:var(--accent)!important;box-shadow:0 0 0 3px rgba(157,190,221,.20)}
   .phrase-info{font-family:var(--body);font-size:13px;margin-top:9px;line-height:1.5;color:var(--muted)}
   .phrase-info b{color:var(--ink);font-weight:600}
   .phrase-info.ok{color:var(--sell)}
   .phrase-info.err{color:var(--buy)}
   /* панель «что понял калькулятор» — компактно, под полем ввода */
   .understood{display:none;margin:8px 0 0;padding:9px 12px;border-radius:10px;
-    background:rgba(59,130,246,.09);border:1px solid rgba(96,150,220,.34);
+    background:rgba(157,190,221,.09);border:1px solid rgba(150,182,214,.34);
     font-family:var(--body);font-size:13px;line-height:1.5;color:var(--ink)}
   .understood.err{background:rgba(224,122,95,.10);border-color:rgba(224,122,95,.42);color:#E0A05F}
   .understood .udir{font-weight:700;color:var(--ink)}
   .understood .urow{margin-top:2px}
   .understood .ucur{color:var(--muted)}
-  .understood .uwarn{margin-top:6px;padding-top:6px;border-top:1px solid rgba(96,150,220,.20);font-size:12px;color:#E0A05F;line-height:1.45}
+  .understood .uwarn{margin-top:6px;padding-top:6px;border-top:1px solid rgba(150,182,214,.20);font-size:12px;color:#E0A05F;line-height:1.45}
   .understood b{font-weight:600}
   /* поле фразы: крестик, клавиши, чипы */
   .pwrap{position:relative}
@@ -101,9 +101,9 @@
   .pkeys{margin-top:5px;font-family:var(--body);font-size:10.5px;color:var(--faint)}
   .pkeys b{color:var(--muted);font-weight:600}
   .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-  .chips button{font-family:var(--body);font-size:11px;color:var(--muted);background:rgba(96,150,220,.08);
-    border:1px solid rgba(96,150,220,.25);border-radius:999px;padding:4px 10px;cursor:pointer;transition:.15s}
-  .chips button:hover{color:var(--ink);border-color:rgba(96,150,220,.55)}
+  .chips button{font-family:var(--body);font-size:11px;color:var(--muted);background:rgba(150,182,214,.08);
+    border:1px solid rgba(150,182,214,.25);border-radius:999px;padding:4px 10px;cursor:pointer;transition:.15s}
+  .chips button:hover{color:var(--ink);border-color:rgba(150,182,214,.55)}
   /* превью ответа клиенту */
   .uans{margin-top:8px;padding:10px 12px;border-radius:12px;background:rgba(60,220,163,.07);
     border:1px solid rgba(60,220,163,.30)}
@@ -117,33 +117,33 @@
   .hist summary{cursor:pointer;font-size:12px;color:var(--muted);user-select:none;padding:3px 0}
   .hist summary:hover{color:var(--ink)}
   .hist #histCnt{color:var(--faint)}
-  .hrow{display:flex;align-items:center;gap:8px;padding:5px 2px;border-bottom:1px solid rgba(96,150,220,.12)}
+  .hrow{display:flex;align-items:center;gap:8px;padding:5px 2px;border-bottom:1px solid rgba(150,182,214,.12)}
   .hrow .ht{font-family:var(--mono);font-size:10.5px;color:var(--faint);flex:0 0 auto}
   .hrow .hp{font-size:12px;color:var(--muted);flex:1 1 auto;overflow:hidden;text-overflow:ellipsis;
     white-space:nowrap;cursor:pointer}
   .hrow .hp:hover{color:var(--ink)}
-  .hrow button{border:1px solid rgba(96,150,220,.30);background:none;color:var(--muted);border-radius:8px;
+  .hrow button{border:1px solid rgba(150,182,214,.30);background:none;color:var(--muted);border-radius:8px;
     font-size:11px;padding:3px 8px;cursor:pointer;flex:0 0 auto}
-  .hrow button:hover{color:var(--ink);border-color:rgba(96,150,220,.6)}
+  .hrow button:hover{color:var(--ink);border-color:rgba(150,182,214,.6)}
   #histClear{margin-top:7px;border:none;background:none;color:var(--faint);font-size:11px;cursor:pointer;text-decoration:underline}
   #histClear:hover{color:var(--buy)}
   /* ===== вкладка «Ответы клиентам» ===== */
   #tplSearch{margin-bottom:10px}
-  .tplrow{background:linear-gradient(180deg,#1C2836,#16202C);border:1px solid #2C3947;border-radius:12px;
+  .tplrow{background:linear-gradient(180deg,#1A2532,#141D29);border:1px solid #28343F;border-radius:12px;
     padding:12px 14px;margin-bottom:8px}
   .tplrow .tph{display:flex;align-items:center;gap:8px;margin-bottom:6px}
   .tplrow .tpt{font-family:var(--disp);font-size:12px;font-weight:700;letter-spacing:.03em;color:#C9D5E1;flex:1 1 auto}
-  .tplrow .tpb{font-family:var(--body);font-size:11px;color:var(--muted);background:linear-gradient(180deg,#26313F,#1F2937);
-    border:1px solid #384757;border-radius:8px;padding:5px 10px;cursor:pointer;white-space:nowrap;flex:0 0 auto}
+  .tplrow .tpb{font-family:var(--body);font-size:11px;color:var(--muted);background:linear-gradient(180deg,#212C39,#19232F);
+    border:1px solid #31404E;border-radius:8px;padding:5px 10px;cursor:pointer;white-space:nowrap;flex:0 0 auto}
   .tplrow .tpb:hover{border-color:var(--accent);color:var(--accent)}
   .tplrow .tpb.tcopy:hover{border-color:var(--sell);color:var(--sell)}
   .tplrow .tpb.tdel:hover{border-color:var(--buy);color:var(--buy)}
   .tplrow pre{margin:0;font-family:var(--body);font-size:13px;line-height:1.55;color:var(--ink);
     white-space:pre-wrap;word-break:break-word}
   .tplrow input.tpe-t{width:100%;box-sizing:border-box;margin-bottom:7px;font-family:var(--disp);font-weight:700;
-    font-size:13px;color:var(--ink);background:#101821;border:1px solid #26323F;border-radius:8px;padding:8px 10px}
+    font-size:13px;color:var(--ink);background:#0C1219;border:1px solid #232F3B;border-radius:8px;padding:8px 10px}
   .tplrow textarea.tpe-x{width:100%;box-sizing:border-box;min-height:88px;resize:vertical;font-family:var(--body);
-    font-size:13px;line-height:1.5;color:var(--ink);background:#101821;border:1px solid #26323F;border-radius:8px;padding:9px 11px}
+    font-size:13px;line-height:1.5;color:var(--ink);background:#0C1219;border:1px solid #232F3B;border-radius:8px;padding:9px 11px}
   .tplrow input.tpe-t:focus,.tplrow textarea.tpe-x:focus{outline:none;border-color:var(--accent)}
   .tplctl{display:flex;gap:8px;margin-top:4px}
   .tplempty{font-family:var(--body);font-size:13px;color:var(--muted);padding:8px 2px}
@@ -171,15 +171,15 @@
   }
   .amount-wrap{position:relative;margin-top:8px}
   .amount-wrap input{width:100%;font-family:var(--mono);font-size:30px;font-weight:600;color:#F5F9FD;letter-spacing:.01em;
-    background:linear-gradient(180deg,#0B131D 0%,#12202F 100%);border:1px solid #35485C;border-radius:16px;padding:15px 96px 15px 17px;transition:box-shadow .18s,border-color .18s;
-    box-shadow:inset 0 3px 10px rgba(0,0,0,.62),inset 0 1px 2px rgba(0,0,0,.55),inset 0 -1px 0 rgba(255,255,255,.045),0 0 0 1px rgba(91,155,255,.11),0 8px 22px -12px rgba(91,155,255,.32)}
-  .amount-wrap input:focus{outline:none;border-color:var(--accent);box-shadow:inset 0 3px 10px rgba(0,0,0,.62),inset 0 -1px 0 rgba(255,255,255,.05),0 0 0 3px rgba(91,155,255,.30),0 0 28px -6px rgba(91,155,255,.62)}
+    background:linear-gradient(180deg,#0A1019 0%,#0F1B28 100%);border:1px solid #31414F;border-radius:14px;padding:15px 96px 15px 17px;transition:box-shadow .18s,border-color .18s;
+    box-shadow:inset 0 3px 10px rgba(0,0,0,.58),inset 0 1px 2px rgba(0,0,0,.5),inset 0 -1px 0 rgba(255,255,255,.04),0 0 0 1px rgba(157,190,221,.06)}
+  .amount-wrap input:focus{outline:none;border-color:var(--accent);box-shadow:inset 0 3px 10px rgba(0,0,0,.58),inset 0 -1px 0 rgba(255,255,255,.05),0 0 0 3px rgba(157,190,221,.28),0 0 26px -8px rgba(157,190,221,.5)}
   .amount-wrap .u{position:absolute;right:15px;top:50%;transform:translateY(-50%);
     font-family:var(--disp);font-weight:600;font-size:15px;color:#8C9AA9;text-shadow:0 1px 0 rgba(0,0,0,.5)}
-  .res{position:relative;background:linear-gradient(165deg,#34475C 0%,#283646 52%,#202C3A 100%);border:1px solid #48596C;border-radius:18px;padding:22px;margin-top:14px;
-    box-shadow:0 2px 4px rgba(0,0,0,.4),0 16px 36px -16px rgba(0,0,0,.7),0 34px 66px -32px rgba(2,12,10,.6),inset 0 1px 0 rgba(255,255,255,.12),inset 0 0 44px -18px rgba(67,224,171,.20)}
+  .res{position:relative;background:linear-gradient(165deg,#30455B 0%,#26384A 52%,#1E2C3B 100%);border:1px solid #46596E;border-radius:16px;padding:24px;margin-top:14px;
+    box-shadow:0 2px 6px rgba(0,0,0,.42),0 22px 48px -22px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.10),inset 0 0 46px -20px rgba(63,211,166,.15)}
   .res .rl{font-family:var(--disp);font-size:10.5px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
-  .res .big{font-family:var(--disp);font-weight:700;font-size:42px;line-height:1.04;letter-spacing:-.015em;color:var(--green);word-break:break-all;font-variant-numeric:tabular-nums;text-shadow:0 1px 0 rgba(0,0,0,.45),0 2px 5px rgba(0,0,0,.4),0 0 34px rgba(113,233,188,.36)}
+  .res .big{font-family:var(--disp);font-weight:700;font-size:46px;line-height:1.03;letter-spacing:-.018em;color:var(--green);word-break:break-all;font-variant-numeric:tabular-nums;text-shadow:0 1px 0 rgba(0,0,0,.45),0 2px 5px rgba(0,0,0,.4),0 0 34px rgba(127,233,196,.30)}
   .res .big .u{font-size:18px;color:var(--muted);margin-left:9px;font-weight:600;letter-spacing:0}
   .res .deal{font-family:var(--mono);font-size:13px;color:var(--ink);margin-top:14px;padding-top:12px;border-top:1px solid var(--line);line-height:1.55}
   .res .deal .g{color:var(--muted)}
@@ -192,14 +192,14 @@
   .fround{font-family:var(--mono);font-size:12px;color:var(--buy);margin-top:8px;line-height:1.5;word-break:break-word}
   .fcomm{font-family:var(--mono);font-size:12px;color:var(--sell);margin-top:8px}
   .brow{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-  .brow .bamt{flex:1;min-width:0;font-family:var(--mono);font-size:16px;font-weight:600;color:var(--ink);background:#121A24;border:1px solid #26323F;border-radius:8px;padding:9px;text-align:right;box-shadow:var(--inset)}
+  .brow .bamt{flex:1;min-width:0;font-family:var(--mono);font-size:16px;font-weight:600;color:var(--ink);background:#0F1721;border:1px solid #232F3B;border-radius:8px;padding:9px;text-align:right;box-shadow:var(--inset)}
   .brow .bamt:focus{outline:none;border-color:var(--accent)}
-  .brow .bcur{font-family:var(--mono);font-size:14px;color:var(--ink);background:#121A24;border:1px solid #26323F;border-radius:8px;padding:9px 4px;box-shadow:var(--inset)}
+  .brow .bcur{font-family:var(--mono);font-size:14px;color:var(--ink);background:#0F1721;border:1px solid #232F3B;border-radius:8px;padding:9px 4px;box-shadow:var(--inset)}
   .brow .bres{font-family:var(--mono);font-size:13px;color:var(--sell);flex:0 0 132px;text-align:right;white-space:nowrap}
   .brow .brm{background:none;border:none;color:var(--faint);font-size:20px;line-height:1;cursor:pointer;padding:0 2px}
   .brow .brm:hover{color:var(--buy)}
   .brow .bunit{font-family:var(--mono);font-size:12px;color:var(--muted);flex:0 0 auto;white-space:nowrap}
-  .badd{background:linear-gradient(180deg,#26313F,#1F2937);border:1px solid #384757;color:var(--muted);border-radius:10px;padding:9px 13px;font-family:var(--body);font-size:13px;cursor:pointer;margin-top:2px;
+  .badd{background:linear-gradient(180deg,#212C39,#19232F);border:1px solid #31404E;color:var(--muted);border-radius:10px;padding:9px 13px;font-family:var(--body);font-size:13px;cursor:pointer;margin-top:2px;
     box-shadow:0 1px 2px rgba(0,0,0,.35),inset 0 1px 0 var(--hiline);transition:border-color .12s,color .12s,background .12s}
   .badd:hover{border-color:var(--accent);color:var(--accent);background:var(--accent2)}
   .badd:active{transform:scale(.99)}
@@ -212,23 +212,25 @@
   .frate{font-family:var(--mono);font-size:13px;color:var(--muted);line-height:1.6;margin-top:10px;padding-top:10px;border-top:1px solid var(--line);word-break:break-word}
   .res .err{font-family:var(--mono);font-size:15px;color:var(--muted)}
   .copy{margin-top:13px;width:100%;font-family:var(--disp);font-weight:600;font-size:15px;color:#fff;
-    background:linear-gradient(115deg,#2F6BD9 0%,#4A8BF2 30%,#6FAAFF 50%,#4A8BF2 70%,#2F6BD9 100%);background-size:220% 100%;
-    border:none;border-radius:12px;padding:12px;cursor:pointer;letter-spacing:.01em;
-    box-shadow:0 6px 16px -6px rgba(74,139,242,.55),inset 0 1px 0 rgba(255,255,255,.22);
+    background:linear-gradient(115deg,#3A6FAE 0%,#5E93C8 30%,#A9C6E0 50%,#5E93C8 70%,#3A6FAE 100%);background-size:220% 100%;
+    border:none;border-radius:12px;padding:13px;cursor:pointer;letter-spacing:.01em;
+    box-shadow:0 6px 18px -7px rgba(94,147,200,.5),inset 0 1px 0 rgba(255,255,255,.20);
     animation:copySheen 4.5s ease-in-out infinite;
     transition:filter .15s, transform .1s, box-shadow .15s}
   @keyframes copySheen{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
   @media(prefers-reduced-motion:reduce){.copy{animation:none}}
-  .copy:hover{filter:brightness(1.06);transform:translateY(-1px);box-shadow:0 9px 22px -7px rgba(74,139,242,.62),inset 0 1px 0 rgba(255,255,255,.22)}
+  .copy:hover{filter:brightness(1.06);transform:translateY(-1px);box-shadow:0 9px 22px -7px rgba(94,147,200,.62),inset 0 1px 0 rgba(255,255,255,.22)}
   .copy:active{transform:translateY(0) scale(.99)}
   .copy.done{background:var(--sell2);color:var(--sell);animation:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
   .rage{font-family:var(--mono);font-size:11px;color:var(--muted);margin:0;line-height:1.4}
-  .rage.warn{color:var(--buy)} .rage.old{color:#F87171;font-weight:600}
+  .rage.warn,.rage.old{padding:4px 10px;border-radius:8px;border-left:3px solid currentColor;line-height:1.35}
+  .rage.warn{color:var(--buy);background:rgba(232,169,81,.11)}
+  .rage.old{color:var(--danger);font-weight:600;background:rgba(240,115,111,.13)}
   .rchk{margin-top:14px;padding-top:14px;border-top:1px dashed var(--line)}
   .rchk .rcl{font-family:var(--body);font-size:13px;color:var(--muted);margin-bottom:7px}
   .rchk .rcrow{display:flex;align-items:stretch;gap:8px}
   .rchk input{flex:1;min-width:0;font-family:var(--mono);font-size:15px;font-weight:600;color:var(--ink);
-    background:#101821;border:1px solid #26323F;border-radius:8px;padding:9px 12px;text-align:right;box-shadow:var(--inset)}
+    background:#0C1219;border:1px solid #232F3B;border-radius:8px;padding:9px 12px;text-align:right;box-shadow:var(--inset)}
   .rchk input:focus{outline:none;border-color:var(--accent)}
   .rchk .rcu{flex:0 0 auto;align-self:center;font-family:var(--mono);font-size:13px;color:var(--muted)}
   .rchk .rcv{font-family:var(--mono);font-size:13px;margin-top:8px;line-height:1.5;min-height:1.2em}
@@ -246,15 +248,15 @@
   .log .lrow .ldot{color:var(--accent);margin-right:4px}
   .log .lrow{align-items:center}
   .log .lcopy{flex:0 0 auto;display:flex;gap:5px;margin-left:8px}
-  .log .cpbtn{font-family:var(--body);font-size:11px;color:var(--muted);background:linear-gradient(180deg,#26313F,#1F2937);border:1px solid #384757;border-radius:8px;padding:4px 8px;cursor:pointer;white-space:nowrap;transition:border-color .12s,color .12s}
+  .log .cpbtn{font-family:var(--body);font-size:11px;color:var(--muted);background:linear-gradient(180deg,#212C39,#19232F);border:1px solid #31404E;border-radius:8px;padding:4px 8px;cursor:pointer;white-space:nowrap;transition:border-color .12s,color .12s}
   .log .cpbtn:hover{border-color:var(--accent);color:var(--accent)}
   .log a.cpbtn.scanlink{text-decoration:none;display:inline-block}
   .log a.cpbtn.scanlink:hover{border-color:var(--sell);color:var(--sell)}
-  .vcard{background:linear-gradient(180deg,#212D3D,#19232F);border:1px solid #33404F;border-radius:14px;padding:16px;margin-top:14px;box-shadow:var(--sh1),inset 0 1px 0 var(--hiline)}
+  .vcard{background:linear-gradient(180deg,#212D3D,#19232F);border:1px solid #2B3745;border-radius:14px;padding:16px;margin-top:14px;box-shadow:var(--sh1),inset 0 1px 0 var(--hiline)}
   .vcard:first-of-type{margin-top:12px}
   .vcard-h{font-family:var(--disp);font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#AEB8C4;margin:0 0 12px;display:flex;align-items:center;gap:8px}
   .vcard-h .sub{font-family:var(--body);font-size:10.5px;font-weight:400;letter-spacing:0;text-transform:none;color:var(--faint);margin:0 0 0 auto;text-align:right}
-  .vfilters{border:1px solid #2C3947;border-radius:10px;background:#182330;padding:0 12px;margin-top:10px}
+  .vfilters{border:1px solid #28343F;border-radius:10px;background:#182330;padding:0 12px;margin-top:10px}
   .vfilters summary{font-family:var(--disp);font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);padding:10px 0;cursor:pointer;list-style:none;user-select:none}
   .vfilters summary::-webkit-details-marker{display:none}
   .vfilters summary::before{content:'▸ ';color:var(--faint)}
@@ -290,7 +292,7 @@
   }
   @media(max-width:560px){ .log .lcopy{flex-direction:column;gap:3px} .log .cpbtn{font-size:10px;padding:3px 6px} }
   /* ===== единая панель ===== */
-  .app{max-width:1000px;margin:0 auto;background:linear-gradient(180deg,#2A394C 0%,#1E2937 46%,#182231 100%);border:1px solid #42535F;border-radius:22px;box-shadow:var(--sh2),inset 0 1px 0 rgba(255,255,255,.10),inset 0 0 0 1px rgba(255,255,255,.02);overflow:hidden;position:relative}
+  .app{max-width:1000px;margin:0 auto;background:linear-gradient(180deg,#1E2B3A 0%,#17212E 46%,#121A26 100%);border:1px solid #2F3C4A;border-radius:20px;box-shadow:var(--sh2),inset 0 1px 0 rgba(255,255,255,.07),inset 0 0 0 1px rgba(255,255,255,.015);overflow:hidden;position:relative}
   .app-head{padding:12px 14px 11px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,0))}
   .head-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
   .head-top .brand{font-family:var(--disp);font-weight:800;font-size:17px;letter-spacing:-.01em;color:#F2F6FB;white-space:nowrap;text-shadow:0 1px 0 rgba(0,0,0,.4)}
@@ -313,31 +315,31 @@
   .usdtx .uxnote{font-family:var(--body);font-size:10.5px;color:var(--faint);margin-top:8px;line-height:1.4}
   .head-rates #rAge{margin:0;font-size:10.5px}
   .head-rates #spreadWarn{margin:0}
-  .gear{font-family:var(--body);font-size:12px;color:var(--muted);background:linear-gradient(180deg,#26313F,#1F2937);border:1px solid #384757;border-radius:8px;padding:6px 10px;cursor:pointer;white-space:nowrap;box-shadow:0 1px 2px rgba(0,0,0,.35),inset 0 1px 0 var(--hiline);transition:border-color .12s,color .12s}
+  .gear{font-family:var(--body);font-size:12px;color:var(--muted);background:linear-gradient(180deg,#212C39,#19232F);border:1px solid #31404E;border-radius:8px;padding:6px 10px;cursor:pointer;white-space:nowrap;box-shadow:0 1px 2px rgba(0,0,0,.35),inset 0 1px 0 var(--hiline);transition:border-color .12s,color .12s}
   .gear:hover{border-color:var(--accent);color:var(--accent)}
   .gear.alt{color:var(--faint)}
-  #ratesCard{overflow:hidden;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#182432,#141E2A);padding:14px}
+  #ratesCard{overflow:hidden;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#131C27,#0F1720);padding:14px}
   #ratesCard.collapsed{max-height:0;padding-top:0;padding-bottom:0;border-bottom:none}
   .set-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
   @media(max-width:680px){.set-grid{grid-template-columns:1fr;gap:14px}}
   .setlab{font-family:var(--disp);font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#AEB8C4;margin-bottom:10px}
   .setsub{font-family:var(--body);font-size:10px;font-weight:400;letter-spacing:0;text-transform:none;color:var(--faint)}
   .setnote{font-family:var(--mono);font-size:10.5px;color:var(--muted);margin-top:8px;line-height:1.5}
-  .costwrap{display:flex;align-items:center;gap:8px;max-width:220px;background:#121A24;border:1px solid #26323F;border-radius:8px;padding:0 12px 0 0;box-shadow:var(--inset)}
+  .costwrap{display:flex;align-items:center;gap:8px;max-width:220px;background:#0F1721;border:1px solid #232F3B;border-radius:8px;padding:0 12px 0 0;box-shadow:var(--inset)}
   .costwrap input{flex:1;min-width:0;font-family:var(--mono);font-size:15px;font-weight:600;color:var(--ink);background:transparent;border:none;outline:none;padding:10px 12px;text-align:right}
   .costu{font-family:var(--mono);font-size:13px;color:var(--muted)}
-  .pbar{padding:10px 13px;border-bottom:1px solid var(--line);background:#121A24}
-  .pbar input{width:100%;box-sizing:border-box;font-family:var(--body);font-size:15px;color:var(--ink);background:linear-gradient(180deg,#0B121B,#101A26);border:1px solid #2A3745;border-radius:12px;padding:12px 14px;outline:none;box-shadow:inset 0 2px 6px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.02)}
-  .pbar input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(59,130,246,.20)}
+  .pbar{padding:10px 13px;border-bottom:1px solid var(--line);background:#0F1721}
+  .pbar input{width:100%;box-sizing:border-box;font-family:var(--body);font-size:15px;color:var(--ink);background:linear-gradient(180deg,#0A0F17,#0E1620);border:1px solid #2A3745;border-radius:12px;padding:12px 14px;outline:none;box-shadow:inset 0 2px 6px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.02)}
+  .pbar input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(157,190,221,.20)}
   .tabs{display:flex;gap:4px;padding:7px 9px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none;background:rgba(13,20,28,.35)}
   .tabs::-webkit-scrollbar{display:none}
   .tabs button{flex:1 0 auto;font-family:var(--disp);font-weight:600;font-size:13px;color:var(--muted);background:transparent;border:none;border-radius:9px;padding:9px 11px;cursor:pointer;transition:background .12s,color .12s;white-space:nowrap}
   .tabs button:hover{color:#C6D1DC}
-  .tabs button.on{color:var(--ink);background:linear-gradient(180deg,#42536A 0%,#33445A 100%);box-shadow:0 2px 6px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.1)}
+  .tabs button.on{color:var(--ink);background:linear-gradient(180deg,#3B4B60 0%,#2E3D50 100%);box-shadow:0 2px 6px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.1)}
   .pane{display:none;padding:14px 13px}
   .pane.on{display:block}
   /* один блок расчёта: карточка с переключателем режима внутри */
-  .onecard{background:linear-gradient(180deg,#212D3D 0%,#192330 100%);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:var(--sh1),inset 0 1px 0 var(--hiline);max-width:860px;margin:0 auto}
+  .onecard{background:linear-gradient(180deg,#1B2634 0%,#151E2A 100%);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:var(--sh1),inset 0 1px 0 var(--hiline);max-width:860px;margin:0 auto}
   .modeSeg{margin:0 0 13px}
   .msec{display:none}
   .msec.on{display:block}
@@ -346,7 +348,7 @@
   @media(max-width:680px){.ex-grid{grid-template-columns:1fr}}
   .ex-in .ql:first-child{margin-top:0}
   .ex-out .res{margin-top:0}
-  .howto{margin-top:12px;border:1px solid #2C3947;border-radius:10px;background:#182330;padding:0 14px;box-shadow:var(--inset)}
+  .howto{margin-top:12px;border:1px solid #28343F;border-radius:10px;background:#182330;padding:0 14px;box-shadow:var(--inset)}
   .howto summary{font-family:var(--disp);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:11px 0;cursor:pointer;list-style:none;user-select:none}
   .howto summary::-webkit-details-marker{display:none}
   .howto summary::before{content:'▸ ';color:var(--faint)}
@@ -358,23 +360,23 @@
   .loghead .tog{margin-left:auto;font-size:10px;color:var(--faint);font-family:var(--body);letter-spacing:0;text-transform:none;cursor:pointer}
   .resnote{font-family:var(--mono);font-size:12px;color:var(--buy);margin-top:8px;line-height:1.4;word-break:break-word}
   .resnote:empty{display:none}
-  #spreadWarn{font-family:var(--mono);font-size:10.5px;color:#F87171;font-weight:600;white-space:nowrap;margin:0}
-  .calcbox{margin-top:14px;padding:15px 16px;border-radius:14px;background:linear-gradient(180deg,#141F2B 0%,#0D161F 100%);border:1px solid #2A3846;
-    box-shadow:inset 0 3px 8px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.04),inset 0 -1px 0 rgba(0,0,0,.3),0 1px 0 rgba(255,255,255,.03)}
+  #spreadWarn{font-family:var(--mono);font-size:10.5px;color:var(--danger);font-weight:600;white-space:nowrap;margin:0;padding:4px 10px;border-radius:8px;border-left:3px solid currentColor;background:rgba(240,115,111,.13)}
+  .calcbox{margin-top:14px;padding:15px 16px;border-radius:14px;background:linear-gradient(180deg,#101924 0%,#0A121B 100%);border:1px solid #26333F;
+    box-shadow:inset 0 3px 8px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.03),inset 0 -1px 0 rgba(0,0,0,.28)}
   .fnum{color:#EAF1F8}
   .calclab{font-family:var(--disp);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#8695A5;margin-bottom:8px}
   .calcbox .fnum{margin-top:0;font-size:16px;font-weight:600;color:#EEF4FB;letter-spacing:.01em;text-shadow:0 1px 0 rgba(0,0,0,.65),0 2px 3px rgba(0,0,0,.4),0 -1px 0 rgba(255,255,255,.05)}
-  .vres{background:linear-gradient(165deg,#34475C 0%,#283646 52%,#202C3A 100%);border:1px solid #48596C;border-radius:16px;padding:17px;margin-top:14px;box-shadow:0 2px 4px rgba(0,0,0,.4),0 16px 36px -16px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.11)}
+  .vres{background:linear-gradient(165deg,#30455B 0%,#26384A 52%,#1E2C3B 100%);border:1px solid #46596E;border-radius:16px;padding:17px;margin-top:14px;box-shadow:0 2px 4px rgba(0,0,0,.4),0 16px 36px -16px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.11)}
   .vres .vverdict{font-family:var(--disp);font-weight:700;font-size:17px;line-height:1.35;margin-bottom:4px}
   .vres .vamt{font-family:var(--disp);font-weight:800;font-size:30px;color:var(--green);margin:12px 0 14px;font-variant-numeric:tabular-nums;word-break:break-all}
-  .vres .vamt.vbad{color:#F87171}
+  .vres .vamt.vbad{color:var(--danger)}
   .vres .vamt .u{font-size:14px;color:var(--muted);margin-left:6px;font-weight:600}
   .vres .vrow{font-family:var(--mono);font-size:12px;color:var(--muted);line-height:1.55;display:flex;gap:10px;padding:3px 0;word-break:break-all}
   .vres .vrow b{color:#AEB8C4;font-weight:500;flex:0 0 92px}
   .vres .vrow span{flex:1;min-width:0;color:var(--ink)}
-  .vok{color:var(--sell)} .vwarn{color:var(--buy)} .vbad{color:#F87171}
-  .vres .vrow.vbad span,.vres .vrow.vbad b{color:#F87171}
-  .vin{width:100%;box-sizing:border-box;font-family:var(--mono);font-size:13px;color:var(--ink);background:#101821;border:1px solid #26323F;border-radius:9px;padding:10px 12px;outline:none;box-shadow:var(--inset)}
+  .vok{color:var(--sell)} .vwarn{color:var(--buy)} .vbad{color:var(--danger)}
+  .vres .vrow.vbad span,.vres .vrow.vbad b{color:var(--danger)}
+  .vin{width:100%;box-sizing:border-box;font-family:var(--mono);font-size:13px;color:var(--ink);background:#0C1219;border:1px solid #232F3B;border-radius:9px;padding:10px 12px;outline:none;box-shadow:var(--inset)}
   .vin:focus{border-color:var(--accent)}
   textarea.vin{resize:vertical;line-height:1.5;word-break:break-all}
   .calcbox .fround:empty{display:none}
@@ -401,7 +403,7 @@
   @media(hover:none){
     .seg button:hover{color:var(--muted)}
     .tabs button:hover{color:var(--muted)}
-    .badd:hover{border-color:#384757;color:var(--muted);background:linear-gradient(180deg,#26313F,#1F2937)}
+    .badd:hover{border-color:#31404E;color:var(--muted);background:linear-gradient(180deg,#212C39,#19232F)}
     .seg button.on:hover{color:var(--ink)}
     .seg.dir button.on[data-dir="sell"]:hover{color:var(--sell)}
     .seg.dir button.on[data-dir="buy"]:hover{color:var(--buy)}
@@ -414,8 +416,8 @@
   /* ===== всплывающие уведомления о поступлениях ===== */
   #toastWrap{position:fixed;top:14px;right:14px;z-index:9999;display:flex;flex-direction:column;gap:9px;
     max-width:340px;pointer-events:none}
-  .toast{pointer-events:auto;cursor:pointer;background:linear-gradient(180deg,#25445F 0%,#1C3346 100%);
-    border:1px solid #3C6488;border-radius:14px;padding:12px 14px;box-shadow:0 8px 26px rgba(0,0,0,.5);
+  .toast{pointer-events:auto;cursor:pointer;background:linear-gradient(180deg,#20394F 0%,#182B3C 100%);
+    border:1px solid #33546F;border-radius:14px;padding:12px 14px;box-shadow:0 8px 26px rgba(0,0,0,.5);
     color:var(--ink);font-family:var(--body);animation:toastIn .28s cubic-bezier(.2,.9,.3,1.2);
     transition:opacity .25s,transform .25s}
   .toast.out{opacity:0;transform:translateX(24px)}
@@ -442,15 +444,15 @@
   .seg button:focus-visible,.tabs button:focus-visible{outline-offset:-2px}
   /* ── селекты в общем стиле, со стрелкой ── */
   select.bcur{appearance:none;-webkit-appearance:none;padding-right:26px;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23A7B5C4' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%2393A2B4' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
     background-repeat:no-repeat;background-position:right 9px center}
   select.bcur:focus{outline:none;border-color:var(--accent)}
-  ::selection{background:rgba(91,155,255,.32)}
+  ::selection{background:rgba(157,190,221,.32)}
   /* ── тонкие скроллбары в тёмном стиле ── */
-  *{scrollbar-width:thin;scrollbar-color:#33424F transparent}
+  *{scrollbar-width:thin;scrollbar-color:#2B3745 transparent}
   *::-webkit-scrollbar{width:8px;height:8px}
-  *::-webkit-scrollbar-thumb{background:#33424F;border-radius:8px}
-  *::-webkit-scrollbar-thumb:hover{background:#42535F}
+  *::-webkit-scrollbar-thumb{background:#2B3745;border-radius:8px}
+  *::-webkit-scrollbar-thumb:hover{background:#38485A}
   *::-webkit-scrollbar-track{background:transparent}
   /* ── режимы 2×2 на узких экранах ── */
   @media(max-width:600px){ #modeSeg{grid-template-columns:1fr 1fr} }
@@ -483,6 +485,103 @@
   .drow .dp{white-space:nowrap;color:var(--sell)} .drow .dp.neg{color:var(--buy)}
   .drow .drm{background:none;border:none;color:var(--faint);cursor:pointer;padding:0 4px}
   .drow .drm:hover{color:var(--buy)}
+  /* ===== «Несколько валют»: понятность + аккуратный вид ===== */
+  /* сценарий сделки простыми словами — «что я сейчас делаю» */
+  .mc-scenario{display:block;margin:0 0 12px;padding:11px 14px;border-radius:12px;
+    background:linear-gradient(180deg,rgba(157,190,221,.11),rgba(157,190,221,.045));
+    border:1px solid rgba(150,182,214,.30);border-left:3px solid var(--accent);
+    font-family:var(--body);font-size:13px;line-height:1.55;color:var(--ink)}
+  .mc-scenario:empty{display:none}
+  .mc-scenario b{font-weight:700;color:#fff}
+  .mc-scenario .ex{display:block;margin-top:5px;padding-top:5px;border-top:1px solid rgba(150,182,214,.16);
+    font-size:11.5px;color:var(--muted);font-style:italic}
+  /* подпись к колонкам строк — что вписывать и что получишь */
+  .mc-colcap{font-family:var(--body);font-size:11px;color:var(--faint);margin:0 4px 8px;line-height:1.4}
+  .mc-colcap b{color:var(--muted);font-weight:600}
+  .mc-colcap:empty{display:none}
+  /* строки сделки — аккуратные карточки */
+  #mcRows{display:flex;flex-direction:column;gap:8px}
+  #mcRows .brow{margin:0;gap:9px;padding:8px 10px;border-radius:12px;
+    background:linear-gradient(180deg,#182431,#121C28);border:1px solid #26333F;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.03)}
+  #mcRows .brow:focus-within{border-color:#3C516B;box-shadow:0 0 0 2px rgba(157,190,221,.16)}
+  #mcRows .brow .bres{color:var(--sell);font-weight:600}
+  #mcRows .brow .bunit{color:var(--faint)}
+  #mcRows .brow .brm{border-radius:8px;transition:color .12s,background .12s}
+  #mcRows .brow .brm:hover{color:var(--buy);background:rgba(247,176,77,.10)}
+  .mc-addwrap{display:flex;align-items:center;gap:9px;margin-top:10px}
+  .mc-addwrap .badd{margin-top:0}
+  .mc-addhint{font-family:var(--body);font-size:11.5px;color:var(--faint)}
+  /* итог «Несколько валют» — как отдельная карточка результата */
+  #mcTotBox{margin:0 0 12px!important;padding:16px 18px!important;border:1px solid #46596E;border-radius:16px;
+    border-top:1px solid #46596E!important;background:linear-gradient(165deg,#30455B 0%,#26384A 52%,#1E2C3B 100%);
+    box-shadow:0 2px 4px rgba(0,0,0,.4),0 16px 36px -16px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.11);
+    flex-direction:column;align-items:flex-start;gap:4px}
+  #mcTotBox #mcTotLab{font-family:var(--disp);font-size:10.5px;font-weight:700;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--muted)}
+  #mcTotBox b{font-size:34px}
+  @media(max-width:520px){
+    /* строка сделки: результат уходит на отдельную строку и не обрезается */
+    #mcRows .brow{flex-wrap:wrap;row-gap:6px;align-items:center}
+    #mcRows .brow .bamt{order:1;flex:1 1 auto;min-width:110px}
+    #mcRows .brow .bunit{order:2}
+    #mcRows .brow .bcur{order:3}
+    #mcRows .brow .brm{order:4;min-width:38px;min-height:38px;font-size:22px;display:flex;align-items:center;justify-content:center}
+    #mcRows .brow .bres{order:5;flex:1 1 100%;flex-basis:100%;text-align:right;font-size:13px;padding-right:36px}
+    #mcTotBox b{font-size:28px}
+  }
+  /* ===== «Ответы клиентам»: перестановка порядка (стрелки + перетаскивание) ===== */
+  .tplrow .tph{flex-wrap:wrap}
+  .tplrow .tpmove{display:flex;flex-direction:column;gap:2px;flex:0 0 auto;margin-right:2px}
+  .tplrow .tpb.tmv{padding:1px 8px;font-size:10px;line-height:1.15;min-height:0;min-width:0;color:var(--faint)}
+  .tplrow .tpb.tmv:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+  .tplrow .tpb.tmv:disabled{opacity:.28;cursor:default}
+  .tplrow .tpgrip{flex:0 0 auto;color:var(--faint);font-size:15px;line-height:1;cursor:grab;
+    padding:2px 4px;user-select:none;letter-spacing:-2px}
+  .tplrow .tpgrip:active{cursor:grabbing}
+  .tplrow.tpl-drag{opacity:.45}
+  .tplrow.tpl-over{border-color:var(--accent);box-shadow:0 0 0 2px rgba(157,190,221,.35)}
+  .tplhint-move{font-family:var(--body);font-size:11px;color:var(--faint);margin:0 2px 8px;line-height:1.4}
+  @media(hover:none){ .tplrow .tpgrip{display:none} }  /* на телефоне тянуть неудобно — только стрелки */
+  /* ===== верхний блок: единая панель Розрахунки/Каса/Реквізити + чистые чипы ===== */
+  .utilbar{display:flex;gap:8px;margin-top:11px}
+  .utilbar .ub{flex:1 1 0;display:flex;align-items:center;justify-content:center;gap:7px;min-width:0;
+    font-family:var(--body);font-size:12.5px;color:var(--muted);
+    background:rgba(255,255,255,.02);border:1px solid var(--line);border-radius:10px;
+    padding:9px 12px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    transition:color .13s,border-color .13s,background .13s}
+  .utilbar .ub:hover{color:var(--ink);border-color:var(--muted);background:rgba(255,255,255,.045)}
+  .utilbar .ub.on{color:var(--ink);border-color:var(--accent);background:var(--accent2);
+    box-shadow:inset 0 0 0 1px rgba(157,190,221,.22),0 4px 12px -6px rgba(157,190,221,.4)}
+  .utilbar .ubc{font-size:11px;color:var(--faint);font-variant-numeric:tabular-nums;overflow:hidden;text-overflow:ellipsis}
+  .utilbar .ub.on .ubc{color:var(--accent)}
+  .utilpanel{margin-top:9px;padding:13px 14px;border:1px solid var(--line);border-radius:13px;
+    background:linear-gradient(180deg,rgba(13,20,28,.55),rgba(13,20,28,.30));
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.03)}
+  .utilpanel[hidden]{display:none}
+  .utilpanel .up[hidden]{display:none}
+  .utilpanel .daybtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  #dayCopy,#daySend,#dayClear{font-family:var(--body);font-size:11.5px;color:var(--muted);
+    background:linear-gradient(180deg,#212C39,#19232F);border:1px solid #31404E;border-radius:8px;
+    padding:7px 11px;cursor:pointer;transition:border-color .12s,color .12s}
+  #dayCopy:hover,#daySend:hover{border-color:var(--accent);color:var(--accent)}
+  #dayClear:hover{border-color:var(--buy);color:var(--buy)}
+  #utilPanel #histClear{margin-top:9px}
+  #utilPanel #reqIn{margin-top:0}
+  /* чипы — ровные аккуратные «таблетки» одного размера */
+  .chips{gap:7px}
+  .chips button{font-size:11.5px;padding:6px 13px;border-radius:999px;letter-spacing:.005em;
+    background:rgba(150,182,214,.07);border:1px solid rgba(150,182,214,.22)}
+  .chips button:hover{background:rgba(150,182,214,.13);border-color:rgba(150,182,214,.5)}
+  @media(max-width:520px){
+    .utilbar{gap:6px}
+    .utilbar .ub{font-size:11.5px;padding:9px 8px;min-height:42px}
+  }
+  @media(max-width:400px){
+    /* очень узкие экраны: панель утилит в 2 ряда, чтобы подписи не жались */
+    .utilbar{flex-wrap:wrap}
+    .utilbar .ub{flex:1 1 42%}
+  }
 </style>
 </head>
 <body>
@@ -629,25 +728,29 @@
     <div id="issueRow" style="display:none">
       <button class="badd" id="issueBtn" type="button" title="сохранить фразу, разбор и ответ в журнал — разобрать позже">⚑ В непонятки — разобрать позже</button>
     </div>
-    <details class="hist" id="histBox">
-      <summary>Последние расчёты <span id="histCnt"></span></summary>
-      <div id="histList"></div>
-      <button id="histClear" type="button">очистить историю</button>
-    </details>
-    <details class="hist" id="dayBox">
-      <summary>Касса за день <span id="dayCnt"></span></summary>
-      <div id="dayList"></div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
-        <button id="dayCopy" type="button">⧉ отчёт дня</button>
-        <button id="daySend" type="button">☁ отчёт в таблицу</button>
-        <button id="dayClear" type="button">очистить сегодня</button>
+    <div class="utilbar" id="utilBar">
+      <button type="button" class="ub" data-util="hist">Розрахунки <span class="ubc" id="histCnt"></span></button>
+      <button type="button" class="ub" data-util="day">Каса <span class="ubc" id="dayCnt"></span></button>
+      <button type="button" class="ub" data-util="req">Реквізити</button>
+    </div>
+    <div class="utilpanel" id="utilPanel" hidden>
+      <div class="up" data-up="hist" hidden>
+        <div id="histList"></div>
+        <button id="histClear" type="button">очистить историю</button>
       </div>
-    </details>
-    <details class="hist" id="reqBox">
-      <summary>Проверка реквизитов клиента</summary>
-      <input id="reqIn" class="vin" spellcheck="false" placeholder="вставь номер карты / TRON-адрес (T…) / ETH-адрес (0x…)" style="margin-top:8px">
-      <div class="phrase-info" id="reqOut"></div>
-    </details>
+      <div class="up" data-up="day" hidden>
+        <div id="dayList"></div>
+        <div class="daybtns">
+          <button id="dayCopy" type="button">⧉ отчёт дня</button>
+          <button id="daySend" type="button">☁ отчёт в таблицу</button>
+          <button id="dayClear" type="button">очистить сегодня</button>
+        </div>
+      </div>
+      <div class="up" data-up="req" hidden>
+        <input id="reqIn" class="vin" spellcheck="false" placeholder="вставь номер карты / TRON-адрес (T…) / ETH-адрес (0x…)">
+        <div class="phrase-info" id="reqOut"></div>
+      </div>
+    </div>
   </div>
 
   <div class="tabs">
@@ -743,9 +846,10 @@
           <div class="ql" style="margin-top:0">Всего USDT у клиента</div>
           <div class="brow"><input class="bamt" id="mcTotal" type="text" inputmode="decimal" value="5000"><span class="bunit">USDT</span></div>
         </div>
-        <div class="hint" id="mcHint" style="margin:0 0 10px"></div>
+        <div class="mc-scenario" id="mcHint"></div>
+        <div class="mc-colcap" id="mcColCap"></div>
         <div id="mcRows"></div>
-        <button class="badd" id="mcAdd" type="button">+ добавить</button>
+        <div class="mc-addwrap"><button class="badd" id="mcAdd" type="button">+ добавить</button><span class="mc-addhint">ещё одна валюта в этой сделке</span></div>
       </div>
       <div class="ex-out">
         <div id="mcRestWrap" style="display:none;margin-top:0;margin-bottom:14px">
@@ -923,7 +1027,7 @@
         <button class="badd" id="vWatchBtn" type="button" style="flex:0 0 auto;margin:0">Ждать</button>
         <button class="badd" id="vTestBtn" type="button" style="flex:0 0 auto;margin:0" title="проверить звук и всплывающее уведомление">🔔 Тест</button>
       </div>
-      <div class="hint" style="margin-top:8px">Наблюдение включается само (кошелёк из настроек) и проверяет поступления раз в минуту: звук + плашка. «Стоп» — пауза. «🔔 Тест» — проверить звук и уведомление. Зелёная пометка новой транзакции держится, пока не откроешь её ↗ Scan или не скопируешь хеш/адрес.</div>
+      <div class="hint" style="margin-top:8px">Впиши кошелёк (или возьму из настроек) — он <b>запоминается</b>, и наблюдение <b>продолжается после перезагрузки</b> страницы само. Проверяет поступления раз в минуту: звук + плашка. «Стоп» — пауза (после неё сам не включится, пока не нажмёшь «Ждать»). «🔔 Тест» — проверить звук и уведомление. Зелёная пометка новой транзакции держится, пока не откроешь её ↗ Scan или не скопируешь хеш/адрес.</div>
       <details class="vfilters">
         <summary>Фильтры и поиск</summary>
         <div class="frow">
@@ -1752,7 +1856,7 @@
   function histRender(){
     const list=$('histList'), cnt=$('histCnt'); if(!list) return;
     const h=histGet();
-    cnt.textContent=h.length?('· '+h.length):'';
+    cnt.textContent=h.length?(''+h.length):'';
     list.innerHTML=h.map((x,i)=>{
       const d=new Date(x.t); const hh=String(d.getHours()).padStart(2,'0'), mm=String(d.getMinutes()).padStart(2,'0');
       return '<div class="hrow" data-i="'+i+'">'+
@@ -1773,15 +1877,39 @@
     const hc=$('histClear'); if(hc) hc.addEventListener('click',()=>{ try{localStorage.removeItem(HISTK);}catch(e){} histRender(); });
     histRender();
   })();
-  // ── чипы-примеры: клик подставляет и разбирает ──
+  // ── чипы-примеры: короткая подпись + рабочая фраза в data-q; клик подставляет и разбирает ──
   (function(){
     const box=$('pChips'); if(!box) return;
-    const EX=['1000 usdt в грн','25000 грн на карту','2000 usdt на карту','5000 usdt: 2000$, решта грн','2000$ і 1500€ в usdt',
-              'є 1500+200 юсдт, нужно 100€, решта грн','поміняти 500$ на грн','хочу 300 usdt, скільки грн','нужно 12500 грн, скільки usdt','продам 1000 usdt навпіл: грн і $'];
-    box.innerHTML=EX.map(x=>'<button type="button">'+esc(x)+'</button>').join('');
+    // по одному на каждое направление запроса — кратко
+    const EX=[
+      ['USDT → грн',    '1000 usdt в грн'],
+      ['грн → USDT',    '12500 грн в usdt'],
+      ['На карту',      '25000 грн на карту'],
+      ['Кілька валют',  '2000$ і 1500€ в usdt'],
+      ['Залишок',       '5000 usdt: 2000$, решта грн'],
+      ['Готівка',       'поміняти 500$ на грн'],
+    ];
+    box.innerHTML=EX.map(([lbl,q])=>'<button type="button" data-q="'+esc(q)+'">'+esc(lbl)+'</button>').join('');
     box.addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return;
-      $('phrase').value=b.textContent; runPhrase(true); try{$('phrase').focus();}catch(_){}
+      $('phrase').value=b.dataset.q||b.textContent; runPhrase(true); try{$('phrase').focus();}catch(_){}
     });
+  })();
+  // ── единая панель: Розрахунки / Каса / Реквізити (аккордеон) ──
+  (function(){
+    const bar=$('utilBar'), panel=$('utilPanel'); if(!bar||!panel) return;
+    function show(key){
+      let opened=false;
+      bar.querySelectorAll('.ub').forEach(b=>{ const on=b.dataset.util===key; b.classList.toggle('on',on); if(on) opened=true; });
+      panel.querySelectorAll('.up').forEach(u=>{ u.hidden = (u.dataset.up!==key); });
+      panel.hidden = !opened;
+      if(opened && key==='req'){ try{ $('reqIn').focus(); }catch(_){} }
+    }
+    function close(){ bar.querySelectorAll('.ub').forEach(b=>b.classList.remove('on')); panel.hidden=true;
+      panel.querySelectorAll('.up').forEach(u=>u.hidden=true); }
+    bar.addEventListener('click',e=>{ const b=e.target.closest('.ub'); if(!b) return;
+      if(b.classList.contains('on')) close(); else show(b.dataset.util);
+    });
+    window.__openUtil=show;   // чтобы касса раскрылась после «+ касса»
   })();
   // ── горячие клавиши и крестик ──
   (function(){
@@ -2095,20 +2223,39 @@
     $('mcTotalWrap').style.display = rest?'':'none';
     $('mcRestWrap').style.display = rest?'':'none';
     $('mcTotBox').style.display = rest?'none':'';
+    // сценарий сделки простыми словами + пример + подпись колонок под режим
+    let scen, ex, cap;
     if(rest){
-      $('mcHint').textContent = mc.dir==='recv'
-        ? 'клиент покупает фикс. сумму USDT — задай, чем платит; остаток доплатит в выбранной валюте'
-        : 'у клиента фикс. сумма USDT — задай суммы наличных к выдаче; остаток уйдёт в выбранную валюту';
+      if(mc.dir==='recv'){
+        scen='Клиент <b>покупает</b> фикс. сумму USDT. Задай, чем он платит наличными — <b>остаток</b> доплатит в выбранной валюте.';
+        ex='напр.: берёт 5000 USDT, вносит $2000, остальное — гривной';
+      } else {
+        scen='У клиента фикс. сумма USDT, <b>выдаём частями</b>. Задай суммы наличных к выдаче — <b>остаток</b> уйдёт в выбранную валюту.';
+        ex='напр.: у клиента 5000 USDT, выдали $2000, остальное — гривной';
+      }
+      cap='В строках — <b>суммы наличных</b> (не USDT). Ниже впиши общий USDT.';
       $('mcRestCur').value=mc.restCur;
+    } else if(mc.kmode==='money'){
+      if(mc.dir==='recv'){
+        scen='Клиент <b>приносит наличные</b> в разных валютах и покупает USDT. Считаем <b>общий USDT</b>.';
+        ex='напр.: принёс $1000 + €500 + 5000 грн → сколько это USDT';
+      } else {
+        scen='Клиент <b>забирает наличными</b> в разных валютах. Считаем, сколько <b>USDT</b> он вносит.';
+        ex='напр.: хочет получить $1000 + €500 → сколько USDT завести';
+      }
+      cap='Впиши <b>сумму</b>, выбери <b>валюту</b> → справа результат в <b>USDT</b>.';
     } else {
-      $('mcHint').textContent = mc.kmode==='money'
-        ? (mc.dir==='recv'
-            ? 'клиент приносит наличные в разных валютах и покупает USDT — посчитаем общий USDT'
-            : 'клиент забирает наличными в разных валютах — посчитаем, сколько USDT он вносит')
-        : (mc.dir==='recv'
-            ? 'известно, сколько USDT берёт клиент по каждой валюте — посчитаем, сколько наличных он вносит'
-            : 'у клиента USDT — раскидай по валютам, посчитаем, сколько наличных он получит');
+      if(mc.dir==='recv'){
+        scen='Известно, сколько <b>USDT</b> берёт клиент по каждой валюте. Считаем, сколько <b>наличных</b> он вносит.';
+        ex='напр.: 1000 USDT долларом + 500 USDT гривной';
+      } else {
+        scen='У клиента <b>USDT</b> — раскидываем по валютам. Считаем, сколько <b>наличных</b> он получит.';
+        ex='напр.: 3000 USDT: часть долларом, часть евро';
+      }
+      cap='Впиши <b>кол-во USDT</b>, выбери <b>валюту</b> → справа сумма <b>наличными</b>.';
     }
+    $('mcHint').innerHTML = scen + '<span class="ex">'+ex+'</span>';
+    $('mcColCap').innerHTML = cap;
     const showUnit = (mc.kmode==='crypto');
     $('mcRows').innerHTML=mc.rows.map((r,i)=>{
       if(mc.kmode!=='money' && r.c.indexOf('>')>=0){ r.c=r.c.split('>')[1]; }
@@ -2667,6 +2814,23 @@
   const isTronAddr2=a=>/^T[1-9A-HJ-NP-Za-km-z]{25,40}$/.test(String(a||'').trim());
   // --- состояние блока поступлений ---
   const RS={addr:'',dir:'in',items:[],src:'',page:0,watching:false,timer:null,hashSet:new Set(),flash:new Set(),unack:new Set(),seeded:false,lastNewAt:0,errStreak:0,lastPollAt:0};
+  // --- запоминаем отслеживаемый кошелёк: адрес, направление и включено ли наблюдение ---
+  // чтобы после перезагрузки страницы кошелёк не пропадал и слежка продолжалась сама.
+  const WATCHK='usdtWatchWallet';
+  function watchLoad(){ try{ const o=JSON.parse(localStorage.getItem(WATCHK)||'null'); return (o&&typeof o==='object')?o:null; }catch(e){ return null; } }
+  // paused=true только когда оператор сам нажал «Стоп». Просто вписанный кошелёк → paused=false (следим сами).
+  function watchSave(pausedState){
+    try{
+      const addr=$('vAddr')?$('vAddr').value.trim():'';
+      const prev=watchLoad();
+      let paused;
+      if(pausedState!==undefined) paused=!!pausedState;
+      else if(prev && prev.addr===addr) paused=!!prev.paused;   // тот же кошелёк — сохраняем статус паузы
+      else paused=false;                                        // новый/впервые вписанный — по умолчанию следим
+      localStorage.setItem(WATCHK, JSON.stringify({addr, dir:RS.dir, paused}));
+    }catch(e){}
+  }
+  function syncDirUI(){ try{ [...$('vDir').children].forEach(x=>x.classList.toggle('on',(x.dataset.dir||'in')===RS.dir)); }catch(e){} }
   const SEENK='usdtRecentSeen';
   function seenGet(a){ try{ return (JSON.parse(localStorage.getItem(SEENK)||'{}')[a])||0; }catch(e){ return 0; } }
   function seenSet(a,ts){ try{ const o=JSON.parse(localStorage.getItem(SEENK)||'{}'); o[a]=ts; localStorage.setItem(SEENK,JSON.stringify(o)); }catch(e){} }
@@ -2912,6 +3076,7 @@
     if(!isTronAddr2(addr)){ box.innerHTML='<div class="lempty">впиши TRON-кошелёк (начинается с T) или добавь его в «Мои кошельки-получатели» в настройках</div>'; $('vRecentSum').style.display='none'; $('vMoreBtn').style.display='none'; return; }
     box.innerHTML='<div class="lempty">'+(RS.dir==='out'?'запрашиваю отправленные…':'запрашиваю последние поступления…')+'</div>';
     if(RS.addr!==addr){ RS.addr=addr; RS.seeded=false; }
+    watchSave();   // запомнить кошелёк, чтобы не пропадал после перезагрузки
     RS.items=[]; RS.hashSet=new Set(); RS.flash=new Set(); RS.page=0;
     RS.unack=unackLoad(addr);
     let full=[];
@@ -2945,6 +3110,7 @@
     if(RS.timer){ clearInterval(RS.timer); RS.timer=null; }
     titleStop();
     RS.watching=false; $('vWatchBtn').textContent='Ждать';
+    watchSave(true);
     const el=$('vWatchInfo');
     if(msg){ el.style.display=''; el.textContent=msg; } else if(el) el.style.display='none';
   }
@@ -2972,6 +3138,7 @@
     if(RS.watching) return;
     RS.watching=true; RS.lastNewAt=Date.now(); RS.errStreak=0;
     $('vWatchBtn').textContent='Стоп';
+    watchSave(false);
     updateWatchInfo();
     RS.timer=setInterval(pollOnce, pollMs());
   }
@@ -2989,8 +3156,17 @@
   function autoWatch(){
     try{
       if(RS.watching) return;
+      // 1) восстановить сохранённый кошелёк в поле — чтобы после перезагрузки он НЕ пропадал
+      const wv=watchLoad();
+      if(wv){
+        if(isTronAddr2(wv.addr) && !$('vAddr').value.trim()) $('vAddr').value=wv.addr;
+        if((wv.dir==='out'||wv.dir==='in') && wv.dir!==RS.dir){ RS.dir=wv.dir; syncDirUI(); }
+      }
       const addr=pickAddr(); if(!isTronAddr2(addr)) return;
       RS.addr=addr; RS.seeded=false; RS.unack=unackLoad(addr);
+      // 2) если оператор ранее сам нажал «Стоп» именно для этого кошелька — не будим слежку,
+      //    но поле уже заполнено; достаточно нажать «Ждать». Иначе — продолжаем следить.
+      if(wv && wv.addr===addr && wv.paused===true){ updateWatchInfo(); return; }
       startWatch();
       pollOnce();   // не ждать первую минуту — засеять сразу
     }catch(e){}
@@ -3012,10 +3188,13 @@
   $('vDir').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return;
     const nd=b.dataset.dir==='out'?'out':'in'; if(nd===RS.dir) return;
     RS.dir=nd; [...$('vDir').children].forEach(x=>x.classList.toggle('on',x===b));
+    watchSave();
     if(isTronAddr2(RS.addr)||isTronAddr2($('vAddr').value.trim())) showRecent();
   });
   $('vMoreBtn').addEventListener('click',moreRecent);
   $('vAddr').addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); showRecent(); }});
+  // запоминаем кошелёк, как только оператор ввёл его и увёл фокус (даже без «Показать»/«Ждать»)
+  $('vAddr').addEventListener('change',()=>{ watchSave(); });
   $('vAddrPick').addEventListener('change',e=>{ $('vAddr').value=e.target.value; showRecent(); });
   $('vWaitAmt').addEventListener('input',()=>{ if(RS.items.length) renderRecent(); });
   $('vOnlyNew').addEventListener('change',()=>{ if(RS.items.length) renderRecent(); });
@@ -3120,11 +3299,15 @@
     const list=$('tplList'); if(!list) return;
     const q=(($('tplSearch')||{}).value||'').trim().toLowerCase();
     const a=tplGet();
+    // порядок можно менять только без активного поиска и не в режиме редактирования
+    const canOrder = !q && tplEdit===null;
     // переключатель языка
     const langSeg='<div class="seg two tplLangSeg" id="tplLangSeg" style="margin-bottom:12px">'+
       '<button type="button" data-l="ua" class="'+(tplLang==='ua'?'on':'')+'">🇺🇦 Клієнту (укр)</button>'+
       '<button type="button" data-l="ru" class="'+(tplLang==='ru'?'on':'')+'">🇷🇺 Клиенту (рус)</button></div>';
     let html=langSeg;
+    if(canOrder && a.length>1)
+      html+='<div class="tplhint-move">↕ Порядок під себе: стрілки ▲▼ або перетягни рядок. Часті шаблони — вгору.</div>';
     if(tplEdit==='new')
       html+='<div class="tplrow" data-edit="new"><input class="tpe-t" placeholder="Назва шаблону" value="">'+
             '<textarea class="tpe-x tpe-ua" placeholder="Текст українською (для клієнта)"></textarea>'+
@@ -3140,7 +3323,15 @@
               '<div class="tph" style="margin:8px 0 0"><button class="tpb tsave" type="button">Зберегти</button>'+
               '<button class="tpb tcancel" type="button">Скасувати</button></div></div>';
       } else {
-        html+='<div class="tplrow" data-i="'+i+'"><div class="tph"><span class="tpt">'+esc(it.t)+'</span>'+
+        const mv = canOrder
+          ? '<div class="tpmove">'+
+              '<button class="tpb tmv tup" type="button" title="перемістити вище"'+(i===0?' disabled':'')+'>▲</button>'+
+              '<button class="tpb tmv tdn" type="button" title="перемістити нижче"'+(i===a.length-1?' disabled':'')+'>▼</button>'+
+            '</div>'+
+            '<span class="tpgrip" title="перетягни, щоб переставити">⠿</span>'
+          : '';
+        html+='<div class="tplrow" data-i="'+i+'"'+(canOrder?' draggable="true"':'')+'><div class="tph">'+mv+
+              '<span class="tpt">'+esc(it.t)+'</span>'+
               '<button class="tpb tcopy" type="button">⧉ Скопіювати</button>'+
               '<button class="tpb tedit" type="button" title="редагувати">✎</button>'+
               '<button class="tpb tdel" type="button" title="видалити">✕</button></div>'+
@@ -3177,6 +3368,11 @@
       }
       if(btn.classList.contains('tcancel')){ tplEdit=null; tplRender(); return; }
       const i=+row.dataset.i; const a=tplGet(); const it=a[i]; if(!it) return;
+      if(btn.classList.contains('tup')||btn.classList.contains('tdn')){
+        const j = btn.classList.contains('tup') ? i-1 : i+1;
+        if(j>=0 && j<a.length){ const tmp=a[i]; a[i]=a[j]; a[j]=tmp; tplSave(a); tplRender(); }
+        return;
+      }
       if(btn.classList.contains('tcopy')){
         let txt=tplText(it);
         try{ // {що віддаєте} → {що отримуєте} заполняем последней скопированной сделкой
@@ -3200,6 +3396,32 @@
         return;
       }
     });
+    // перетаскивание строк для смены порядка (десктоп)
+    let dragI=null;
+    list.addEventListener('dragstart',e=>{
+      const row=e.target.closest('.tplrow');
+      if(!row || row.getAttribute('draggable')!=='true'){ return; }
+      dragI=+row.dataset.i; row.classList.add('tpl-drag');
+      try{ e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain',String(dragI)); }catch(_){}
+    });
+    list.addEventListener('dragover',e=>{
+      if(dragI===null) return;
+      const row=e.target.closest('.tplrow'); if(!row) return;
+      e.preventDefault();
+      list.querySelectorAll('.tpl-over').forEach(x=>x.classList.remove('tpl-over'));
+      if(+row.dataset.i!==dragI) row.classList.add('tpl-over');
+    });
+    list.addEventListener('drop',e=>{
+      if(dragI===null) return;
+      const row=e.target.closest('.tplrow'); if(!row){ dragI=null; return; }
+      e.preventDefault();
+      const to=+row.dataset.i, from=dragI; dragI=null;
+      if(isNaN(to) || to===from){ tplRender(); return; }
+      const a=tplGet(); if(from<0||from>=a.length){ tplRender(); return; }
+      const [moved]=a.splice(from,1); a.splice(to,0,moved); tplSave(a); tplRender();
+    });
+    list.addEventListener('dragend',()=>{ dragI=null;
+      list.querySelectorAll('.tpl-drag,.tpl-over').forEach(x=>x.classList.remove('tpl-drag','tpl-over')); });
   })();
   loadCfg();
   autoWatch();
@@ -3401,7 +3623,7 @@
     const list=$('dayList'); if(!list) return;
     const a=todayItems();
     let sum=0,has=false; a.forEach(x=>{if(x.p!=null){sum+=x.p;has=true;}});
-    $('dayCnt').textContent=a.length?('· '+a.length+' сдел.'+(has?(' · выгода '+(sum>=0?'+':'−')+Math.abs(Math.round(sum*100)/100).toLocaleString('ru-RU')+' грн'):'')):'';
+    $('dayCnt').textContent=a.length?(a.length+(has?(' · '+(sum>=0?'+':'−')+Math.abs(Math.round(sum*100)/100).toLocaleString('ru-RU')+' грн'):'')):'';
     list.innerHTML=a.length? a.map(x=>'<div class="drow" data-id="'+x.id+'">'+
         '<span class="dt">'+tstr(x.t)+'</span>'+
         '<span class="dtx">'+esc(x.txt)+' <span style="color:var(--faint)">['+x.lb+']</span></span>'+
@@ -3417,7 +3639,7 @@
     const o=b.textContent;
     if(!sn){ b.textContent='нет расчёта'; setTimeout(()=>b.textContent=o,1200); return; }
     const a=dget(); a.push({id:Date.now()+''+Math.floor(Math.random()*1e4), t:Date.now(), d:today(), txt:sn.txt, p:sn.p, lb:sn.lb});
-    dsave(a); renderDay(); try{$('dayBox').open=true;}catch(e){}
+    dsave(a); renderDay(); try{ if(window.__openUtil) window.__openUtil('day'); }catch(e){}
     b.textContent='✓ учтено'; setTimeout(()=>b.textContent=o,1200);
   }));
   function dayReport(){
