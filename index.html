@@ -66,6 +66,8 @@
   .seg.two{grid-template-columns:1fr 1fr}
   .seg.three{grid-template-columns:1fr 1fr 1fr}
   .seg.four{grid-template-columns:1fr 1fr 1fr 1fr}
+  .seg.five{grid-template-columns:repeat(5,1fr)}
+  .seg.five button{font-size:12.5px;padding-left:5px;padding-right:5px;white-space:nowrap}
   .seg button{font-family:var(--disp);font-weight:600;font-size:14px;color:var(--muted);
     background:transparent;border:none;border-radius:9px;padding:10px 6px;cursor:pointer;transition:background .12s,color .12s,box-shadow .12s}
   .seg button:hover{color:#C6D1DC}
@@ -102,7 +104,11 @@
   @media(max-width:520px){ .understood .ufb{min-height:36px;padding:7px 12px} }
   /* ── швидкі відповіді клієнту ── */
   .qbar{margin-top:11px}
-  .qbar .qbl{font-family:var(--body);font-size:11px;color:var(--faint);margin-bottom:6px;letter-spacing:.01em}
+  .qbar .qbl{font-family:var(--body);font-size:11px;color:var(--faint);margin-bottom:6px;letter-spacing:.01em;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;row-gap:6px}
+  .qbar .qlang{display:inline-flex;gap:3px;background:#131D28;border:1px solid #28343F;border-radius:8px;padding:2px;flex:0 0 auto}
+  .qbar .qlang button{font-family:var(--body);font-size:10.5px;color:var(--muted);background:transparent;border:none;border-radius:6px;padding:3px 9px;cursor:pointer;transition:color .12s,background .12s}
+  .qbar .qlang button.on{background:var(--accent2);color:var(--ink)}
+  .qbar .qlang button:hover:not(.on){color:var(--ink)}
   .qbar-row{display:flex;flex-wrap:wrap;gap:7px}
   .qrb{font-family:var(--body);font-size:12px;color:#CBD8E6;background:linear-gradient(180deg,#212C39,#19232F);
     border:1px solid #31404E;border-radius:999px;padding:7px 13px;cursor:pointer;white-space:nowrap;
@@ -120,8 +126,17 @@
     background:#0C1219;border:1px solid #232F3B;border-radius:9px;padding:8px 10px;resize:vertical}
   .qedit .qet:focus{outline:none;border-color:var(--accent)}
   .qedit .qehint{font-family:var(--body);font-size:11px;color:var(--faint);margin-top:8px;line-height:1.4}
+  .qedit .prrow{display:flex;align-items:center;gap:6px;margin-top:7px}
+  .qedit .prrow .qet{margin:0;min-width:0}
+  .qedit .prrow .pr-d{font-family:var(--body);font-size:12px;color:var(--ink);background:#0C1219;border:1px solid #232F3B;border-radius:8px;padding:7px 6px}
+  .qedit .prrow .prdel{flex:0 0 auto;width:30px;height:30px;border-radius:8px;border:1px solid #3A2A2E;background:rgba(240,115,111,.10);color:var(--danger);font-size:16px;cursor:pointer;line-height:1}
+  .qedit .prrow .prdel:hover{background:rgba(240,115,111,.2)}
+  .fullmsg-row{display:flex;align-items:center;flex-wrap:wrap;gap:8px 10px;margin-top:8px}
+  .fullmsg-chk{display:inline-flex;align-items:center;gap:6px;font-family:var(--body);font-size:12px;color:var(--muted);cursor:pointer;white-space:nowrap;flex:0 0 auto}
+  .fullmsg-chk input{accent-color:var(--accent);cursor:pointer}
   @media(max-width:520px){
     .qbar-row{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-left:-8px;margin-right:-8px;padding:2px 8px}
+    #cuPresets .qbar-row{margin-left:0;margin-right:0;padding-left:0;padding-right:0}
     .qbar-row::-webkit-scrollbar{display:none}
     .qrb{flex:0 0 auto;min-height:38px}
   }
@@ -135,6 +150,8 @@
   #reverseBtn{font-family:var(--body);font-size:12px;color:#CBD8E6;background:linear-gradient(180deg,#212C39,#19232F);border:1px solid #31404E;border-radius:999px;padding:6px 13px;cursor:pointer;white-space:nowrap;transition:color .13s,border-color .13s,background .13s;flex:0 0 auto}
   #reverseBtn:hover{color:var(--ink);border-color:var(--accent);background:var(--accent2)}
   #reverseBtn:active{transform:scale(.98)}
+  #reverseBtn.hint{border-color:var(--accent);color:var(--ink);box-shadow:0 0 0 1px var(--accent),0 0 12px rgba(157,190,221,.25);animation:revpulse 1.6s ease-in-out infinite}
+  @keyframes revpulse{0%,100%{box-shadow:0 0 0 1px var(--accent),0 0 6px rgba(157,190,221,.18)}50%{box-shadow:0 0 0 1px var(--accent),0 0 14px rgba(157,190,221,.42)}}
   .pkeys b{color:var(--muted);font-weight:600}
   .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
   .chips button{font-family:var(--body);font-size:11px;color:var(--muted);background:rgba(150,182,214,.08);
@@ -255,7 +272,7 @@
     animation:copySheen 4.5s ease-in-out infinite;
     transition:filter .15s, transform .1s, box-shadow .15s}
   @keyframes copySheen{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-  @media(prefers-reduced-motion:reduce){.copy{animation:none}}
+  @media(prefers-reduced-motion:reduce){.copy{animation:none}#reverseBtn.hint{animation:none}}
   .copy:hover{filter:brightness(1.06);transform:translateY(-1px);box-shadow:0 9px 22px -7px rgba(94,147,200,.62),inset 0 1px 0 rgba(255,255,255,.22)}
   .copy:active{transform:translateY(0) scale(.99)}
   .copy.done{background:var(--sell2);color:var(--sell);animation:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
@@ -642,7 +659,7 @@
 
   <div class="rates collapsed" id="ratesCard">
     <div class="setlab">Вставить курсы текстом <span class="setsub">— скопируй сообщение с курсами, поля заполнятся сами</span></div>
-    <textarea id="ratePaste" class="vin" rows="2" spellcheck="false" placeholder="USDT Купівля: +0.7% · Продаж: -1.4% · USD/UAH: 44,55 / 44,85 · EUR/UAH: 51,10 / 51,40 · EUR/USD: 1,142 / 1,153 · Закупка 44,3 · Карта 43,5"></textarea>
+    <textarea id="ratePaste" class="vin" rows="2" spellcheck="false" placeholder="USDT Покупка: +0.7% · Продажа: -1.4% · USD/UAH: 44,55 / 44,85 · EUR/UAH: 51,10 / 51,40 · EUR/USD: 1,142 / 1,153 · Закупка 44,3 · Карта 43,5"></textarea>
     <div class="phrase-info" id="ratePasteInfo"></div>
     <div class="rsep"></div>
     <div class="set-grid">
@@ -664,9 +681,9 @@
         <div class="rsep"></div>
         <div class="cgrid">
           <span></span>
-          <span class="ch"><b class="s">Купівля</b> <em>клиент продаёт</em></span>
-          <span class="ch"><b class="b">Продаж</b> <em>клиент покупает</em></span>
-          <span class="rn cml">Коміс.%</span>
+          <span class="ch"><b class="s">Покупка</b> <em>клиент продаёт</em></span>
+          <span class="ch"><b class="b">Продажа</b> <em>клиент покупает</em></span>
+          <span class="rn cml">Комис.%</span>
           <div class="cinp"><button class="pm" data-for="cB" type="button">±</button>
             <input id="cB" type="text" inputmode="decimal" value="0.7"></div>
           <div class="cinp"><button class="pm" data-for="cS" type="button">±</button>
@@ -689,13 +706,6 @@
         </div>
         <div class="hint" style="margin-top:8px">используется в блоке «На карту»: USDT = сума грн ÷ этот курс. Без комиссии.</div>
         <div class="rsep"></div>
-        <div class="setlab">Курс дійсний, хв <span class="setsub">— строка в ответе клиенту; 0 или пусто = выкл</span></div>
-        <div class="costwrap">
-          <input id="fixMin" type="text" inputmode="numeric" value="">
-          <span class="costu">хв</span>
-        </div>
-        <div class="hint" style="margin-top:8px">если задано — к каждому ответу клиенту добавится «Курс дійсний до HH:MM (N хв)».</div>
-        <div class="rsep"></div>
         <div class="setlab">Округление результата</div>
         <div class="seg two mseg" id="rSeg">
           <button data-round="fav" class="on">в пользу</button>
@@ -707,13 +717,13 @@
           <button data-step="ten">до 10</button>
         </div>
         <div class="rsep"></div>
-        <div class="setlab">Округлення для клієнта <span class="setsub">— підсумок у копії, у нашу користь</span></div>
+        <div class="setlab">Округление для клиента <span class="setsub">— итог в копии, в нашу пользу</span></div>
         <div class="seg three mseg" id="custSeg">
-          <button data-cust="whole" class="on">Ціле</button>
-          <button data-cust="cent">До копійки</button>
+          <button data-cust="whole" class="on">Целое</button>
+          <button data-cust="cent">До копейки</button>
           <button data-cust="off">Як у розрахунку</button>
         </div>
-        <div class="hint" style="margin-top:8px">итог в копии клиенту: «Ціле» — округляем в свою пользу (клиент отдаёт вверх, получает вниз). Ты у себя везде видишь точное с копейками.</div>
+        <div class="hint" style="margin-top:8px">итог в копии клиенту: «Целое» — округляем в свою пользу (клиент отдаёт вверх, получает вниз). Ты у себя везде видишь точное с копейками.</div>
         <div class="rsep"></div>
         <div class="setlab">Удержание комиссии</div>
         <div class="seg two mseg" id="mSeg">
@@ -725,11 +735,6 @@
         <div class="seg two mseg" id="cpSeg">
           <button data-cr="on" class="on">с просчётом</button>
           <button data-cr="off">без</button>
-        </div>
-        <div class="setlab" style="margin-top:12px">Мова відповіді клієнту</div>
-        <div class="seg two mseg" id="langSeg">
-          <button data-lang="ua" class="on">Українська</button>
-          <button data-lang="ru">Русский</button>
         </div>
         <div class="setnote">строка «Розрахунок: … = …» в ответе клиенту. Базовый курс и коэффициент наценки клиенту не показываются никогда.</div>
       </div>
@@ -748,28 +753,29 @@
       <input id="phrase" type="text" autocomplete="off" placeholder="опиши сделку словами: 1000 usdt в грн · 100 долларов в гривне · 2000$ и 1500€ в usdt">
       <button id="pClear" type="button" title="очистить (Esc)">×</button>
     </div>
-    <div class="pkeys"><span>⏎ разобрать · <b>Ctrl+⏎</b> скопировать ответ · <b>Esc</b> очистить · <b>/</b> в поле</span><button id="reverseBtn" type="button" title="перевернуть направление сделки и пересчитать — если калькулятор понял наоборот" style="display:none">⇄ порахувати навпаки</button></div>
+    <div class="pkeys"><span>⏎ разобрать · <b>Ctrl+⏎</b> скопировать ответ · <b>Esc</b> очистить · <b>/</b> в поле</span><button id="reverseBtn" type="button" title="перевернуть направление сделки и пересчитать — если калькулятор понял наоборот" style="display:none">⇄ посчитать наоборот</button></div>
     <div class="chips" id="pChips"></div>
     <div class="phrase-info" id="phraseInfo"></div>
     <div class="understood" id="understood"></div>
     <div class="uans" id="phraseAns" style="display:none">
       <div class="uansh">Ответ клиенту готов</div>
       <pre id="phraseAnsTxt"></pre>
-      <button class="copy uansbtn" id="phraseAnsBtn" type="button">Скопіювати відповідь</button>
+      <button class="copy uansbtn" id="phraseAnsBtn" type="button">Скопировать ответ</button>
+      <div class="fullmsg-row"><label class="fullmsg-chk"><input type="checkbox" id="fullGreet"> с приветствием</label><button class="badd" id="fullMsgBtn" type="button" style="flex:1;margin-top:0">⧉ Полное сообщение</button></div>
     </div>
     <div class="uans ask" id="phraseAsk" style="display:none">
-      <div class="uansh">Питання клієнту — щоб точно зрозуміти одне одного</div>
+      <div class="uansh">Вопрос клиенту — чтобы точно понять друг друга</div>
       <pre id="phraseAskTxt"></pre>
-      <button class="copy uansbtn" id="phraseAskBtn" type="button">Скопіювати запитання</button>
+      <button class="copy uansbtn" id="phraseAskBtn" type="button">Скопировать вопрос</button>
     </div>
     <div id="issueRow" style="display:none">
       <button class="badd" id="issueBtn" type="button" title="сохранить фразу, разбор и ответ в журнал — разобрать позже">⚑ В непонятки — разобрать позже</button>
     </div>
     <div class="qbar" id="quickBar"></div>
     <div class="utilbar" id="utilBar">
-      <button type="button" class="ub" data-util="hist">Розрахунки <span class="ubc" id="histCnt"></span></button>
-      <button type="button" class="ub" data-util="day">Каса <span class="ubc" id="dayCnt"></span></button>
-      <button type="button" class="ub" data-util="req">Реквізити</button>
+      <button type="button" class="ub" data-util="hist">Расчёты <span class="ubc" id="histCnt"></span></button>
+      <button type="button" class="ub" data-util="day">Касса <span class="ubc" id="dayCnt"></span></button>
+      <button type="button" class="ub" data-util="req">Реквизиты</button>
     </div>
     <div class="utilpanel" id="utilPanel" hidden>
       <div class="up" data-up="hist" hidden>
@@ -800,15 +806,16 @@
 
   <div class="pane on" data-pane="calc">
   <div class="onecard" id="calcCard">
-  <div class="seg four modeSeg" id="modeSeg">
+  <div class="seg five modeSeg" id="modeSeg">
     <button data-mode="secEx" class="on">Обмен</button>
     <button data-mode="secMc">Несколько валют</button>
     <button data-mode="secEu">Наличные</button>
     <button data-mode="secCard">На карту</button>
+    <button data-mode="secCustom">Другое ±%</button>
   </div>
   <div class="msec on" id="secEx">
     <details class="howto"><summary>Как пользоваться этим блоком</summary>
-      <div class="fsym" style="margin-bottom:12px">Основной расчёт обмена USDT ↔ грн/$/€.<br><b>1.</b> Сверху задай курсы и комиссии (кнопка «изменить»). <b>2.</b> Выбери <b>направление</b>: клиент продаёт USDT или покупает. <b>3.</b> Выбери <b>валюту</b> расчёта и что известно — количество USDT или сумму денег. <b>4.</b> Впиши число. Справа появится результат, курс и строка «как считается». <b>5.</b> «Скопировать ответ для клиента» — готовый текст на украинском (наценка клиенту не видна).<br><span style="color:var(--muted)">«Сверка: сколько клиент прислал» — впиши полученную сумму, покажет недостачу или перебор.</span><br><span style="color:var(--muted)">Быстрый путь: вставь фразу клиента в поле сверху — под «Понял» сразу появится готовый ответ (кнопка «Скопіювати» или Ctrl+Enter). Последние расчёты — в «Последние расчёты» под полем.</span></div>
+      <div class="fsym" style="margin-bottom:12px">Основной расчёт обмена USDT ↔ грн/$/€.<br><b>1.</b> Сверху задай курсы и комиссии (кнопка «изменить»). <b>2.</b> Выбери <b>направление</b>: клиент продаёт USDT или покупает. <b>3.</b> Выбери <b>валюту</b> расчёта и что известно — количество USDT или сумму денег. <b>4.</b> Впиши число. Справа появится результат, курс и строка «как считается». <b>5.</b> «Скопировать ответ для клиента» — готовый текст на украинском (наценка клиенту не видна).<br><span style="color:var(--muted)">Быстрый путь: вставь фразу клиента в поле сверху — под «Понял» сразу появится готовый ответ (кнопка «Скопировать» или Ctrl+Enter). Последние расчёты — в «Последние расчёты» под полем.</span></div>
     </details>
     <div class="ex-grid">
       <div class="ex-in">
@@ -845,11 +852,6 @@
           <div class="rate" id="resRate"></div>
           <div class="profit" id="resProfit"></div>
           <div class="resnote" id="resNote"></div>
-          <div class="rchk" id="rChk">
-            <div class="rcl">Сверка: сколько клиент прислал</div>
-            <div class="rcrow"><input id="rcIn" type="text" inputmode="decimal" placeholder="0"><span class="rcu" id="rcU"></span></div>
-            <div class="rcv" id="rcV"></div>
-          </div>
           <div class="uans" id="exPrev" style="display:none"><div class="uansh">Ответ клиенту</div><pre id="exPrevTxt"></pre></div>
           <button class="copy" id="copyBtn">Скопировать ответ для клиента</button><button class="kadd" data-k="ex" type="button" title="учесть сделку в кассе дня">+ касса</button>
         </div>
@@ -925,7 +927,7 @@
           <button data-eud="b2q" class="on">—</button>
           <button data-eud="q2b">—</button>
         </div>
-        <div class="ql" id="euAmtLab">Скільки</div>
+        <div class="ql" id="euAmtLab">Сколько</div>
         <div class="amount-wrap">
           <input id="euAmt" type="text" inputmode="decimal" value="100">
           <span class="u" id="euAmtU">$</span>
@@ -947,7 +949,7 @@
 
   <div class="msec" id="secCard">
     <details class="howto"><summary>Как пользоваться этим блоком</summary>
-      <div class="fsym" style="margin-bottom:12px">Переказ USDT на картку в гривні. Работает в две стороны — переключатель «Клиент назвал»:<br><b>• грн на карту</b> — клиент называет суму в грн, блок считает, сколько <b>USDT</b> он заводит: USDT = сума грн ÷ курс на карту.<br><b>• USDT</b> — клиент называет свои <b>USDT</b>, блок считает, сколько <b>грн</b> упадёт на карту: грн = USDT × курс на карту.<br>Курс задаётся полем «Курс на карту» в «Курсы и комиссии». Без комиссии. «Округляти» — до целого в пользу обменника: грн клиенту — вниз, USDT от клиента — вверх.</div>
+      <div class="fsym" style="margin-bottom:12px">Перевод USDT на карту в гривне. Работает в две стороны — переключатель «Клиент назвал»:<br><b>• грн на карту</b> — клиент называет сумму в грн, блок считает, сколько <b>USDT</b> он заводит: USDT = сумма грн ÷ курс на карту.<br><b>• USDT</b> — клиент называет свои <b>USDT</b>, блок считает, сколько <b>грн</b> упадёт на карту: грн = USDT × курс на карту.<br>Курс задаётся полем «Курс на карту» в «Курсы и комиссии». Без комиссии. «Округлять» — до целого в пользу обменника: грн клиенту — вниз, USDT от клиента — вверх.</div>
     </details>
     <div class="ex-grid">
       <div class="ex-in">
@@ -963,10 +965,10 @@
         </div>
         <div class="ql" id="cardRndLab">Округлення USDT</div>
         <div class="seg two mseg" id="cardRnd">
-          <button data-crn="floor" class="on">Округляти</button>
+          <button data-crn="floor" class="on">Округлять</button>
           <button data-crn="exact">Точно</button>
         </div>
-        <div class="hint">«Округляти» — до целого в пользу обменника (грн клиенту — вниз, USDT от клиента — вверх). «Точно» — до 2 знаков.</div>
+        <div class="hint">«Округлять» — до целого в пользу обменника (грн клиенту — вниз, USDT от клиента — вверх). «Точно» — до 2 знаков.</div>
       </div>
       <div class="ex-out">
         <div class="res" style="margin-top:0">
@@ -978,6 +980,51 @@
           <div class="resnote" id="cardNote"></div>
           <div class="uans" id="cardPrev" style="display:none"><div class="uansh">Ответ клиенту</div><pre id="cardPrevTxt"></pre></div>
           <button class="copy" id="cardCopyBtn">Скопировать ответ для клиента</button><button class="kadd" data-k="card" type="button" title="учесть сделку в кассе дня">+ касса</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="msec" id="secCustom">
+    <details class="howto"><summary>Как пользоваться этим блоком</summary>
+      <div class="fsym" style="margin-bottom:12px">Нестандартные операции с простой наценкой или удержанием: перестановка средств, обмен старых купюр на новые и т.п.<br><b>1.</b> (необязательно) впиши название операции — оно пойдёт в ответ клиенту. <b>2.</b> Впиши сумму и валюту. <b>3.</b> Впиши процент. <b>4.</b> Выбери «+% надбавка» (клиент доплачивает процент) или «−% удержание» (выдаём на процент меньше). Справа — результат, комиссия и готовый ответ клиенту.</div>
+    </details>
+    <div class="ex-grid">
+      <div class="ex-in">
+        <div class="qbar" id="cuPresets" style="margin-top:0;margin-bottom:14px"></div>
+        <div class="ql" style="margin-top:0">Операция <span style="color:var(--faint);font-weight:400">(необязательно)</span></div>
+        <input id="cuName" class="vin" type="text" autocomplete="off" placeholder="напр.: перестановка средств · старые купюры">
+        <div class="ql">Сума</div>
+        <div class="amount-wrap">
+          <input id="cuAmt" type="text" inputmode="decimal" value="10000">
+          <span class="u" id="cuAmtU">грн</span>
+        </div>
+        <div class="ql">Валюта</div>
+        <div class="seg four" id="cuCur">
+          <button data-cc="UAH" class="on" type="button">грн</button>
+          <button data-cc="USD" type="button">$</button>
+          <button data-cc="EUR" type="button">€</button>
+          <button data-cc="USDT" type="button">USDT</button>
+        </div>
+        <div class="ql">Процент</div>
+        <div class="amount-wrap">
+          <input id="cuPct" type="text" inputmode="decimal" value="5">
+          <span class="u">%</span>
+        </div>
+        <div class="ql">Напрямок</div>
+        <div class="seg two mseg" id="cuDir">
+          <button data-cud="add" class="on" type="button">+% надбавка</button>
+          <button data-cud="sub" type="button">−% удержание</button>
+        </div>
+        <div class="hint">«+% надбавка» — клиент доплачивает процент (напр. перестановка +5%). «−% удержание» — выдаём на процент меньше (напр. −0.5%).</div>
+      </div>
+      <div class="ex-out">
+        <div class="res" style="margin-top:0">
+          <div class="rl" id="cuRl">Клиент платит</div>
+          <div class="big" id="cuBig" title="нажми — скопируется ответ клиенту"><span id="cuV">—</span><span class="u" id="cuVU">грн</span></div>
+          <div class="rate" id="cuFeeLine"></div>
+          <div class="calcbox"><div class="calclab">как считается</div><div class="fnum" id="cuCalc">—</div></div>
+          <div class="uans" id="cuPrev" style="display:none"><div class="uansh">Ответ клиенту</div><pre id="cuPrevTxt"></pre></div>
+          <button class="copy" id="cuCopyBtn">Скопировать ответ для клиента</button>
         </div>
       </div>
     </div>
@@ -1014,15 +1061,15 @@
 
   <div class="pane" data-pane="faq">
     <div class="vcard">
-      <div class="vcard-h">Готові відповіді клієнтам <span class="sub">копія в один клік · шаблони можна редагувати</span></div>
+      <div class="vcard-h">Готовые ответы клиентам <span class="sub">копия в один клик · шаблоны можно редактировать</span></div>
       <div class="qbar" id="quickBarFaq"></div>
-      <input id="tplSearch" class="vin" type="text" autocomplete="off" placeholder="пошук: реквізити, курс, затримка, хеш…">
+      <input id="tplSearch" class="vin" type="text" autocomplete="off" placeholder="поиск: реквизиты, курс, задержка, хеш…">
       <div id="tplList"></div>
       <div class="tplctl">
-        <button class="badd" id="tplAdd" type="button">+ додати свій шаблон</button>
-        <button class="badd" id="tplReset" type="button">↺ стандартні</button>
+        <button class="badd" id="tplAdd" type="button">+ добавить свой шаблон</button>
+        <button class="badd" id="tplReset" type="button">↺ стандартные</button>
       </div>
-      <div class="hint" style="margin-top:9px">Кожен шаблон має дві мови — обери зверху 🇺🇦/🇷🇺, кнопка «Скопіювати» бере обрану. Слова у {фігурних} дужках заміни своїми даними. Шаблони зберігаються локально в цьому браузері.</div>
+      <div class="hint" style="margin-top:9px">У каждого шаблона два языка — выбери сверху 🇺🇦/🇷🇺, кнопка «Скопировать» берёт выбранный. Слова в {фигурных} скобках замени своими данными. Шаблоны хранятся локально в этом браузере.</div>
     </div>
   </div>
 
@@ -1161,21 +1208,14 @@
   function withClientTotal(formula, raw, rounded, unit){
     return formula.replace(/ = [^=]*$/, eqTail(raw, rounded, unit));
   }
-  // «Курс дійсний до …» — добавляется к ответам клиенту, если задано поле fixMin (минуты); пусто/0 = выкл
-  function fixLine(){
-    const el=$('fixMin'); if(!el) return '';
-    const m=parseFloat(String(el.value||'').replace(',','.'));
-    if(!(m>0)) return '';
-    const d=new Date(Date.now()+m*60000), p=x=>String(x).padStart(2,'0');
-    return '\nКурс дійсний до '+p(d.getHours())+':'+p(d.getMinutes())+' ('+ffMc(m)+' хв)';
-  }
+  // «Курс дійсний до …» полностью убрано из ответов клиенту
+  function fixLine(){ return ''; }
   // мова відповіді клієнту: ua (за замовчуванням) / ru — переводим только слова, числа не трогаем
   function locTxt(t){
     if(ansLang!=='ru'||!t) return t;
     return t.replace(/Віддаєте /g,'Отдаёте ').replace(/ отримуєте /g,' получаете ')
       .replace(/Розрахунок:/g,'Расчёт:').replace(/зараховуємо /g,'зачисляем ')
-      .replace(/ на картку/g,' на карту').replace(/Залишок: /g,'Остаток: ')
-      .replace(/Курс дійсний до /g,'Курс действителен до ').replace(/ хв\)/g,' мин)');
+      .replace(/ на картку/g,' на карту').replace(/Залишок: /g,'Остаток: ');
   }
   function ratesSummary(){
     const g=id=>$(id).value;
@@ -1206,8 +1246,7 @@
         [...$('rStep').children].forEach(b=>b.classList.toggle('on',b.dataset.step===roundStep)); }
       if(o.copyRate===false){ copyRate=false;
         [...$('cpSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.cr==='off')); }
-      if(o.ansLang==='ru'||o.ansLang==='ua'){ ansLang=o.ansLang;
-        [...$('langSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.lang===ansLang)); }
+      if(o.ansLang==='ru'||o.ansLang==='ua'){ ansLang=o.ansLang; }
       if(o.custRound==='whole'||o.custRound==='cent'||o.custRound==='off'){ custRound=o.custRound;
         [...$('custSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.cust===custRound)); }
       if(o.collapsed===false){ $('ratesCard').classList.remove('collapsed'); $('tog').textContent='свернуть'; } }
@@ -1268,6 +1307,28 @@
     el.value=fmtStr(val);
     let p=0,seen=0; while(p<el.value.length&&seen<leftKeep){ if(/[\d.]/.test(el.value[p]))seen++; p++; }
     try{el.setSelectionRange(p,p);}catch(e){}
+  }
+  // ── №6: мини-калькулятор в поле суммы. Без eval, только + − * / ( ). Триггер: «=» или Enter при * / ( ) ──
+  function evalExpr(raw){
+    let s=String(raw).replace(/[=\s\u2009\u00a0]+$/,'').replace(/[\s\u2009\u00a0]/g,'').replace(/,/g,'.');
+    if(!/^[-+*/().\d]+$/.test(s) || !/\d/.test(s)) return null;
+    let i=0;
+    const num=()=>{ let st=i; if(s[i]==='+'||s[i]==='-')i++; while(i<s.length&&/[\d.]/.test(s[i]))i++; const n=parseFloat(s.slice(st,i)); return isNaN(n)?null:n; };
+    const factor=()=>{ if(s[i]==='('){ i++; const v=expr(); if(s[i]===')')i++; return v; } return num(); };
+    const term=()=>{ let v=factor(); while(i<s.length&&(s[i]==='*'||s[i]==='/')){ const op=s[i++]; const r=factor(); if(v==null||r==null)return null; v=op==='*'?v*r:(r===0?null:v/r); } return v; };
+    function expr(){ let v=term(); while(i<s.length&&(s[i]==='+'||s[i]==='-')){ const op=s[i++]; const r=term(); if(v==null||r==null)return null; v=op==='+'?v+r:v-r; } return v; }
+    const v=expr();
+    if(i!==s.length || v==null || !isFinite(v) || v<0) return null;
+    return Math.round(v*100)/100;
+  }
+  function smartAmt(el, update){
+    const v=el.value;
+    if(v.indexOf('=')>=0){ const r=evalExpr(v); if(r!=null){ el.value=String(r); fmtNum(el); } else { el.value=v.replace(/=/g,''); } update(); return; }
+    if(/[*/()]/.test(v)) return;   // выражение в наборе — ждём Enter/=, сделку пока не считаем
+    fmtNum(el); update();
+  }
+  function amtEnter(el, update){
+    if(/[*/()=]/.test(el.value)){ const r=evalExpr(el.value); if(r!=null){ el.value=String(r); fmtNum(el); update(); } }
   }
   // выгода обменника (грн) = грн-эквивалент денег клиента − USDT × закупка; знак = чистая выгода
   function profitUAH(d, U, money, cur){
@@ -1392,7 +1453,7 @@
   function render(){
     const r=compute(); last=r;
     if(r.error){ $('resV').textContent='—'; $('resU').textContent=''; $('resDeal').textContent='';
-      $('resRate').innerHTML='<span class="err">'+(typeof r.error==='string'?r.error:'введи сумму')+'</span>'; $('fNum').textContent='—'; $('fRound').textContent=''; $('rcU').textContent=''; $('resNote').textContent=''; checkRecv(); updPrev('ex', null); return; }
+      $('resRate').innerHTML='<span class="err">'+(typeof r.error==='string'?r.error:'введи сумму')+'</span>'; $('fNum').textContent='—'; $('fRound').textContent=''; $('resNote').textContent=''; updPrev('ex', null); return; }
     $('resV').textContent=fBig(r.value); $('resU').textContent=r.outUnit;
     $('resDeal').innerHTML='<span class="g">даёт</span> '+f2(r.gives.v)+' '+r.gives.u+
       ' <span class="g">→ получает</span> '+f2(r.gets.v)+' '+r.gets.u;
@@ -1404,7 +1465,6 @@
     } else { $('resProfit').textContent=''; $('resProfit').className='profit'; }
     $('fNum').textContent=r.formula;
     $('fRound').textContent=r.roundNote||'';
-    $('rcU').textContent=r.gives.u; checkRecv();
     $('resNote').textContent=resultNote(r.value, r.rawValue, pn('amount'));
     updPrev('ex', buildCopySingle());
   }
@@ -1440,7 +1500,8 @@
     known=b.dataset.known;labels();render();});
   RKEYS.forEach(i=>$(i).addEventListener('input',()=>{touchRates();render();euRender();mcCalc();ratesSummary();updateRatesAge();checkSpread();renderUsdtRates();saveRates();}));
   $('cost').addEventListener('input',()=>{touchRates();render();mcCalc();updateRatesAge();saveRates();});
-  $('amount').addEventListener('input',e=>{fmtNum(e.target);render();updateSumHint();});
+  $('amount').addEventListener('input',e=>{smartAmt(e.target,()=>{render();updateSumHint();});});
+  $('amount').addEventListener('keydown',e=>{if(e.key==='Enter'){amtEnter(e.target,()=>{render();updateSumHint();});}});
   $('amount').addEventListener('focus',e=>{try{e.target.select();}catch(_){}});
   // ---------- разбор фразы (без ИИ, по ключевым словам) ----------
   function parseNum(s){
@@ -1510,6 +1571,53 @@
       .replace(/п(?:ол|ів)\s*-?\s*(?:сотн|сот)[а-яіїєґё]*/g,' 50 ')
       .replace(/полтора|півтора/g,' 1.5 ');
   }
+  // ── ПРЕДОЧИСТКА строки перед разбором (изолирована; ядро расчёта не трогает) ──
+  // №6: чужая раскладка «удар в удар» (EN клавиши → кириллица)
+  const L2C={q:'й',w:'ц',e:'у',r:'к',t:'е',y:'н',u:'г',i:'ш',o:'щ',p:'з','[':'х',']':'ъ',a:'ф',s:'ы',d:'в',f:'а',g:'п',h:'р',j:'о',k:'л',l:'д',';':'ж',"'":'э',z:'я',x:'ч',c:'с',v:'м',b:'и',n:'т',m:'ь',',':'б','.':'ю','`':'ё'};
+  function lat2cyr(s){ return String(s).replace(/[a-z\[\];',.`]/gi,ch=>{ const lo=ch.toLowerCase(); const r=L2C[lo]; return r?(ch===lo?r:r.toUpperCase()):ch; }); }
+  const CURTEST=/грн|грив|₴|долар|доллар|бакс|євр|евр|усдт|юсдт|тезер|тетер|монет|usdt|usdc|usd|eur|uah|\$|€/i;
+  function hasCur(s){ return CURTEST.test(s); }
+  function curWordC(w){ for(const cw of CURWORDS){ if(cw[1].test(w)) return true; } return false; }
+  function fixLayout(s){
+    if(!hasCur(s)){ const c=lat2cyr(s); if(hasCur(c)) return c; }              // вся строка в чужой раскладке
+    s=s.replace(/[a-z]{3,}/gi,tok=>{ const lo=tok.toLowerCase();
+      if(/^(usdt|usdc|usd|eur|uah)$/.test(lo)) return tok;                      // известные латинские токены не трогаем
+      const conv=lat2cyr(lo); return curWordC(conv)?conv:tok; });               // смешанный случай: слово-валюта в чужой раскладке
+    s=s.replace(/(^|\s)([a-z]{1,3})(?=\s|$)/gi,(m,pre,tok)=>{ const conv=lat2cyr(tok.toLowerCase());
+      return /^(в|у|на|з|із|из|с|і|від|до)$/.test(conv)? pre+conv : m; });       // одиночные предлоги в чужой раскладке (d→в …)
+    return s;
+  }
+  function fixTypos(s){
+    return s.replace(/\s*(?:->|=>|=&gt;|➡️?|⟶|→)\s*/g,' → ')                    // стрелки → единый вид
+      .replace(/додлар/gi,'доллар').replace(/грвн/gi,'грн');
+  }
+  // №1: числа словами → цифры (рус/укр)
+  const NW={"ноль":0,"нуль":0,"один":1,"одна":1,"одну":1,"одно":1,"одне":1,"два":2,"две":2,"дві":2,"три":3,"четыре":4,"чотири":4,"пять":5,"п'ять":5,"шесть":6,"шість":6,"семь":7,"сім":7,"восемь":8,"вісім":8,"девять":9,"дев'ять":9,"десять":10,"одиннадцать":11,"одинадцять":11,"двенадцать":12,"дванадцять":12,"тринадцать":13,"тринадцять":13,"четырнадцать":14,"чотирнадцять":14,"пятнадцать":15,"п'ятнадцять":15,"шестнадцать":16,"шістнадцять":16,"семнадцать":17,"сімнадцять":17,"восемнадцать":18,"вісімнадцять":18,"девятнадцать":19,"дев'ятнадцять":19,"двадцать":20,"двадцять":20,"тридцать":30,"тридцять":30,"сорок":40,"пятьдесят":50,"п'ятдесят":50,"шестьдесят":60,"шістдесят":60,"семьдесят":70,"сімдесят":70,"восемьдесят":80,"вісімдесят":80,"девяносто":90,"дев'яносто":90,"сто":100,"двести":200,"двісті":200,"триста":300,"четыреста":400,"чотириста":400,"пятьсот":500,"п'ятсот":500,"шестьсот":600,"шістсот":600,"семьсот":700,"сімсот":700,"восемьсот":800,"вісімсот":800,"девятьсот":900,"дев'ятсот":900,"полтора":1.5,"півтора":1.5};
+  const NSC=[["миллиард",1e9],["мільярд",1e9],["млрд",1e9],["миллион",1e6],["мільйон",1e6],["млн",1e6],["лям",1e6],["тысяч",1000],["тисяч",1000],["тыщ",1000],["тыс",1000],["тис",1000]];
+  function nWord(w){ if(Object.prototype.hasOwnProperty.call(NW,w)) return {v:NW[w]}; for(const [k,s] of NSC){ if(w.indexOf(k)===0) return {sc:s}; } return null; }
+  function spellRun(words){ let total=0,chunk=0,any=false;
+    for(const w of words){ const n=nWord(w); if(!n) return null;
+      if('v' in n){ chunk+=n.v; any=true; } else { if(n.sc===1000){ chunk=(chunk||1)*1000; } else { total+=(chunk||1)*n.sc; chunk=0; } any=true; } }
+    return any? total+chunk : null; }
+  function wordsToNum(s){
+    const parts=s.split(/(\s+)/); const res=[]; let i=0;
+    while(i<parts.length){
+      if(parts[i].trim()===''){ res.push(parts[i]); i++; continue; }
+      let j=i; const words=[];
+      while(j<parts.length){ if(parts[j].trim()===''){ words.push(parts[j]); j++; continue; }
+        if(nWord(parts[j].toLowerCase())){ words.push(parts[j]); j++; } else break; }
+      const wonly=words.filter(x=>x.trim());
+      if(wonly.length){ const v=spellRun(wonly.map(w=>w.toLowerCase()));
+        if(v!=null){ res.push(String(v)); let trail=''; for(let k=words.length-1;k>=0&&words[k].trim()==='';k--) trail=words[k]+trail; res.push(trail); i=j; continue; } }
+      res.push(parts[i]); i++;
+    }
+    return res.join('');
+  }
+  function preClean(raw){
+    let s=String(raw||'').replace(/[\r\n\t]+/g,' ').replace(/\s{2,}/g,' ');
+    s=fixLayout(s); s=fixTypos(s); s=wordsToNum(s);
+    return s.trim();
+  }
   function curAt(s){ for(const [c,re] of CURWORDS){ if(re.test(s)) return c; } return null; }
   function parseDeal(raw){
     const t=preNum(' '+raw.toLowerCase().replace(/[\u00a0\u2009]/g,' ')+' ');
@@ -1530,6 +1638,7 @@
     const lastPos=(re,s)=>{let x,l=-1;re.lastIndex=0;while((x=re.exec(s)))l=x.index;return l;};
     const gi=lastPos(giveRe,beforeNum), ge=lastPos(getRe,beforeNum);
     let role, dirSignal=(gi>=0||ge>=0);   // #2: был ли явный сигнал направления (глагол отдать/получить)
+    let dirWord=''; if(gi>=0||ge>=0){ const re=(gi>=ge?giveRe:getRe); re.lastIndex=0; let x,pos=-1; while((x=re.exec(beforeNum)))pos=x.index; if(pos>=0){ const wm=beforeNum.slice(pos).match(/^[а-яіїєґёʼ'’]+/); dirWord=wm?wm[0]:''; } }   // #10: слово, по которому решили направление
     if(gi<0&&ge<0) role='give';
     else role = gi>=ge ? 'give' : 'get';
     // «з 120 000 грн» / «из 5000$» — предлог-источник сильнее дальнего глагола: это отдаваемая сумма
@@ -1562,15 +1671,15 @@
         const getAdj =/^(получ|отрим|забир|забер|куп|придб|возьм|візьм|бер|хоч|нужн|треб|надо)/;
         const giveAdj=/^(прода|прод|сда|сдам|зда|здам|вивед|вывед|віддат|віддам|отдат|отдам|отправ|відправ|скин|занес|занос|внес|внос|надішл|переказ)/;
         let adjDir=null;
-        if(getAdj.test(wBefore)||getAdj.test(wAfter)) adjDir='buy';
-        else if(giveAdj.test(wBefore)||giveAdj.test(wAfter)) adjDir='sell';
+        if(getAdj.test(wBefore)||getAdj.test(wAfter)){ adjDir='buy'; dirWord=getAdj.test(wBefore)?wBefore:wAfter; }
+        else if(giveAdj.test(wBefore)||giveAdj.test(wAfter)){ adjDir='sell'; dirWord=giveAdj.test(wBefore)?wBefore:wAfter; }
         if(adjDir||sellU||buyU) dirSignal=true;
         dir = adjDir ? adjDir : (sellU ? 'sell' : (buyU ? 'buy' : ((role==='give')?'buy':'sell')));
       } else {
         dir=(role==='give')?'buy':'sell';
       }
     }
-    return {dir,cur,known,amount:num,amtCur,role,defCur:(typeof defCur!=='undefined'&&defCur),dirGuessed:!dirSignal,multi:mentioned.size>=3};
+    return {dir,cur,known,amount:num,amtCur,role,defCur:(typeof defCur!=='undefined'&&defCur),dirGuessed:!dirSignal,dirWord,multi:mentioned.size>=3};
   }
   const CN={UAH:'грн',USD:'$',EUR:'€',USDT:'USDT'};
   const fcur=(s)=>{let best=null,bp=1e9;for(const [c,re] of CURWORDS){const mm=new RegExp(re.source).exec(s);if(mm&&mm.index<bp){bp=mm.index;best=c;}}return best;};
@@ -1852,8 +1961,9 @@
     }
     // #2 — метки «принял по умолчанию, перевір» (жовтим): напрямок і/або валюта угадані
     let warn='';
-    if(r.dirGuessed) warn+='<div class="uwarn">⚠ напрямок у фразі не вказано — прийняв за замовчуванням. Перевір і, якщо треба, натисни ⇄ нижче.</div>';
-    if(isUsdt && r.defCur) warn+='<div class="uwarn">⚠ валюту виплати не вказано — взяв грн. Зміни нижче, якщо інша.</div>';
+    if(r.dirWord && !r.dirGuessed) warn+='<div class="urow" style="color:var(--faint);font-size:11.5px">· направление по слову «'+esc(r.dirWord)+'»</div>';
+    if(r.dirGuessed) warn+='<div class="uwarn">⚠ направление во фразе не указано — принял по умолчанию. Проверь и, если надо, нажми ⇄ ниже.</div>';
+    if(isUsdt && r.defCur) warn+='<div class="uwarn">⚠ валюта выплаты не указана — взял грн. Измени ниже, если другая.</div>';
     return core+warn;
   }
   function setUnderstood(html,isErr){
@@ -1921,7 +2031,7 @@
     if(r.type==='single' && r.defCur) ask='Виплату бажаєте отримати у гривні, доларах чи євро?';
     if(r.droppedUsdt) ask='Уточніть, будь ласка, щодо '+ffMc(r.droppedUsdt)+' USDT: це загальна сума обміну? Якщо так — напишіть, що робити із залишком (наприклад «решта в грн»).';
     setPhraseAsk(ask);
-    if($('reverseBtn')) $('reverseBtn').style.display='inline-block';
+    if($('reverseBtn')){ const rb=$('reverseBtn'); rb.style.display='inline-block'; rb.classList.toggle('hint', !!r.dirGuessed); }
     return ans;
   }
   function runPhrase(apply){
@@ -1929,7 +2039,7 @@
     if(info){ info.textContent=''; info.className='phrase-info'; }
     if($('pClear')) $('pClear').style.display=v?'block':'none';
     if(!v){ lastR=null; setUnderstood(''); setPhraseAns(null); setPhraseAsk(null); if($('reverseBtn')) $('reverseBtn').style.display='none'; return; }
-    const r=parseRequest(v);
+    const r=parseRequest(preClean(v));
     if(r.error){ lastR=null; setUnderstood('⚠ '+r.error, true); setPhraseAns(null);
       setPhraseAsk(r.ask||'Уточніть, будь ласка: яку суму і валюту віддаєте, і що бажаєте отримати?'); if($('reverseBtn')) $('reverseBtn').style.display='none'; return; }
     const ans=applyParsed(r, apply);
@@ -2026,6 +2136,14 @@
     if(pc) pc.addEventListener('click',()=>{ $('phrase').value=''; runPhrase(false); try{$('phrase').focus();}catch(_){} });
     const ab=$('phraseAnsBtn');
     if(ab) ab.addEventListener('click',()=>{ if(phraseAnsTxt) window.__lastDealTxt=phraseAnsTxt; clip(phraseAnsTxt,'phraseAnsBtn'); });
+    // №7 — собрать полное сообщение: приветствие (по галочке) + просчёт клиенту
+    const fg=$('fullGreet');
+    if(fg){ try{ fg.checked = localStorage.getItem('usdtFullGreet')==='1'; }catch(_){}
+      fg.addEventListener('change',()=>{ try{ localStorage.setItem('usdtFullGreet', fg.checked?'1':'0'); }catch(_){} }); }
+    const fmb=$('fullMsgBtn');
+    if(fmb) fmb.addEventListener('click',()=>{ if(!phraseAnsTxt) return;
+      const greet = ($('fullGreet')&&$('fullGreet').checked) ? 'Вітаю!\n\n' : '';
+      const full = greet + phraseAnsTxt; window.__lastDealTxt=full; clip(full,'fullMsgBtn'); });
     const ak=$('phraseAskBtn');
     if(ak) ak.addEventListener('click',()=>clip(phraseAskVal,'phraseAskBtn'));
     try{
@@ -2104,7 +2222,7 @@
   function reset(){
     for(const k in DEF) $(k).value=DEF[k];
     method='mul'; roundMode='fav'; roundStep='cent'; copyRate=true; cardRnd='floor'; cardDir='uah'; custRound='whole'; ansLang='ua';
-    [...$('langSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.lang==='ua'));
+    qrRenderBars();
     [...$('cpSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.cr==='on'));
     [...$('mSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.method==='mul'));
     [...$('rSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.round==='fav'));
@@ -2157,11 +2275,11 @@
   // --- Обмін готівки (без USDT): пары $/грн, €/грн, €/$ ---
   function euLabels(){
     const P=PAIRS[euPair];
-    $('euDir').children[0].textContent='Дає '+P.base+' → '+P.quote; $('euDir').children[0].dataset.eud='b2q';
-    $('euDir').children[1].textContent='Дає '+P.quote+' → '+P.base; $('euDir').children[1].dataset.eud='q2b';
+    $('euDir').children[0].textContent='Даёт '+P.base+' → '+P.quote; $('euDir').children[0].dataset.eud='b2q';
+    $('euDir').children[1].textContent='Даёт '+P.quote+' → '+P.base; $('euDir').children[1].dataset.eud='q2b';
     [...$('euDir').children].forEach(b=>b.classList.toggle('on',b.dataset.eud===euDir));
     const give = euDir==='b2q'?P.base:P.quote;
-    $('euAmtLab').textContent='Скільки '+give; $('euAmtU').textContent=give;
+    $('euAmtLab').textContent='Сколько '+give; $('euAmtU').textContent=give;
   }
   function euCompute(){
     const P=PAIRS[euPair], bR=pn(P.bK), sR=pn(P.sK), A=pn('euAmt');
@@ -2206,7 +2324,8 @@
     euDir='b2q'; euLabels(); euRender();});
   $('euDir').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
     euDir=b.dataset.eud;euLabels();euRender();});
-  $('euAmt').addEventListener('input',e=>{fmtNum(e.target);euRender();});
+  $('euAmt').addEventListener('input',e=>{smartAmt(e.target,euRender);});
+  $('euAmt').addEventListener('keydown',e=>{if(e.key==='Enter')amtEnter(e.target,euRender);});
   $('euAmt').addEventListener('focus',e=>{try{e.target.select();}catch(_){}});
 
   document.querySelectorAll('.pm').forEach(btn=>btn.addEventListener('click',()=>{
@@ -2392,9 +2511,9 @@
     mc.kmode=b.dataset.mcmode;[...$('mcMode').children].forEach(x=>x.classList.toggle('on',x===b));mcRender();});
   $('mcAdd').addEventListener('click',()=>{ mc.rows.push({a:'',c:'UAH'}); mcRender();
     const ins=$('mcRows').querySelectorAll('.bamt'); if(ins.length) ins[ins.length-1].focus(); });
-  $('mcTotal').addEventListener('input',e=>{ fmtNum(e.target); mcCalc(); });
+  $('mcTotal').addEventListener('input',e=>{ smartAmt(e.target,mcCalc); });
   $('mcTotal').addEventListener('focus',e=>{try{e.target.select();}catch(_){}});
-  $('mcTotal').addEventListener('keydown',e=>{if(e.key==='e'||e.key==='E'||e.key==='+')e.preventDefault();});
+  $('mcTotal').addEventListener('keydown',e=>{if(e.key==='e'||e.key==='E')e.preventDefault(); if(e.key==='Enter')amtEnter(e.target,mcCalc);});
   $('mcRestCur').addEventListener('change',e=>{ mc.restCur=e.target.value; mcCalc(); });
   // строка расчёта для клиента: только суммы (без коэффициентов и базовых курсов)
   function mcRowLine(o){ return o.formulaClient||o.formula; }  // строка копии клиенту: комиссия процентом
@@ -2516,34 +2635,132 @@
   function doCopyCard(){ const t=buildCopyCard(); if(t) window.__lastDealTxt=t; clip(t,'cardCopyBtn'); }
   $('cardCopyBtn').addEventListener('click',doCopyCard);
   $('cardBig').addEventListener('click',doCopyCard);
+
+  // ── нестандартные операции: сумма ± процент (перестановка, старые купюры и т.п.) ──
+  let cuCur='UAH', cuDir='add', cuLabel='', customLast=null;
+  const CUS_C={UAH:'грн',USD:'$',EUR:'€',USDT:'USDT'};
+  // ОТДЕЛЬНЫЙ разбор строки — только для режима «Другое ±%». Не вызывает основной парсер обмена и ничего в нём не меняет.
+  function parseCustom(raw){
+    const s=String(raw||''); const t=' '+s.toLowerCase().replace(/[\u00a0\u2009]/g,' ')+' ';
+    let pct=null, dir=null;
+    const pm=/([+\-−])?\s*(\d+(?:[.,]\d+)?)\s*%/.exec(t);
+    if(pm){ pct=parseFloat(pm[2].replace(',','.')); if(pm[1]==='-'||pm[1]==='−') dir='sub'; else if(pm[1]==='+') dir='add'; }
+    if(dir===null){ if(/утрим|удерж|мінус|минус|знят|списа/.test(t)) dir='sub'; else if(/надбав|доплат|зверху/.test(t)) dir='add'; }
+    // сумму ищем БЕЗ процентной части, чтобы «5%» не приняли за сумму
+    const tNoPct = pm? (t.slice(0,pm.index)+'  '+t.slice(pm.index+pm[0].length)) : t;
+    let amount=null; const nm=new RegExp(NUMRE).exec(tNoPct);
+    if(nm){ const v=parseNum(nm[1])*numMult(nm[2]||nm[3]); if(v>0) amount=v; }
+    let cur=null; for(const [c,re] of CURWORDS){ if(re.test(t)){ cur=c; break; } }
+    if(amount==null && pct==null) return null;   // ничего числового — это просто подпись
+    // метка операции: убрать процент, число (с множителем) и валютные слова со склонениями
+    let label=s
+      .replace(/[+\-−]?\s*\d+(?:[.,]\d+)?\s*%/g,' ')
+      .replace(/[.,;:]+/g,' ')
+      .replace(/\d[\d\s\u2009]*\d|\d+/g,' ')
+      .replace(/(?:^|\s)(?:к|кк|тис[а-яіїєґ]*|тыс[а-яіїєґ]*|тыщ[а-яіїєґ]*|млн[а-яіїєґ]*|млрд[а-яіїєґ]*)(?=\s|$)/gi,' ')
+      .replace(/(?:^|\s)(?:грн[а-яіїєґ]*|гривн[а-яіїєґ]*|₴|uah|долар[а-яіїєґ]*|доллар[а-яіїєґ]*|бакс[а-яіїєґ]*|usd|\$|євр[а-яіїєґ]*|евр[а-яіїєґ]*|eur|€|usdt|юсдт|тезер[а-яіїєґ]*|тетер[а-яіїєґ]*|монет[а-яіїєґ]*)(?=\s|$)/gi,' ')
+      .replace(/\s+/g,' ').trim();
+    return {amount, cur, pct, dir, label};
+  }
+  function customRender(){
+    if(!$('cuAmt')) return;
+    const A=pn('cuAmt'), P=pn('cuPct'); const add=(cuDir!=='sub');
+    const name=cuLabel;
+    const u=CUS_C[cuCur]||cuCur;
+    if($('cuAmtU')) $('cuAmtU').textContent=u;
+    if($('cuVU')) $('cuVU').textContent=u;
+    if($('cuRl')) $('cuRl').textContent = add?'Клиент платит':'Клиент получает';
+    if(!(A>0)||!(P>=0)){ $('cuV').textContent='—'; $('cuFeeLine').textContent=''; $('cuCalc').textContent='—'; customLast=null; updPrev('cu',null); return; }
+    const fee=Math.round(A*P/100*100)/100;
+    const result=Math.round((add? A+fee : A-fee)*100)/100;
+    $('cuV').textContent=ffMc(result);
+    $('cuFeeLine').textContent=(add?'комісія ':'утримано ')+fpc(P)+'% = '+ffMc(fee)+' '+u;
+    $('cuCalc').textContent=ffMc(A)+' '+u+(add?' + ':' − ')+fpc(P)+'% = '+ffMc(result)+' '+u;
+    customLast={A,P,add,name,fee,result,u};
+    updPrev('cu', buildCopyCustom());
+  }
+  function buildCopyCustom(){
+    if(!customLast) return null;
+    const L=customLast;
+    const pre=L.name? (L.name.charAt(0).toUpperCase()+L.name.slice(1)+': ') : '';
+    const feeword=L.add?'комісія':'утримано';
+    return pre+ffMc(L.A)+' '+L.u+(L.add?' + ':' − ')+fpc(L.P)+'% = '+ffMc(L.result)+' '+L.u+' ('+feeword+' '+ffMc(L.fee)+' '+L.u+')';
+  }
+  function doCopyCustom(){ const t=buildCopyCustom(); if(t) window.__lastDealTxt=t; clip(t,'cuCopyBtn'); }
+  if($('cuAmt')){
+    $('cuCur').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return; cuCur=b.dataset.cc; [...$('cuCur').children].forEach(x=>x.classList.toggle('on',x===b)); customRender();});
+    $('cuDir').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return; cuDir=b.dataset.cud; [...$('cuDir').children].forEach(x=>x.classList.toggle('on',x===b)); customRender();});
+    $('cuAmt').addEventListener('input',e=>{smartAmt(e.target,customRender);});
+    $('cuAmt').addEventListener('keydown',e=>{if(e.key==='Enter')amtEnter(e.target,customRender);});
+    $('cuAmt').addEventListener('focus',e=>{try{e.target.select();}catch(_){}});
+    $('cuPct').addEventListener('input',customRender);
+    $('cuName').addEventListener('input',e=>{
+      const p=parseCustom(e.target.value);
+      if(p){
+        if(p.amount!=null){ $('cuAmt').value=p.amount; fmtNum($('cuAmt')); }
+        if(p.pct!=null){ $('cuPct').value=p.pct; }
+        if(p.cur){ cuCur=p.cur; [...$('cuCur').children].forEach(x=>x.classList.toggle('on',x.dataset.cc===cuCur)); }
+        if(p.dir){ cuDir=p.dir; [...$('cuDir').children].forEach(x=>x.classList.toggle('on',x.dataset.cud===cuDir)); }
+        cuLabel=p.label;
+      } else { cuLabel=(e.target.value||'').trim(); }
+      customRender();
+    });
+    $('cuCopyBtn').addEventListener('click',doCopyCustom);
+    $('cuBig').addEventListener('click',doCopyCustom);
+  }
+  // ── №3: пресеты частых операций для «Другое ±%» (редактируемые, хранятся локально) ──
+  const PRK='usdtPresetsV1';
+  const PR_DEF=[{l:'перестановка',p:5,d:'add'},{l:'старі купюри',p:0.5,d:'add'}];
+  function prGet(){ try{ const o=JSON.parse(localStorage.getItem(PRK)||'null'); return Array.isArray(o)?o:PR_DEF.map(x=>Object.assign({},x)); }catch(e){ return PR_DEF.map(x=>Object.assign({},x)); } }
+  function prSave(a){ try{ localStorage.setItem(PRK, JSON.stringify(a)); }catch(e){} }
+  function prApply(pr){ if(!pr) return; cuLabel=pr.l||''; if($('cuName'))$('cuName').value=pr.l||''; if(pr.p!=null&&$('cuPct'))$('cuPct').value=pr.p; cuDir=(pr.d==='sub')?'sub':'add'; if($('cuDir'))[...$('cuDir').children].forEach(x=>x.classList.toggle('on',x.dataset.cud===cuDir)); customRender(); try{$('cuAmt').focus();}catch(_){}
+  }
+  function prRender(){
+    const box=$('cuPresets'); if(!box) return; const list=prGet();
+    let h='<div class="qbl"><span>Пресеты операций</span></div><div class="qbar-row">';
+    h+=list.map((pr,i)=>'<button type="button" class="qrb" data-pri="'+i+'">'+esc(pr.l||'—')+' '+(pr.d==='sub'?'−':'+')+esc(String(pr.p))+'%</button>').join('');
+    h+='<button type="button" class="qrb pradd">+ добавить</button></div>';
+    h+='<details class="qedit"><summary>Редактировать пресеты</summary><div id="prEdit"></div></details>';
+    box.innerHTML=h; prRenderEdit();
+  }
+  function prRenderEdit(){
+    const e=$('prEdit'); if(!e) return; const list=prGet();
+    e.innerHTML=list.map((pr,i)=>'<div class="prrow"><input class="qet pr-l" data-i="'+i+'" value="'+esc(pr.l||'')+'" placeholder="название"><input class="qet pr-p" data-i="'+i+'" value="'+esc(String(pr.p))+'" inputmode="decimal" style="max-width:64px" placeholder="%"><select class="pr-d" data-i="'+i+'"><option value="add"'+(pr.d!=='sub'?' selected':'')+'>+%</option><option value="sub"'+(pr.d==='sub'?' selected':'')+'>−%</option></select><button type="button" class="prdel" data-i="'+i+'" title="удалить">×</button></div>').join('')
+      + '<div class="qehint">Тап по кнопке пресета подставляет название, процент и направление. Сумму впиши сам.</div>';
+  }
+  if($('cuPresets')){
+    prRender();
+    $('cuPresets').addEventListener('click',e=>{
+      const ap=e.target.closest('.qrb[data-pri]'); if(ap){ prApply(prGet()[+ap.dataset.pri]); return; }
+      if(e.target.closest('.pradd')){ const a=prGet(); a.push({l:'нова операція',p:1,d:'add'}); prSave(a); prRender(); const d=$('cuPresets').querySelector('.qedit'); if(d)d.open=true; return; }
+      const del=e.target.closest('.prdel'); if(del){ const a=prGet(); a.splice(+del.dataset.i,1); prSave(a); prRender(); const d=$('cuPresets').querySelector('.qedit'); if(d)d.open=true; return; }
+    });
+    $('cuPresets').addEventListener('input',e=>{
+      const t=e.target; const i=+t.dataset.i; if(isNaN(i)) return; const a=prGet(); if(!a[i]) return;
+      if(t.classList.contains('pr-l')) a[i].l=t.value;
+      else if(t.classList.contains('pr-p')){ const v=parseFloat(String(t.value).replace(',','.')); a[i].p=isNaN(v)?0:v; }
+      prSave(a);
+      // обновим только надписи кнопок, не сбрасывая фокус в редакторе
+      const row=$('cuPresets').querySelector('.qbar-row');
+      if(row){ [...row.querySelectorAll('.qrb[data-pri]')].forEach((b,bi)=>{ if(a[bi]) b.textContent=(a[bi].l||'—')+' '+(a[bi].d==='sub'?'−':'+')+a[bi].p+'%'; }); }
+    });
+    $('cuPresets').addEventListener('change',e=>{
+      const t=e.target; if(!t.classList.contains('pr-d')) return; const i=+t.dataset.i; const a=prGet(); if(a[i]){ a[i].d=t.value; prSave(a); prRender(); const d=$('cuPresets').querySelector('.qedit'); if(d)d.open=true; }
+    });
+  }
   $('cardWho').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
     cardDir=b.dataset.cw; cardRender(); saveRates();});
-  $('cardAmt').addEventListener('input',e=>{fmtNum(e.target);cardRender();});
+  $('cardAmt').addEventListener('input',e=>{smartAmt(e.target,cardRender);});
+  $('cardAmt').addEventListener('keydown',e=>{if(e.key==='Enter')amtEnter(e.target,cardRender);});
   $('cardAmt').addEventListener('focus',e=>{try{e.target.select();}catch(_){}});
   $('cardRnd').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
     cardRnd=b.dataset.crn;[...$('cardRnd').children].forEach(x=>x.classList.toggle('on',x===b));cardRender();saveRates();});
   $('cardRate').addEventListener('input',e=>{fmtNum(e.target);touchRates();cardRender();saveRates();});
   $('cardRate').addEventListener('focus',e=>{try{e.target.select();}catch(_){}});
-  $('fixMin').addEventListener('input',()=>{render();mcCalc();euRender();cardRender();saveRates();});
-  $('langSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
-    ansLang=b.dataset.lang;[...$('langSeg').children].forEach(x=>x.classList.toggle('on',x===b));
-    render();mcCalc();euRender();cardRender();saveRates();});
+  // (поле «Курс дійсний, хв» прибрано — рядок у відповідь більше не додається)
+  // (тумблер мови перенесено до швидких відповідей — обробник там)
 
-  // --- сверка присланной суммы (ожидаем то, что клиент ОТДАЁТ) ---
-  function checkRecv(){
-    const el=$('rcV'); if(!el) return;
-    if(!last||last.error){ el.textContent=''; el.className='rcv'; return; }
-    const raw=($('rcIn').value||'').trim();
-    if(!raw){ el.textContent=''; el.className='rcv'; return; }
-    const got=parseFloat(raw.replace(/[\s\u2009\u00a0]/g,'').replace(',','.'));
-    if(!(got>0)){ el.textContent=''; el.className='rcv'; return; }
-    const exp=last.gives.v, u=last.gives.u, d=got-exp;
-    if(Math.abs(d)<0.005){ el.textContent='✓ сходится: '+f2(exp)+' '+u; el.className='rcv ok'; }
-    else if(d<0){ el.textContent='не хватает '+f2(-d)+' '+u+' (ждём '+f2(exp)+' '+u+')'; el.className='rcv bad'; }
-    else { el.textContent='перебор на '+f2(d)+' '+u+' (ждём '+f2(exp)+' '+u+')'; el.className='rcv bad'; }
-  }
-  $('rcIn').addEventListener('input',e=>{ fmtNum(e.target); checkRecv(); });
-  $('rcIn').addEventListener('keydown',e=>{ if(e.key==='e'||e.key==='E'||e.key==='+') e.preventDefault(); });
+  // (блок «Сверка: сколько клиент прислал» прибрано)
 
 
   // --- вкладки единой панели ---
@@ -2558,66 +2775,55 @@
   // единый блок расчёта: переключение режима внутри карточки
   function switchMode(id){
     document.querySelectorAll('#modeSeg button').forEach(b=>b.classList.toggle('on',b.dataset.mode===id));
-    ['secEx','secMc','secEu','secCard'].forEach(x=>{ const el=document.getElementById(x); if(el) el.classList.toggle('on',x===id); });
+    ['secEx','secMc','secEu','secCard','secCustom'].forEach(x=>{ const el=document.getElementById(x); if(el) el.classList.toggle('on',x===id); });
   }
   $('modeSeg').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; switchMode(b.dataset.mode); });
   // разбор фразы: включить нужный режим и мягко подсветить карточку
   function focusSec(id){ setTab('calc'); switchMode(id); }
 
   mcRender();
-  loadRates(); labels(); render(); euLabels(); euRender(); cardRender(); ratesSummary(); renderUsdtRates(); updateSumHint(); stepVis();
+  loadRates(); labels(); render(); euLabels(); euRender(); cardRender(); customRender(); ratesSummary(); renderUsdtRates(); updateSumHint(); stepVis();
   updateRatesAge(); setInterval(updateRatesAge,60000); checkSpread();
   fmtNum($('amount')); fmtNum($('euAmt')); fmtNum($('mcTotal'));
 
   /* ── швидкі відповіді клієнту (короткі; «Уточнити» і «Курс» — динамічні) ── */
   const QRK='usdtQuickV1';
-  const QR_DEF={ hi:'Вітаю! Що бажаєте обміняти?',
-    yes:'Так, усе зробимо. Надішліть, будь ласка, деталі.',
+  const QR_DEF={ hi:'Вітаю! Чим можу допомогти?',
+    yes:'Так, усе зробимо, хвилинку рахую.',
     bye:'Дякуємо за співпрацю! Звертайтесь ще — завжди раді допомогти.' };
   function qrGet(){ try{ const o=JSON.parse(localStorage.getItem(QRK)||'null'); return Object.assign({},QR_DEF,(o&&typeof o==='object')?o:{}); }catch(e){ return Object.assign({},QR_DEF); } }
   function qrSave(o){ try{ localStorage.setItem(QRK, JSON.stringify(o)); }catch(e){} }
   const QRCUR={UAH:'грн',USD:'долари',EUR:'євро',USDT:'USDT'};
-  // «Уточнити» — напрямок з розбору фрази (клієнтська версія «Понял»)
+  // «Уточнити» — напрямок з розбору фрази (Б: підставляє валюти запиту; запасний приклад — через долар)
   function qrClarify(){
     const r=lastR; let a=null,b=null;
     if(r && r.type==='single'){ if(r.amtCur==='USDT'){ a='USDT'; b=r.cur||'UAH'; } else { a=r.amtCur; b='USDT'; } }
     else if(r && r.type==='cash'){ a=r.amtCur; b=r.target; }
-    if(!a||!b||a===b) return 'Уточніть, будь ласка: у якому напрямку міняємо? Наприклад USDT → грн чи грн → USDT?';
+    else if(r && r.type==='multi' && r.rows && r.rows.length){
+      const c=(r.rows[0].c||'').split('>')[0];
+      if(QRCUR[c]){ if(r.mode==='crypto'){ a='USDT'; b=c; } else { a=c; b='USDT'; } }
+    }
+    const head='Уточніть, будь ласка: у якому напрямку міняємо?\nНаприклад ';
+    if(!a||!b||a===b) return head+'USDT → долар чи долар → USDT?';
     const A=QRCUR[a]||a, B=QRCUR[b]||b;
-    return 'Уточніть, будь ласка: '+A+' → '+B+' чи '+B+' → '+A+'?';
+    return head+A+' → '+B+' чи '+B+' → '+A+'?';
   }
-  // «Курс» — з поточних клієнтських курсів, по ситуації із запиту
+  // «Курс» — карточка як у налаштуваннях: комісії USDT + усі три пари, числа з полів курсів
   function qrRate(){
-    const raw=($('phrase')?$('phrase').value:'')||''; const t=' '+raw.toLowerCase()+' ';
     const f=(v,d)=> (v==null||!isFinite(v))?'—':v.toLocaleString('uk-UA',{minimumFractionDigits:d,maximumFractionDigits:d});
-    const u=unitRates();   // клієнтський курс 1 USDT (з націнкою), тим самим ядром — без витоку закупки/вигоди
-    const wantSell=/куп(?:уєте|ляєте|ите)|берете|приймаєте|здат|здаю/.test(t);      // клієнт продає нам → ми купуємо
-    const wantBuy =/прода[єе]те|продаж|віддаєте/.test(t);                            // клієнт купує → ми продаємо
-    const hasU=/usdt|юсдт|тезер|монет/.test(t), hasUsd=/\$|долар|доллар|бакс/.test(t),
-          hasEur=/€|євр|евр|eur/.test(t), hasUah=/грн|грив|₴|uah/.test(t);
-    function line(cc,unit,d){
-      const s=u['sell_'+cc], b=u['buy_'+cc];              // sell_* = ми купуємо (прийом), buy_* = ми продаємо (видача)
-      const buyP=s?f(s.rate,d):'—', sellP=b?f(b.rate,d):'—';
-      if(wantSell&&!wantBuy) return 'USDT купуємо по '+buyP+' '+unit+'.';
-      if(wantBuy&&!wantSell) return 'USDT продаємо по '+sellP+' '+unit+'.';
-      return 'USDT: купуємо по '+buyP+', продаємо по '+sellP+' '+unit+'.';
-    }
-    if(!hasU){   // без usdt — готівкова пара
-      if(hasEur&&hasUsd) return 'Євро/долар: '+f(pn('eurB'),3)+' – '+f(pn('eurS'),3)+'.';
-      if(hasUsd) return 'Долар готівкою: купуємо по '+f(pn('usdB'),2)+', продаємо по '+f(pn('usdS'),2)+' грн.';
-      if(hasEur) return 'Євро готівкою: купуємо по '+f(pn('euruahB'),2)+', продаємо по '+f(pn('euruahS'),2)+' грн.';
-    }
-    if(hasUsd&&hasU) return line('USD','$ за 1 USDT',4);
-    if(hasEur&&hasU) return line('EUR','€ за 1 USDT',4);
-    return line('UAH','грн',2);   // usdt/грн — за замовчуванням
+    const pctFmt=(v)=>{ if(v==null||!isFinite(v)) return '—'; const sign=v>0?'+':(v<0?'−':''); const a=Math.round(Math.abs(v)*1000)/1000; return sign+a+'%'; };
+    return 'Актуальний курс на зараз:\n\nUSDT\n• Купівля: '+pctFmt(pn('cB'))+'\n• Продаж: '+pctFmt(pn('cS'))
+      +'\n\nUSD/UAH: '+f(pn('usdB'),2)+' / '+f(pn('usdS'),2)
+      +'\nEUR/UAH: '+f(pn('euruahB'),2)+' / '+f(pn('euruahS'),2)
+      +'\nEUR/USD: '+f(pn('eurB'),3)+' / '+f(pn('eurS'),3);
   }
   function qrText(id){ if(id==='clarify') return qrClarify(); if(id==='rate') return qrRate(); const q=qrGet(); return q[id]||''; }
   function qrCopyFb(txt){ try{ const ta=document.createElement('textarea'); ta.value=txt; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.focus(); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);}catch(e){} }
-  function qrFlash(b){ const o=b.getAttribute('data-lbl')||b.textContent; b.classList.add('qdone'); b.textContent='✓ скопійовано'; setTimeout(()=>{ b.classList.remove('qdone'); b.textContent=o; },1200); }
+  function qrFlash(b){ const o=b.getAttribute('data-lbl')||b.textContent; b.classList.add('qdone'); b.textContent='✓ скопировано'; setTimeout(()=>{ b.classList.remove('qdone'); b.textContent=o; },1200); }
   function qrRenderBar(box, withEditor){
     if(!box) return;
     const items=[['hi','Привітання'],['yes','Так, зробимо'],['clarify','Уточнити'],['rate','Курс'],['bye','Прощання']];
-    let h='<div class="qbl">Швидкі відповіді клієнту</div><div class="qbar-row">'
+    let h='<div class="qbl"><span>Швидкі відповіді клієнту</span><span class="qlang"><button type="button" data-lang="ua" class="'+(ansLang!=='ru'?'on':'')+'">UA</button><button type="button" data-lang="ru" class="'+(ansLang==='ru'?'on':'')+'">RU</button></span></div><div class="qbar-row">'
       + items.map(function(it){ return '<button type="button" class="qrb" data-qr="'+it[0]+'" data-lbl="'+it[1]+'">'+it[1]+'</button>'; }).join('') + '</div>';
     if(withEditor){ const q=qrGet();
       h+='<details class="qedit"><summary>Редагувати тексти</summary>'
@@ -2628,14 +2834,21 @@
     }
     box.innerHTML=h;
   }
+  function qrRenderBars(){ qrRenderBar($('quickBar'), false); qrRenderBar($('quickBarFaq'), true); }
   document.addEventListener('click',function(e){ const b=e.target&&e.target.closest?e.target.closest('.qrb'):null; if(!b) return;
     const txt=qrText(b.dataset.qr); if(!txt) return;
     try{ navigator.clipboard.writeText(txt).then(function(){qrFlash(b);},function(){qrCopyFb(txt);qrFlash(b);}); }catch(_){ qrCopyFb(txt); qrFlash(b); }
   });
+  // тумблер мови відповіді (перенесений з налаштувань до швидких відповідей)
+  document.addEventListener('click',function(e){ const lb=e.target&&e.target.closest?e.target.closest('.qlang button'):null; if(!lb) return;
+    ansLang=lb.dataset.lang;
+    render(); mcCalc(); euRender(); cardRender(); customRender();
+    if(lastR) applyParsed(lastR,false);
+    qrRenderBars(); saveRates();
+  });
   document.addEventListener('input',function(e){ const t=e.target&&e.target.closest?e.target.closest('.qet'):null; if(!t) return;
     const q=qrGet(); q[t.dataset.q]=t.value; qrSave(q); });
-  qrRenderBar($('quickBar'), false);
-  qrRenderBar($('quickBarFaq'), true);
+  qrRenderBars();
 })();
 </script>
 <script>
@@ -2739,14 +2952,14 @@
   function linkHtml(hash){
     const u=txUrl(hash); if(!u) return '';
     return '<div style="display:flex;gap:8px;margin-top:12px">'+
-      '<a class="badd" style="flex:1;text-align:center;text-decoration:none;margin-top:0" target="_blank" rel="noopener noreferrer" href="'+esc(u)+'">Відкрити в експлорері ↗</a>'+
-      '<button class="badd" id="vLinkCopy" type="button" style="flex:1;margin-top:0">Скопіювати посилання</button></div>';
+      '<a class="badd" style="flex:1;text-align:center;text-decoration:none;margin-top:0" target="_blank" rel="noopener noreferrer" href="'+esc(u)+'">Открыть в эксплорере ↗</a>'+
+      '<button class="badd" id="vLinkCopy" type="button" style="flex:1;margin-top:0">Скопировать ссылку</button></div>';
   }
   function vCopyFb(txt,done){ const t=document.createElement('textarea'); t.value=txt; document.body.appendChild(t); t.select(); try{ document.execCommand('copy'); done(); }catch(e){} document.body.removeChild(t); }
   function bindLink(hash){
     const b=$('vLinkCopy'); if(!b) return;
     const u=txUrl(hash); if(!u) return;
-    b.addEventListener('click',()=>{ const done=()=>{ b.textContent='Скопійовано ✓'; setTimeout(()=>{ b.textContent='Скопіювати посилання'; },1400); };
+    b.addEventListener('click',()=>{ const done=()=>{ b.textContent='Скопировано ✓'; setTimeout(()=>{ b.textContent='Скопировать ссылку'; },1400); };
       try{ navigator.clipboard.writeText(u).then(done,()=>vCopyFb(u,done)); }catch(e){ vCopyFb(u,done); } });
   }
 
@@ -2956,7 +3169,7 @@
 
     const cc=$('vConfirmCopy');
     if(cc) cc.addEventListener('click',()=>{ const txt='Платіж отримано: '+fmtUnits(d.amount,d.dec)+' USDT ✓';
-      const done=()=>{ cc.textContent='Скопійовано ✓'; setTimeout(()=>{ cc.textContent='Скопіювати підтвердження для клієнта'; },1400); };
+      const done=()=>{ cc.textContent='Скопировано ✓'; setTimeout(()=>{ cc.textContent='Скопіювати підтвердження для клієнта'; },1400); };
       try{ navigator.clipboard.writeText(txt).then(done,()=>vCopyFb(txt,done)); }catch(e){ vCopyFb(txt,done); } });
 
     const mk=$('vMark'), um=$('vUnmark');
@@ -3095,11 +3308,11 @@
     el.className='toast'+(out?' out-dir':'');
     el.innerHTML=
       '<div class="th"><span class="tdot"></span>'+
-      '<span class="ttl">'+(out?'Відправлення USDT':'Надходження USDT')+'</span>'+
+      '<span class="ttl">'+(out?'Отправление USDT':'Надходження USDT')+'</span>'+
       '<span class="tclose" data-close="1">×</span></div>'+
       '<div class="tamt">'+(out?'−':'+')+esc(amt)+' USDT</div>'+
       (peer?'<div class="tsub">'+(out?'кому: ':'від: ')+esc(shortA(peer))+'</div>':'')+
-      '<div class="thint">натисніть, щоб відкрити транзакції</div>';
+      '<div class="thint">нажмите, чтобы открыть транзакции</div>';
     const close=()=>{ el.classList.add('out'); setTimeout(()=>{ try{el.remove();}catch(e){} },260); };
     el.addEventListener('click',ev=>{
       if(ev.target&&ev.target.dataset&&ev.target.dataset.close){ close(); return; }
@@ -3436,70 +3649,67 @@
   // ══════════ вкладка «Ответы клиентам»: заготовки с копией в один клик ══════════
   const TPLK='usdtTplV2';
   const TPL_DEF=[
-    {t:'Привітання / Приветствие',
+    {t:'Приветствие',
      ua:'Вітаю! Підкажіть, будь ласка, напрямок обміну та суму — одразу порахую і надішлю умови.',
      ru:'Здравствуйте! Подскажите, пожалуйста, направление обмена и сумму — сразу посчитаю и пришлю условия.'},
-    {t:'Як правильно написати запит · пам’ятка клієнту',
+    {t:'Как правильно написать запрос · памятка клиенту',
      ua:'Щоб порахувати швидко і точно, напишіть одним повідомленням: що віддаєте (сума + валюта) і що бажаєте отримати. Приклади: «1000 USDT в грн» · «15 000 грн + 1000$ в USDT» · «5000 USDT: 2000$, решта грн» · «25 000 грн на картку».',
      ru:'Чтобы посчитать быстро и точно, напишите одним сообщением: что отдаёте (сумма + валюта) и что хотите получить. Примеры: «1000 USDT в грн» · «15 000 грн + 1000$ в USDT» · «5000 USDT: 2000$, остальное грн» · «25 000 грн на карту».'},
-    {t:'Уточнення · напрямок обміну',
+    {t:'Уточнение · направление обмена',
      ua:'Підкажіть, будь ласка: ви віддаєте USDT і отримуєте готівку, чи навпаки — вносите кошти та отримуєте USDT?',
      ru:'Подскажите, пожалуйста: вы отдаёте USDT и получаете наличные, или наоборот — вносите средства и получаете USDT?'},
-    {t:'Уточнення · сума і валюта',
+    {t:'Уточнение · сумма и валюта',
      ua:'Напишіть, будь ласка, суму та валюту одним повідомленням — наприклад: «1000 USDT в грн» або «15 000 грн в USDT».',
      ru:'Напишите, пожалуйста, сумму и валюту одним сообщением — например: «1000 USDT в грн» или «15 000 грн в USDT».'},
-    {t:'Уточнення · валюта виплати',
+    {t:'Уточнение · валюта выплаты',
      ua:'У якій валюті бажаєте отримати виплату: гривня, долар чи євро? І чи потрібно розбити на кілька валют — напишіть, скільки в якій.',
      ru:'В какой валюте хотите получить выплату: гривна, доллар или евро? Если нужно разбить на несколько валют — напишите, сколько в какой.'},
-    {t:'Уточнення · готівка чи картка',
+    {t:'Уточнение · наличные или карта',
      ua:'Виплату зручніше отримати готівкою чи переказом на картку?',
      ru:'Выплату удобнее получить наличными или переводом на карту?'},
-    {t:'Уточнення · мережа USDT',
+    {t:'Уточнение · сеть USDT',
      ua:'Уточніть, будь ласка, мережу для USDT: TRC-20 (Tron)? За замовчуванням працюємо саме з нею.',
      ru:'Уточните, пожалуйста, сеть для USDT: TRC-20 (Tron)? По умолчанию работаем именно с ней.'},
-    {t:'Підтвердження перед фіксацією',
+    {t:'Подтверждение перед фиксацией',
      ua:'Перевірте, будь ласка, чи все вірно: {віддаєте} → {отримуєте}. Якщо так — підтвердіть, і я фіксую курс.',
      ru:'Проверьте, пожалуйста, всё ли верно: {отдаёте} → {получаете}. Если да — подтвердите, и я фиксирую курс.'},
-    {t:'Запит реквізитів · картка (грн)',
+    {t:'Запрос реквизитов · карта (грн)',
      ua:'Надішліть, будь ласка, номер картки для зарахування гривні. Перевірте цифри перед відправкою.',
      ru:'Пришлите, пожалуйста, номер карты для зачисления гривны. Проверьте цифры перед отправкой.'},
-    {t:'Запит адреси · USDT TRC-20',
+    {t:'Запрос адреса · USDT TRC-20',
      ua:'Надішліть, будь ласка, вашу USDT-адресу мережі TRC-20 (починається з T). Уважно перевірте перші та останні символи.',
      ru:'Пришлите, пожалуйста, вашу USDT-адрес сети TRC-20 (начинается с T). Внимательно проверьте первые и последние символы.'},
-    {t:'Підтвердження умов',
-     ua:'Фіксуємо: {що віддаєте} → {що отримуєте}. Курс дійсний {N} хвилин. Після оплати надішліть, будь ласка, хеш транзакції.',
-     ru:'Фиксируем: {что отдаёте} → {что получаете}. Курс действителен {N} минут. После оплаты пришлите, пожалуйста, хеш транзакции.'},
-    {t:'Оплату отримано',
+    {t:'Оплата получена',
      ua:'Кошти отримали ✅ Виплату відправимо протягом кількох хвилин і одразу повідомимо з підтвердженням.',
      ru:'Средства получили ✅ Выплату отправим в течение нескольких минут и сразу сообщим с подтверждением.'},
-    {t:'Виплату відправлено',
+    {t:'Выплата отправлена',
      ua:'Виплату відправлено ✅ Підтвердження: {хеш або квитанція}. Дякуємо за обмін — будемо раді бачити знову!',
      ru:'Выплата отправлена ✅ Подтверждение: {хеш или квитанция}. Спасибо за обмен — будем рады видеть снова!'},
-    {t:'Затримка мережі',
+    {t:'Задержка сети',
      ua:'Транзакція вже в мережі та очікує підтверджень — це робота блокчейна, з нашого боку все відправлено. Зазвичай до {N} хвилин. Тримаю на контролі й одразу повідомлю.',
      ru:'Транзакция уже в сети и ожидает подтверждений — это работа блокчейна, с нашей стороны всё отправлено. Обычно до {N} минут. Держу на контроле и сразу сообщу.'},
-    {t:'Курс змінився',
+    {t:'Курс изменился',
      ua:'На жаль, попередні умови вже не дійсні — ринок змінився. Актуально зараз: {нові умови}. Підтверджуєте обмін за цими умовами?',
      ru:'К сожалению, прежние условия уже неактуальны — рынок изменился. Сейчас актуально: {новые условия}. Подтверждаете обмен на этих условиях?'},
-    {t:'Оплата не надійшла',
+    {t:'Оплата не поступила',
      ua:'Поки що надходження не бачимо. Перевірте, будь ласка, чи відправлена транзакція, і надішліть хеш — одразу перевіримо з нашого боку.',
      ru:'Пока поступление не видим. Проверьте, пожалуйста, отправлена ли транзакция, и пришлите хеш — сразу проверим с нашей стороны.'},
-    {t:'Невірні / неповні реквізити',
+    {t:'Неверные / неполные реквизиты',
      ua:'У реквізитах є розбіжність, виплату за ними зробити не можемо — це для вашої ж безпеки. Надішліть, будь ласка, реквізити ще раз, повністю.',
      ru:'В реквизитах есть расхождение, выплату по ним сделать не можем — это для вашей же безопасности. Пришлите, пожалуйста, реквизиты ещё раз, полностью.'},
-    {t:'Прохання зачекати',
+    {t:'Просьба подождать',
      ua:'Одну хвилину, будь ласка — уточнюю інформацію і одразу повернуся з відповіддю.',
      ru:'Одну минуту, пожалуйста — уточняю информацию и сразу вернусь с ответом.'},
-    {t:'Ввічлива відмова',
+    {t:'Вежливый отказ',
      ua:'Дякуємо за звернення! На жаль, цю операцію зараз не проводимо. Гарного дня!',
      ru:'Спасибо за обращение! К сожалению, эту операцию сейчас не проводим. Хорошего дня!'},
-    {t:'Відповідь на претензію',
+    {t:'Ответ на претензию',
      ua:'Розумію ваше занепокоєння, давайте розберемося по фактах. Надішліть, будь ласка, хеш транзакції та час відправки — перевіримо і вирішимо питання.',
      ru:'Понимаю ваше беспокойство, давайте разберёмся по фактам. Пришлите, пожалуйста, хеш транзакции и время отправки — проверим и решим вопрос.'},
-    {t:'Мінімальна сума',
+    {t:'Минимальная сумма',
      ua:'Мінімальна сума для цього напрямку — {сума}. Якщо влаштовує, надішліть вашу суму — порахую точно.',
      ru:'Минимальная сумма для этого направления — {сумма}. Если устраивает, пришлите вашу сумму — посчитаю точно.'},
-    {t:'Утримати клієнта',
+    {t:'Удержать клиента',
      ua:'Для вашої суми можемо запропонувати кращі умови: {умови}. Пропозиція актуальна сьогодні. Як вам?',
      ru:'Для вашей суммы можем предложить лучшие условия: {условия}. Предложение актуально сегодня. Как вам?'},
   ];
@@ -3522,14 +3732,14 @@
     const canOrder = !q && tplEdit===null;
     // переключатель языка
     const langSeg='<div class="seg two tplLangSeg" id="tplLangSeg" style="margin-bottom:12px">'+
-      '<button type="button" data-l="ua" class="'+(tplLang==='ua'?'on':'')+'">🇺🇦 Клієнту (укр)</button>'+
+      '<button type="button" data-l="ua" class="'+(tplLang==='ua'?'on':'')+'">🇺🇦 Клиенту (укр)</button>'+
       '<button type="button" data-l="ru" class="'+(tplLang==='ru'?'on':'')+'">🇷🇺 Клиенту (рус)</button></div>';
     let html=langSeg;
     if(canOrder && a.length>1)
-      html+='<div class="tplhint-move">↕ Порядок під себе: стрілки ▲▼ або перетягни рядок. Часті шаблони — вгору.</div>';
+      html+='<div class="tplhint-move">↕ Порядок под себя: стрелки ▲▼ или перетащи строку. Частые шаблоны — вверх.</div>';
     if(tplEdit==='new')
       html+='<div class="tplrow" data-edit="new"><input class="tpe-t" placeholder="Назва шаблону" value="">'+
-            '<textarea class="tpe-x tpe-ua" placeholder="Текст українською (для клієнта)"></textarea>'+
+            '<textarea class="tpe-x tpe-ua" placeholder="Текст на украинском (для клиента)"></textarea>'+
             '<textarea class="tpe-x tpe-ru" placeholder="Текст на русском (для клиента)"></textarea>'+
             '<div class="tph" style="margin:8px 0 0"><button class="tpb tsave" type="button">Зберегти</button>'+
             '<button class="tpb tcancel" type="button">Скасувати</button></div></div>';
@@ -3537,27 +3747,27 @@
       if(q && (it.t+' '+(it.ua||'')+' '+(it.ru||'')).toLowerCase().indexOf(q)<0) return;
       if(tplEdit===i){
         html+='<div class="tplrow" data-edit="'+i+'"><input class="tpe-t" value="'+esc(it.t)+'">'+
-              '<textarea class="tpe-x tpe-ua" placeholder="українською">'+esc(it.ua||'')+'</textarea>'+
+              '<textarea class="tpe-x tpe-ua" placeholder="на украинском">'+esc(it.ua||'')+'</textarea>'+
               '<textarea class="tpe-x tpe-ru" placeholder="на русском">'+esc(it.ru||'')+'</textarea>'+
               '<div class="tph" style="margin:8px 0 0"><button class="tpb tsave" type="button">Зберегти</button>'+
               '<button class="tpb tcancel" type="button">Скасувати</button></div></div>';
       } else {
         const mv = canOrder
           ? '<div class="tpmove">'+
-              '<button class="tpb tmv tup" type="button" title="перемістити вище"'+(i===0?' disabled':'')+'>▲</button>'+
-              '<button class="tpb tmv tdn" type="button" title="перемістити нижче"'+(i===a.length-1?' disabled':'')+'>▼</button>'+
+              '<button class="tpb tmv tup" type="button" title="переместить выше"'+(i===0?' disabled':'')+'>▲</button>'+
+              '<button class="tpb tmv tdn" type="button" title="переместить ниже"'+(i===a.length-1?' disabled':'')+'>▼</button>'+
             '</div>'+
             '<span class="tpgrip" title="перетягни, щоб переставити">⠿</span>'
           : '';
         html+='<div class="tplrow" data-i="'+i+'"'+(canOrder?' draggable="true"':'')+'><div class="tph">'+mv+
               '<span class="tpt">'+esc(it.t)+'</span>'+
-              '<button class="tpb tcopy" type="button">⧉ Скопіювати</button>'+
+              '<button class="tpb tcopy" type="button">⧉ Скопировать</button>'+
               '<button class="tpb tedit" type="button" title="редагувати">✎</button>'+
               '<button class="tpb tdel" type="button" title="видалити">✕</button></div>'+
               '<pre>'+esc(tplText(it))+'</pre></div>';
       }
     });
-    list.innerHTML=html || (langSeg+'<div class="tplempty">нічого не знайдено — зміни запит або додай свій шаблон</div>');
+    list.innerHTML=html || (langSeg+'<div class="tplempty">ничего не найдено — измени запрос или добавь свой шаблон</div>');
   }
   (function(){
     const list=$('tplList'); if(!list) return;
@@ -3567,9 +3777,9 @@
       const t=list.querySelector('.tpe-t'); if(t) t.focus(); });
     if($('tplReset')) $('tplReset').addEventListener('click',e=>{
       const b=e.currentTarget;
-      if(b.dataset.arm){ delete b.dataset.arm; b.textContent='↺ стандартні'; tplSave(TPL_DEF.map(x=>({t:x.t,ua:x.ua,ru:x.ru}))); tplEdit=null; tplRender(); return; }
-      b.dataset.arm='1'; b.textContent='точно повернути стандартні?';
-      setTimeout(()=>{ if(b.dataset.arm){ delete b.dataset.arm; b.textContent='↺ стандартні'; } },2600);
+      if(b.dataset.arm){ delete b.dataset.arm; b.textContent='↺ стандартные'; tplSave(TPL_DEF.map(x=>({t:x.t,ua:x.ua,ru:x.ru}))); tplEdit=null; tplRender(); return; }
+      b.dataset.arm='1'; b.textContent='точно вернуть стандартные?';
+      setTimeout(()=>{ if(b.dataset.arm){ delete b.dataset.arm; b.textContent='↺ стандартные'; } },2600);
     });
     list.addEventListener('click',e=>{
       const langBtn=e.target.closest('#tplLangSeg button');
@@ -3580,7 +3790,7 @@
         const t=row.querySelector('.tpe-t').value.trim();
         const ua=row.querySelector('.tpe-ua').value.trim();
         const ru=row.querySelector('.tpe-ru').value.trim();
-        if(!t||(!ua&&!ru)){ btn.textContent='заповни назву і хоча б одну мову'; setTimeout(()=>{btn.textContent='Зберегти';},1800); return; }
+        if(!t||(!ua&&!ru)){ btn.textContent='заполни название и хотя бы один язык'; setTimeout(()=>{btn.textContent='Зберегти';},1800); return; }
         const a=tplGet();
         if(row.dataset.edit==='new') a.unshift({t,ua,ru}); else a[+row.dataset.edit]={t,ua,ru};
         tplSave(a); tplEdit=null; tplRender(); return;
@@ -3603,7 +3813,7 @@
                    .replace(/\{(?:що отримуєте|что получаете|отримуєте|получаете)\}/g,get);
           }
         }catch(e){}
-        const done=()=>{ btn.textContent='✓ Скопійовано'; setTimeout(()=>{btn.textContent='⧉ Скопіювати';},1300); };
+        const done=()=>{ btn.textContent='✓ Скопировано'; setTimeout(()=>{btn.textContent='⧉ Скопировать';},1300); };
         try{ navigator.clipboard.writeText(txt).then(done,()=>vCopyFb(txt,done)); }catch(_){ vCopyFb(txt,done); }
         return;
       }
