@@ -787,6 +787,337 @@
     .utilbar .ub{font-size:11.5px;padding:7px 11px}
   }
 </style>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+<style id="premium-skin">
+/* ═══ Premium light skin (перенос из прототипа) ═══ */
+:root{
+  color-scheme:light;
+  --bg:#E7ECE7; --surface:#FAFCFA; --surface2:#F1F5F1; --sunk:#E9EEEA; --veil:#FFFFFF;
+  --panel:#FAFCFA; --panel2:#F1F5F1;
+  --ink:#16211C; --ink2:#3B4842; --muted:#6E7C74; --faint:#8B978F;
+  --line:#D8E0DA; --hair:#E4EAE5; --hiline:rgba(255,255,255,.95); --edge:rgba(255,255,255,.9);
+  --accent:#2F6E56; --accent2:#E9F1EC; --accent-soft:#E9F1EC;
+  --sell:#2F6E56; --sell2:#E9F1EC; --buy:#9C5B35; --buy2:#F6EDE6;
+  --green:#2F6E56; --danger:#A8443C;
+  --cta1:#357C61; --cta2:#2F6E56; --cta3:#28604B; --cta-glow:rgba(47,110,86,.38);
+  --gold:#7A6031; --gold-soft:rgba(169,133,71,.12);
+  --gold-grad:linear-gradient(175deg,#A98547 0%,#6E5629 55%,#8F7238 100%);
+  --warn:#9A6B1F; --warn-soft:#FBF2E0; --warn-line:#E8D6AE;
+  --plate:linear-gradient(180deg,#FFFFFF 0%,#F4F7F4 100%);
+  --veil-blur:rgba(250,252,250,.86);
+  --sh1:inset 0 1px 0 rgba(255,255,255,.95),0 1px 1px rgba(22,33,28,.06),0 3px 6px -3px rgba(22,33,28,.14),0 8px 16px -10px rgba(22,33,28,.16);
+  --sh2:inset 0 0 0 1px rgba(255,255,255,.85),inset 0 1px 0 rgba(255,255,255,.95),0 1px 2px rgba(22,33,28,.07),0 6px 12px -6px rgba(22,33,28,.16),0 20px 36px -18px rgba(22,33,28,.22),0 44px 80px -44px rgba(22,33,28,.24);
+  --sh3:inset 0 0 0 1px rgba(255,255,255,.8),inset 0 1px 0 rgba(255,255,255,.9),0 2px 4px rgba(22,33,28,.07),0 12px 24px -10px rgba(22,33,28,.16),0 38px 64px -26px rgba(22,33,28,.26),0 90px 140px -70px rgba(22,33,28,.34);
+  --sh-btn:inset 0 1px 0 rgba(255,255,255,.30),inset 0 -1px 0 rgba(0,0,0,.14),0 2px 3px rgba(22,33,28,.18),0 10px 20px -8px rgba(22,33,28,.42);
+  --inset:inset 0 2px 4px rgba(22,33,28,.09),inset 0 1px 1px rgba(22,33,28,.07),0 1px 0 rgba(255,255,255,.9);
+  --inset-deep:inset 0 3px 8px rgba(22,33,28,.13),inset 0 1px 2px rgba(22,33,28,.10),0 1px 0 rgba(255,255,255,.95);
+  --page-glow:rgba(255,255,255,.85);
+  --serif:'Instrument Serif',Georgia,serif;
+  --disp:'Helvetica Neue',Helvetica,'Segoe UI',system-ui,sans-serif;
+  --body:'Helvetica Neue',Helvetica,'Segoe UI',system-ui,sans-serif;
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#171A1F; --surface:#232830; --surface2:#1D2128; --sunk:#191D23; --veil:#252A32;
+  --panel:#232830; --panel2:#1D2128;
+  --ink:#EBEEF2; --ink2:#C5CAD2; --muted:#9AA0A9; --faint:#868C95;
+  --line:#353B45; --hair:#2B3039; --hiline:rgba(255,255,255,.07); --edge:rgba(255,255,255,.08);
+  --accent:#93B8DA; --accent2:#222B35; --accent-soft:#222B35;
+  --sell:#8FC0CE; --sell2:#1E2830; --buy:#D6A87C; --buy2:#2A2219;
+  --green:#8FC0CE; --danger:#E08A83;
+  --cta1:#93B8DA; --cta2:#7FA8CE; --cta3:#6E99C2; --cta-glow:rgba(147,184,218,.30);
+  --gold:#D2BC8C; --gold-soft:rgba(226,201,143,.13);
+  --gold-grad:linear-gradient(175deg,#F5E3B4 0%,#D9BC7C 55%,#EBD69F 100%);
+  --warn:#E2B776; --warn-soft:#2A2317; --warn-line:#4C4028;
+  --plate:linear-gradient(180deg,#2B313A 0%,#232830 100%);
+  --veil-blur:rgba(35,40,48,.84);
+  --page-glow:rgba(190,208,228,.07);
+  --sh1:inset 0 1px 0 rgba(255,255,255,.06),0 1px 2px rgba(0,0,0,.3),0 6px 14px -8px rgba(0,0,0,.42);
+  --sh2:inset 0 0 0 1px rgba(255,255,255,.055),inset 0 1px 0 rgba(255,255,255,.08),0 2px 4px rgba(0,0,0,.3),0 14px 26px -12px rgba(0,0,0,.42),0 34px 60px -30px rgba(0,0,0,.5);
+  --sh3:inset 0 0 0 1px rgba(255,255,255,.055),inset 0 1px 0 rgba(255,255,255,.09),0 4px 8px rgba(0,0,0,.34),0 28px 50px -20px rgba(0,0,0,.46),0 80px 120px -60px rgba(0,0,0,.6);
+  --sh-btn:inset 0 1px 0 rgba(255,255,255,.28),inset 0 -1px 0 rgba(0,0,0,.22),0 2px 4px rgba(0,0,0,.34),0 12px 22px -10px rgba(0,0,0,.5);
+  --inset:inset 0 2px 5px rgba(0,0,0,.38),inset 0 1px 1px rgba(0,0,0,.28);
+  --inset-deep:inset 0 3px 9px rgba(0,0,0,.42),inset 0 1px 2px rgba(0,0,0,.36);
+}
+body{
+  background:radial-gradient(1100px 480px at 50% -8%,var(--page-glow),rgba(255,255,255,0) 62%),var(--bg);
+  background-attachment:fixed;color:var(--ink);font-variant-numeric:tabular-nums;
+  transition:background .35s ease,color .35s ease}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+::selection{background:var(--accent-soft)}
+*{scrollbar-color:var(--line) transparent}
+*::-webkit-scrollbar-thumb{background:var(--line)}
+*::-webkit-scrollbar-thumb:hover{background:var(--muted)}
+
+/* ── каркас ── */
+.app{background:var(--surface);border:1px solid var(--line);box-shadow:var(--sh3);border-radius:22px}
+.app::before{background:linear-gradient(90deg,transparent,rgba(22,33,28,.10),transparent)}
+.app-head{position:sticky;top:0;z-index:20;background:var(--veil-blur);
+  -webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);
+  border-bottom:1px solid var(--hair);border-radius:22px 22px 0 0}
+.head-top .brand{font-family:var(--serif);font-weight:400;font-size:27px;letter-spacing:-.01em;color:var(--ink);text-shadow:none;
+  display:flex;align-items:center;gap:11px}
+.head-top .brand::before{content:'₮';flex:0 0 auto;display:grid;place-items:center;width:38px;height:38px;border-radius:11px;
+  background:var(--plate);border:1px solid var(--line);box-shadow:var(--sh1);font-family:var(--serif);font-size:20px;color:var(--ink)}
+.head-top .brand .ver{font-family:var(--mono);font-size:10px;letter-spacing:.14em;background:transparent;border:1px solid var(--line);
+  color:var(--gold)}
+.head-rates{flex-direction:column;align-items:stretch;gap:7px;margin-top:14px}
+.head-rates #rSum{color:var(--ink);font-variant-numeric:tabular-nums;font-size:13.5px;font-weight:500;
+  padding:9px 14px;border-radius:14px;background:var(--sunk);border:1px solid var(--line);box-shadow:var(--inset);
+  white-space:nowrap;overflow-x:auto;scrollbar-width:none;transition:border-color .2s}
+.head-rates #rSum b{color:var(--faint);font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase}
+.head-rates #rSum:hover{background:var(--sunk);border-color:var(--accent)}
+.head-rates #rAge{font-family:var(--body);font-size:11px;color:var(--faint);padding:0 2px}
+.head-rates #rSum{display:flex;align-items:center;flex-wrap:nowrap;padding:6px 4px;font-size:17px}
+.head-rates #rSum .rcell{display:flex;align-items:baseline;gap:9px;padding:3px 16px;border-left:1px solid var(--hair);
+  white-space:nowrap;font-family:var(--mono);font-size:17px;font-weight:500;letter-spacing:-.01em;color:var(--ink)}
+.head-rates #rSum .rcell:first-child{border-left:none}
+.head-rates #rSum .rcell b{font-size:9.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+.head-rates #rSum .rup{color:var(--buy)}
+.head-rates #rSum .rdn{color:var(--sell)}
+.head-rates #spreadWarn{border-radius:10px;padding:7px 11px;font-size:11.5px}
+.usdtx .uxcur{color:var(--muted)}
+.gear{color:var(--ink2);background:var(--surface);border:1px solid var(--line);box-shadow:var(--sh1);transition:border-color .2s,color .2s}
+.gear:hover{border-color:var(--accent);color:var(--accent)}
+.gear.alt{background:transparent;border-color:transparent;color:var(--faint);box-shadow:none}
+.gear.alt:hover{color:var(--ink2)}
+#ratesCard{background:var(--surface2)}
+.setlab{color:var(--ink2);font-family:var(--serif);font-size:16px}
+.costwrap{background:var(--sunk);border:1px solid var(--line)}
+.pbar{background:var(--surface2)}
+.pbar input:not([type=checkbox]),.pbar textarea{background:var(--surface);border:1px solid var(--line);box-shadow:var(--sh1);color:var(--ink)}
+.pbar input:not([type=checkbox]):focus,.pbar textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+#phrase:focus{border-color:var(--accent)!important;box-shadow:0 0 0 3px var(--accent-soft)}
+
+/* ── вкладки ── */
+.tabs{background:var(--surface2);border-top:1px solid var(--hair)}
+.tabs button{color:var(--muted)}
+.tabs button:hover{color:var(--ink2)}
+.tabs button.on{color:var(--ink);background:var(--surface);box-shadow:var(--sh1)}
+@media(max-width:680px){
+  .tabs{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;gap:2px;border-top:1px solid var(--line);border-radius:0;
+    padding:7px 8px calc(8px + env(safe-area-inset-bottom));background:var(--veil-blur);
+    -webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);
+    box-shadow:0 -12px 30px -18px rgba(0,0,0,.35);overflow-x:auto}
+  .tabs button{flex:1 1 0;min-width:0;font-size:11.5px;padding:9px 4px;border-radius:11px;white-space:nowrap}
+  body{padding-bottom:104px}
+}
+
+/* ── сегменты и поля ── */
+.seg{background:var(--sunk);border:1px solid var(--line);box-shadow:var(--inset)}
+.seg button{color:var(--muted);font-family:var(--disp)}
+.seg button:hover{color:var(--ink2)}
+.seg button.on{color:var(--ink);background:var(--surface);box-shadow:var(--sh1)}
+.seg.dir button.on[data-dir="sell"]{color:var(--sell);background:var(--sell2)}
+.seg.dir button.on[data-dir="buy"]{color:var(--buy);background:var(--buy2)}
+.seg.cur button.on,.seg.kn button.on{color:var(--accent)}
+.mseg button.on{color:var(--ink)}
+.rgrid input,.cgrid input,.brow .bamt,.brow .bcur,.vin,.qedit .qet,.qetx,.qelbl,
+.qedit .prrow .pr-d,.tplrow input.tpe-t,.tplrow textarea.tpe-x,.trsolve textarea,.rchk input{
+  background:var(--sunk);border:1px solid var(--line);color:var(--ink);box-shadow:var(--inset)}
+.rgrid input:focus,.cgrid input:focus,.vin:focus,.trsolve textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.tplrow .tpb{background:var(--surface);border:1px solid var(--line);color:var(--ink2);box-shadow:var(--sh1)}
+.tplrow .tpb:hover{border-color:var(--accent);color:var(--accent)}
+.tplrow .tpb.tmv{color:var(--muted)}
+.tplrow .tpgrip{color:var(--faint)}
+.tplrow.tpl-over{box-shadow:0 0 0 2px var(--accent-soft)}
+.cinp .pm,.badd,.qrb,#reverseBtn,.log .cpbtn,#dayCopy,#daySend,#dayClear{
+  color:var(--ink2);background:var(--surface);border:1px solid var(--line);box-shadow:var(--sh1)}
+.cinp .pm:hover,.badd:hover,.qrb:hover,#reverseBtn:hover{border-color:var(--accent);color:var(--accent);background:var(--surface)}
+.ql,.cl{color:var(--ink2)}
+.hint,.setnote,.phrase-info{color:var(--muted)}
+.phrase-info b{color:var(--ink)}
+.phrase-info.ok{color:var(--sell)} .phrase-info.err{color:var(--buy)}
+.qbar .qlang{background:var(--sunk);border:1px solid var(--line)}
+.qerow,.dealopts,.utilbar .ub{background:var(--sunk)}
+.utilbar .ub:hover{background:var(--surface)}
+.utilbar .ub.on{box-shadow:inset 0 0 0 1px var(--accent)}
+.utilpanel{background:var(--surface2);box-shadow:none}
+.chips button{background:var(--surface);border:1px solid var(--line);color:var(--ink2);box-shadow:var(--sh1);transition:color .2s,border-color .2s,transform .12s}
+.chips button:hover{color:var(--accent);border-color:var(--accent);background:var(--surface)}
+.chips button:active{transform:scale(.98)}
+.phsug{background:var(--surface);border:1px solid var(--line);box-shadow:var(--sh2)}
+.phsug .psk{background:var(--accent-soft);border:1px solid var(--line);color:var(--accent)}
+
+/* ── карточки ── */
+.onecard,.calcfold>summary,.tplrow,.vcard{background:var(--surface);border:1px solid var(--line);box-shadow:var(--sh2)}
+.calcfold .cfs-t,.tplrow .tpt,.vcard-h,.loghead{color:var(--ink);font-family:var(--serif);font-size:18px;
+  text-transform:none;letter-spacing:0;font-weight:400}
+.setlab{text-transform:none;letter-spacing:0;font-weight:400;font-size:17px}
+.setlab .setsub,.vcard-h span,.loghead span{font-family:var(--body);font-size:11.5px;color:var(--faint);text-transform:none;letter-spacing:0}
+.howto,.vfilters{background:var(--sunk);border:1px solid var(--line)}
+.calcbox{background:var(--sunk);border:1px solid var(--line);box-shadow:var(--inset)}
+.calcbox .fnum,.fnum{color:var(--ink);text-shadow:none}
+.calclab{color:var(--muted)}
+.amount-wrap input{color:var(--ink);background:var(--sunk);border:1px solid var(--line);
+  box-shadow:var(--inset-deep);caret-color:var(--accent)}
+.amount-wrap input:focus{border-color:var(--accent);box-shadow:var(--inset-deep),0 0 0 3px var(--accent-soft)}
+.amount-wrap .u{color:var(--faint);text-shadow:none}
+.res,.vres,#mcTotBox{background:var(--surface);border:1px solid var(--line)!important;border-top:3px solid var(--accent)!important;
+  box-shadow:var(--sh2);color:var(--ink)}
+.res .big,.btot b{color:var(--ink);text-shadow:none}
+.vres .vrow b{color:var(--muted)}
+.copy{color:#fff;background:linear-gradient(180deg,var(--cta1),var(--cta3));box-shadow:var(--sh-btn);text-shadow:none}
+.copy:hover{box-shadow:var(--sh-btn),0 14px 30px -12px var(--cta-glow)}
+.copy::after{background:linear-gradient(105deg,transparent,rgba(255,255,255,.22),transparent)}
+.copy.done{box-shadow:var(--sh1)}
+html[data-theme="dark"] .copy{color:#161A20}
+.toast{background:var(--surface);border:1px solid var(--line);box-shadow:var(--sh3);color:var(--ink)}
+.toast .ttl{color:var(--ink)}
+
+/* ── глазок / понял / ответ ── */
+.glance{background:var(--surface);border:1px solid var(--line);box-shadow:var(--sh2);border-radius:16px}
+.glance .gtop{background:var(--surface2)}
+.glance .gbody{border-top:1px solid var(--hair);background:var(--surface2)}
+.glance .gsum{color:var(--ink);font-variant-numeric:tabular-nums}
+.glance .gbadge{font-family:var(--mono);font-weight:600;font-size:10px;letter-spacing:.12em;text-transform:uppercase}
+.glance.sell{border-color:var(--line);border-top:3px solid var(--sell)}
+.glance.sell .gtop{background:var(--sell2)}
+.glance.sell .gbadge{background:var(--sell);color:#fff}
+.glance.buy{border-color:var(--line);border-top:3px solid var(--buy)}
+.glance.buy .gtop{background:var(--buy2)}
+.glance.buy .gbadge{background:var(--buy);color:#fff}
+.glance.neutral{border-color:var(--line);border-top:3px solid var(--accent)}
+.glance.neutral .gtop{background:var(--accent2)}
+.glance.neutral .gbadge{background:var(--accent);color:#fff}
+.understood{background:var(--surface2);border:1px solid var(--line);color:var(--ink)}
+.understood.err{background:var(--warn-soft);border-color:var(--warn-line);color:var(--warn)}
+.understood .udir,.glance .gbody .udir{color:var(--ink)}
+.understood .ucur,.glance .gbody .ucur,.understood .ucomp,.glance .gbody .ucomp{color:var(--muted)}
+.understood .uwarn,.glance .gbody .uwarn{border-top:1px solid var(--hair);color:var(--warn)}
+.understood .ufixnote,.glance .gbody .ufixnote{color:var(--warn);background:var(--warn-soft);border:1px solid var(--warn-line)}
+.understood .ufix,.glance .gbody .ufix{border-top:1px solid var(--hair)}
+.understood .ufb,.glance .gbody .ufb{background:var(--surface);border:1px solid var(--line);color:var(--ink2);box-shadow:var(--sh1)}
+.understood .ufb:hover,.glance .gbody .ufb:hover{background:var(--surface);border-color:var(--accent);color:var(--accent)}
+.understood .ufb.on,.glance .gbody .ufb.on{box-shadow:inset 0 0 0 1px var(--accent)}
+.uans{background:var(--veil);border:1px solid var(--line);box-shadow:var(--sh2);border-radius:14px}
+.uans pre{font-size:15px;line-height:1.7;color:var(--ink)}
+.mc-scenario{background:var(--surface2);border:1px solid var(--line);color:var(--ink)}
+.mc-scenario b{color:var(--ink)}
+.mc-scenario .ex{border-top:1px solid var(--hair)}
+#mcRows .brow{background:var(--sunk);border:1px solid var(--line);box-shadow:var(--inset)}
+#mcRows .brow:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+#mcRows .brow .brm:hover{background:var(--buy2)}
+
+/* ── таблицы, журналы, статусы ── */
+.hrow{border-bottom:1px solid var(--hair)}
+.hrow button{border:1px solid var(--line);color:var(--ink2)}
+.hrow button:hover{border-color:var(--accent);color:var(--accent)}
+.trow{border-bottom:1px solid var(--hair)}
+.trow:hover{background:var(--sunk)}
+.trow.lmatch,.log .lrow.lmatch{background:var(--sell2)}
+.trow.lnew,.log .lrow.lnew{background:var(--accent2)}
+.rage.warn{background:var(--warn-soft);color:var(--warn)}
+.rage.old,#spreadWarn{background:#FBEAE8;color:var(--danger)}
+html[data-theme="dark"] .rage.old,html[data-theme="dark"] #spreadWarn{background:#2A1D1B}
+.trchips button.bad{background:#FBEAE8;color:var(--danger)}
+html[data-theme="dark"] .trchips button.bad{background:#2A1D1B}
+.trdone .etline.diff{background:var(--warn-soft);border-left:2px solid var(--warn)}
+#issTabCnt:not(:empty){color:#fff;background:var(--accent)}
+.qedit .prrow .prdel{border:1px solid var(--line);background:#FBEAE8;color:var(--danger)}
+.qedit .prrow .prdel:hover{background:#F6DCD8}
+html[data-theme="dark"] .qedit .prrow .prdel{background:#2A1D1B}
+
+/* ═══ новый блок сделки: одна плита, «Понял» слева, ответ справа ═══ */
+.dealplate{display:none;margin:12px 0 0;background:var(--surface);border:1px solid var(--line);
+  border-left:4px solid var(--accent);border-radius:18px;box-shadow:var(--sh3);overflow:hidden;
+  grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);transition:border-color .3s ease}
+.dealplate:has(.gtop),.dealplate:has(.uans[style*="display: block"]){display:grid}
+.dealplate:not(:has(.gtop)){grid-template-columns:minmax(0,1fr)}
+.dealplate:not(:has(.gtop)) .uans{grid-column:1;grid-row:auto}
+.dealplate:has(.glance.sell){border-left-color:var(--sell)}
+.dealplate:has(.glance.buy){border-left-color:var(--buy)}
+.dealplate .glance{display:contents!important}
+.dealplate .gtop{grid-column:1/-1;margin:0;padding:14px 20px;border-bottom:1px solid var(--hair);
+  background:var(--surface2);font-size:15px}
+.dealplate:has(.glance.sell) .gtop{background:var(--sell2)}
+.dealplate:has(.glance.buy) .gtop{background:var(--buy2)}
+.dealplate .gsum{font-family:var(--mono);font-size:clamp(18px,2.1vw,26px);font-weight:500;letter-spacing:-.025em;color:var(--ink);line-height:1.15}
+.dealplate .gtop{flex-wrap:wrap;gap:10px 14px}
+/* подпись под заголовком */
+.head-top .brand{flex-wrap:wrap}
+.brandsub{font-family:var(--body);font-size:12.5px;color:var(--muted);letter-spacing:.01em;width:100%;padding-left:49px;margin-top:-2px}
+.dealplate .gbody{grid-column:1;grid-row:2;margin:0;padding:16px 18px 18px;background:var(--surface2);
+  border-top:none;border-right:1px solid var(--hair);font-size:13px;color:var(--ink2)}
+.dealplate .understood{grid-column:1/-1;grid-row:3;margin:0;border:none;border-top:1px solid var(--hair);border-radius:0}
+.dealplate .anscol{grid-column:2;grid-row:2;display:flex;flex-direction:column;min-width:0}
+.dealplate:not(:has(.gtop)) .anscol{grid-column:1}
+.dealplate .uans{grid-column:auto;grid-row:auto;margin:0;border:none;border-radius:0;box-shadow:none;background:var(--surface);
+  padding:16px 20px 20px;flex-direction:column;flex:1 1 auto}
+.dealplate .uans+.uans{border-top:1px solid var(--hair)}
+.dealplate .uans[style*="display: block"]{display:flex!important}
+.dealplate .uansh{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--sell);margin-bottom:11px}
+.dealplate:has(.glance.buy) .uansh{color:var(--buy)}
+.dealplate .uans pre{flex:1 1 auto;background:var(--veil);border:1px solid var(--hair);border-radius:12px;
+  padding:15px 17px;box-shadow:var(--inset);font-family:var(--mono);font-size:15px;line-height:1.75;color:var(--ink);white-space:pre-wrap;word-break:break-word}
+.dealplate .uansbtn{margin-top:14px}
+.dealplate:has(.glance.sell) .uansbtn{background:linear-gradient(180deg,#357C61,#28604B)}
+.dealplate:has(.glance.buy) .uansbtn{background:linear-gradient(180deg,#A9663C,#8A4E2C)}
+html[data-theme="dark"] .dealplate:has(.glance.sell) .uansbtn{background:linear-gradient(180deg,#8FC0CE,#75A9B8);color:#161A20}
+html[data-theme="dark"] .dealplate:has(.glance.buy) .uansbtn{background:linear-gradient(180deg,#D6A87C,#BE8F63);color:#161A20}
+.dealplate .fullmsg-row{margin-top:11px}
+.gsplit{display:flex;flex-direction:column;gap:6px;margin:0 0 11px}
+.gsplit .gsl{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--faint);margin-bottom:2px}
+.gsplit .gsr{display:flex;align-items:baseline;gap:9px;background:var(--surface);border:1px solid var(--line);
+  border-radius:10px;padding:8px 11px;box-shadow:var(--sh1);text-align:left;font-family:var(--body);width:100%}
+.gsplit button.gsr{cursor:pointer;transition:border-color .2s}
+.gsplit button.gsr:hover{border-color:var(--accent)}
+.gsplit .gsv{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--ink);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gsplit .gsr.dirrow .gsv,.gsplit .gsr.getsrow .gsv{color:var(--sell)}
+.dealplate:has(.glance.buy) .gsplit .gsr.dirrow .gsv,
+.dealplate:has(.glance.buy) .gsplit .gsr.getsrow .gsv{color:var(--buy)}
+.gsplit .gsk{margin-left:auto;font-size:12px;color:var(--muted);white-space:nowrap}
+.gsplit .gsh{font-size:11px;color:var(--faint);white-space:nowrap}
+#sumCopyBtn{margin-top:8px;width:100%;cursor:pointer;background:var(--surface);border:1px solid var(--line);
+  border-radius:12px;padding:11px 14px;font-family:var(--body);font-size:12.5px;color:var(--ink2);box-shadow:var(--sh1);transition:color .2s,border-color .2s}
+#sumCopyBtn:hover{color:var(--accent);border-color:var(--accent)}
+input[type=checkbox]{accent-color:var(--accent);width:16px;height:16px}
+@media(max-width:820px){
+  .dealplate{grid-template-columns:minmax(0,1fr)}
+  .dealplate .gtop,.dealplate .gbody,.dealplate .uans,.dealplate .understood{grid-column:1}
+  .dealplate .gbody{border-right:none;border-bottom:1px solid var(--hair)}
+  .dealplate .uans{grid-row:auto}
+}
+
+/* ═══ структура нового дизайна: две плиты, карточка ввода, подчёркнутые вкладки ═══ */
+.app{background:transparent!important;border:none!important;box-shadow:none!important;border-radius:0;overflow:visible;padding:0}
+.app::before{display:none}
+.plate{background:var(--surface);border:1px solid var(--line);border-radius:22px;box-shadow:var(--sh3);overflow:hidden;transition:background .35s ease,border-color .35s ease}
+.plate.pbot{margin-top:16px;background:var(--surface2)}
+.plate.ptop>.app-head{border-radius:22px 22px 0 0}
+/* карточка «Сообщение клиента» */
+.pbar{background:transparent!important;border-bottom:none!important;padding:18px clamp(14px,3vw,30px) 22px}
+.msgcard{display:grid;grid-template-columns:1fr auto;gap:9px 14px;align-items:baseline;
+  background:var(--surface2);border:1px solid var(--line);border-radius:18px;padding:15px 16px 14px;box-shadow:var(--inset)}
+.msgcard::before{content:'Сообщение клиента';font-family:var(--serif);font-size:17px;color:var(--ink)}
+.msgcard .pkeys{grid-column:2;justify-self:end;margin:0;font-size:10.5px;white-space:nowrap;display:flex;align-items:center;gap:12px}
+.msgcard .pwrap{grid-column:1/-1;margin:0}
+.msgcard .ph-toggles{grid-column:1/-1;margin:0}
+.msgcard textarea#phrase{background:var(--surface);border:1px solid var(--line);box-shadow:var(--sh1);border-radius:13px}
+/* вкладки — подчёркивание вместо пилюли */
+.plate.pbot>.tabs{background:transparent;border-top:none;border-bottom:1px solid var(--hair);padding:0 clamp(10px,2.4vw,22px);gap:2px}
+.plate.pbot>.tabs button{background:transparent!important;box-shadow:none!important;border-radius:0;
+  border-bottom:2px solid transparent;padding:16px 14px;color:var(--muted)}
+.plate.pbot>.tabs button.on{color:var(--ink);border-bottom-color:var(--accent);background:transparent!important}
+.plate.pbot>.pane{padding:22px clamp(14px,3vw,30px) 28px;background:transparent}
+@media(max-width:680px){
+  .plate.pbot>.tabs{position:fixed;left:0;right:0;bottom:0;border-bottom:none;border-top:1px solid var(--line);padding:7px 8px calc(8px + env(safe-area-inset-bottom));
+    background:var(--veil-blur);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);z-index:60}
+  .plate.pbot>.tabs button{border-bottom:none;border-radius:11px;padding:9px 4px;font-size:11.5px}
+  .plate.pbot>.tabs button.on{background:var(--surface)!important;box-shadow:var(--sh1)!important}
+}
+/* быстрые ответы — группами с разделителями */
+.qbar{gap:9px}
+#quickBar>.qbar-row{display:flex;flex-direction:column;gap:9px;width:100%}
+[data-pane="train"] .seg:not(.two):not(.three):not(.four):not(.five){grid-template-columns:repeat(3,minmax(0,1fr))}
+.qgrp{display:flex;align-items:center;gap:14px;flex-wrap:wrap;width:100%}
+.qgl{flex:0 0 84px;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+.qgi{flex:1 1 auto;display:flex;flex-wrap:wrap;gap:8px;padding-left:14px;border-left:1px solid var(--hair)}
+/* ручной калькулятор — раскрыт, как в новом дизайне */
+.calcfold>summary{border-radius:16px}
+.calcfold[open]>summary{border-radius:16px 16px 0 0}
+</style>
 </head>
 <body>
 <div class="app">
@@ -896,6 +1227,7 @@
       <label class="nocomm-chk"><input type="checkbox" id="nbPh"> новые купюры $</label>
     </div>
     <div class="phrase-info" id="phraseInfo"></div>
+    <div class="dealplate" id="dealPlate">
     <div class="glance" id="glance"></div>
     <div class="understood" id="understood"></div>
     <div class="uans" id="phraseAns" style="display:none">
@@ -908,6 +1240,7 @@
       <div class="uansh">Вопрос клиенту — чтобы точно понять друг друга</div>
       <pre id="phraseAskTxt"></pre>
       <button class="copy uansbtn" id="phraseAskBtn" type="button">Скопировать вопрос</button>
+    </div>
     </div>
     <div id="issueRow" style="display:none">
       <button class="badd" id="issueBtn" type="button" title="сохранить фразу, разбор и ответ в журнал — разобрать позже">⚑ В непонятки — разобрать позже</button>
@@ -5841,6 +6174,192 @@
     }
     inp.addEventListener('input',check);
   })();
+})();
+</script>
+
+<script>
+/* переключатель темы (светлая по умолчанию) */
+(function(){
+  var KEY='usdtTheme';
+  function apply(t){ document.documentElement.setAttribute('data-theme', t==='dark'?'dark':'light');
+    var m=document.querySelector('meta[name=theme-color]'); if(m) m.setAttribute('content', t==='dark'?'#171A1F':'#E7ECE7'); }
+  var cur='light'; try{ cur=localStorage.getItem(KEY)||'light'; }catch(e){}
+  apply(cur);
+  function mount(){
+    var box=document.querySelector('.head-actions'); if(!box||document.getElementById('themeTog')) return;
+    var b=document.createElement('button'); b.type='button'; b.className='gear'; b.id='themeTog';
+    b.style.cssText='width:36px;padding:0;display:grid;place-items:center;font-size:15px;line-height:1';
+    function label(){ var d=document.documentElement.getAttribute('data-theme')==='dark';
+      b.textContent=d?'☀':'☾'; b.title=d?'Светлая тема':'Тёмная тема'; }
+    b.addEventListener('click',function(){
+      var d=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
+      apply(d); try{ localStorage.setItem(KEY,d); }catch(e){} label();
+    });
+    label();
+    var gear=document.getElementById('tog');
+    box.insertBefore(b, gear||box.firstChild);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',mount); else mount();
+})();
+</script>
+
+<script>
+/* новый разбор: три строки «направление / отдаёт / получает» + «только сумму» */
+(function(){
+  function build(){
+    var g=document.getElementById('glance'); if(!g) return;
+    var top=g.querySelector('.gtop'), body=g.querySelector('.gbody');
+    if(!top) return;
+    if(!body){ body=document.createElement('div'); body.className='gbody'; g.appendChild(body); }
+    if(body.querySelector('.gsplit')) return;
+    var badge=(top.querySelector('.gbadge')||{}).textContent||'';
+    var sum=(top.querySelector('.gsum')||{}).textContent||'';
+    var parts=sum.split('\u2192');
+    var gives=(parts[0]||'').replace(/^\s*(Отдаёте|Віддаєте|Продаж|Продажа|Купівля|Покупка)\s*/i,'').trim();
+    var gets=(parts[1]||'').replace(/^\s*(получаете|отримуєте)\s*/i,'').trim();
+    var wrap=document.createElement('div'); wrap.className='gsplit';
+    var h=document.createElement('div'); h.className='gsl'; h.textContent='Понял'; wrap.appendChild(h);
+    var rev=document.getElementById('reverseBtn');
+    var d=document.createElement('button'); d.type='button'; d.className='gsr dirrow';
+    d.title='Сменить направление и пересчитать';
+    d.innerHTML='<span class="gsv"></span><span class="gsk">направление</span><span class="gsh">сменить ⇄</span>';
+    d.querySelector('.gsv').textContent=badge;
+    d.addEventListener('click',function(){ if(rev) rev.click(); });
+    wrap.appendChild(d);
+    if(gives){ var a=document.createElement('div'); a.className='gsr';
+      a.innerHTML='<span class="gsv"></span><span class="gsk">отдаёт</span>';
+      a.querySelector('.gsv').textContent=gives; wrap.appendChild(a); }
+    if(gets){ var b=document.createElement('div'); b.className='gsr getsrow';
+      b.innerHTML='<span class="gsv"></span><span class="gsk">получает</span>';
+      b.querySelector('.gsv').textContent=gets; wrap.appendChild(b); }
+    body.insertBefore(wrap, body.firstChild);
+  }
+  function sumBtn(){
+    var box=document.getElementById('phraseAns'); if(!box||document.getElementById('sumCopyBtn')) return;
+    var b=document.createElement('button'); b.type='button'; b.id='sumCopyBtn'; b.textContent='⧉ Только сумму';
+    b.addEventListener('click',function(){
+      var g=document.getElementById('glance'), s=g&&g.querySelector('.gsum');
+      var t=s?s.textContent:''; var m=t.split('\u2192'); var v=(m[1]||m[0]||'').trim();
+      try{ navigator.clipboard.writeText(v); }catch(e){}
+      var old=b.textContent; b.textContent='Сумма скопирована ✓';
+      setTimeout(function(){ b.textContent=old; },1500);
+    });
+    var main=document.getElementById('phraseAnsBtn');
+    if(main&&main.parentNode===box) box.insertBefore(b, main.nextSibling); else box.appendChild(b);
+  }
+  function run(){ build(); sumBtn(); }
+  function start(){
+    run();
+    var g=document.getElementById('glance');
+    if(g&&window.MutationObserver) new MutationObserver(run).observe(g,{childList:true,subtree:true});
+    var a=document.getElementById('phraseAns');
+    if(a&&window.MutationObserver) new MutationObserver(sumBtn).observe(a,{childList:true});
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start); else start();
+})();
+</script>
+
+<script>
+/* структура нового дизайна: плиты, карточка ввода, группировка быстрых ответов */
+(function(){
+  function rates(){
+    var el=document.getElementById('rSum'); if(!el) return;
+    var h=el.innerHTML;
+    if(!h || h.indexOf('rcell')>=0) return;
+    var cells=h.split('·').map(function(s){ return s.trim(); }).filter(Boolean);
+    el.innerHTML=cells.map(function(c){
+      c=c.replace(/\+\s*([\d.,]+)\s*%/g,'<span class="rup">+$1%</span>')
+         .replace(/(?:−|-)\s*([\d.,]+)\s*%/g,'<span class="rdn">−$1%</span>');
+      return '<span class="rcell">'+c+'</span>';
+    }).join('');
+  }
+  function header(){
+    var brand=document.querySelector('.head-top .brand');
+    if(brand && !brand.querySelector('.brandsub')){
+      var s=document.createElement('div'); s.className='brandsub';
+      s.textContent='Рабочее место оператора обмена';
+      brand.appendChild(s);
+    }
+    var tog=document.getElementById('tog');
+    if(tog && tog.textContent.trim()==='изменить') tog.textContent='Курсы и настройки';
+    var box=document.querySelector('.head-actions'), th=document.getElementById('themeTog');
+    if(box && th && tog && th.nextSibling!==null && tog.nextSibling!==th) box.insertBefore(th, tog.nextSibling);
+  }
+  function structure(){
+    var app=document.querySelector('.app'); if(!app||app.dataset.restructured) return;
+    app.dataset.restructured='1';
+    var top=document.createElement('div'); top.className='plate ptop';
+    var bot=document.createElement('div'); bot.className='plate pbot';
+    app.insertBefore(top, app.firstChild);
+    ['.app-head','#ratesCard','.pbar'].forEach(function(s){ var el=app.querySelector(s); if(el) top.appendChild(el); });
+    app.appendChild(bot);
+    var tabs=app.querySelector('.tabs'); if(tabs) bot.appendChild(tabs);
+    Array.prototype.slice.call(app.children).forEach(function(el){
+      if(el!==top && el!==bot && el.classList.contains('pane')) bot.appendChild(el);
+    });
+    /* карточка сообщения клиента */
+    var pbar=top.querySelector('.pbar');
+    if(pbar && !pbar.querySelector('.msgcard')){
+      var card=document.createElement('div'); card.className='msgcard';
+      var pw=pbar.querySelector('.pwrap'), pk=pbar.querySelector('.pkeys'), pt=pbar.querySelector('.ph-toggles');
+      pbar.insertBefore(card, pbar.firstChild);
+      if(pk) card.appendChild(pk);
+      if(pw) card.appendChild(pw);
+      if(pt) card.appendChild(pt);
+    }
+    var plate=document.getElementById('dealPlate');
+    if(plate && !plate.querySelector('.anscol')){
+      var col=document.createElement('div'); col.className='anscol';
+      var a=document.getElementById('phraseAns'), q=document.getElementById('phraseAsk');
+      if(a){ plate.insertBefore(col, a); col.appendChild(a); }
+      else if(q){ plate.insertBefore(col, q); }
+      if(q) col.appendChild(q);
+    }
+    var cw=document.getElementById('calcWrap'); if(cw) cw.open=true;
+  }
+  var GRP=[
+    ['Вітання', /привіт|привет|прощ|zdrav|добрий|добрый|зробимо|сделаем|так,/i],
+    ['Статус',  /заявк|готов|уточн|переформул|очіку|ожид|check|перевір/i],
+    ['Дані',    /курс|реквіз|реквиз|адрес|гаманц|кошел|hash|хеш/i]
+  ];
+  function groupChips(){
+    var bar=document.getElementById('quickBar'); if(!bar) return;
+    var row=bar.querySelector('.qbar-row')||bar;
+    var btns=Array.prototype.slice.call(row.children).filter(function(el){ return el.tagName==='BUTTON'; });
+    if(!btns.length) return;
+    var buckets=[[],[],[]];
+    btns.forEach(function(b){
+      var t=b.textContent||'', k=1;
+      for(var i=0;i<GRP.length;i++){ if(GRP[i][1].test(t)){ k=i; break; } }
+      buckets[k].push(b);
+    });
+    var frag=document.createDocumentFragment();
+    buckets.forEach(function(list,i){
+      if(!list.length) return;
+      var g=document.createElement('div'); g.className='qgrp';
+      var lab=document.createElement('div'); lab.className='qgl'; lab.textContent=GRP[i][0];
+      var box=document.createElement('div'); box.className='qgi';
+      list.forEach(function(b){ box.appendChild(b); });
+      g.appendChild(lab); g.appendChild(box); frag.appendChild(g);
+    });
+    row.appendChild(frag);
+  }
+  function start(){
+    structure(); groupChips(); rates(); header();
+    var rs=document.getElementById('rSum');
+    if(rs&&window.MutationObserver){
+      var rmo=new MutationObserver(function(){ rmo.takeRecords(); rates(); });
+      rmo.observe(rs,{childList:true,characterData:true,subtree:true});
+    }
+    var bar=document.getElementById('quickBar');
+    if(bar&&window.MutationObserver){
+      var mo=new MutationObserver(function(){ mo.takeRecords(); groupChips(); });
+      mo.observe(bar,{childList:true,subtree:true});
+    }
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start);
+  else start();
+  window.addEventListener('load',function(){ setTimeout(function(){ structure(); groupChips(); rates(); header(); },80); });
 })();
 </script>
 </body>
